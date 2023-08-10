@@ -1,6 +1,4 @@
 package com.example.shelter.model;
-
-import com.sun.jdi.PrimitiveValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -15,9 +13,9 @@ public class Dog {
     private String name;
 
 
-    public Dog(String name, int id) {
-        this.name = name;
+    public Dog(int id, String name)  {
         this.id = id;
+        this.name = name;
     }
 
     public Dog() {

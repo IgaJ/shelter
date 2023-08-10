@@ -15,8 +15,8 @@ public class Service {
     @Autowired
     CatRepository catRepository;
 
-    public Dog createNewDog(String name, int id) {
-        Dog newOne = new Dog(name, id);
+    public Dog createNewDog(int id, String name) {
+        Dog newOne = new Dog(id, name);
         dogRepository.save(newOne);
         return newOne;
     }
@@ -35,55 +35,45 @@ public class Service {
         return catRepository.findAll();
     }
 
-    public Dog getDogByName(String name) {
-        System.out.println("try get by name from servce");
-        Optional<Dog> dog = dogRepository.findById(name);
-        if (dog.isPresent()) {
-            return dog.get();
-        }
-        return new Dog();
+    public List<Dog> getDogByName(String name) {
+        return dogRepository.getDogByName(name);
     }
 
-    public Cat getCatByName(String name) {
-        Optional<Cat> cat = catRepository.findById(name);
-        if (cat.isPresent()) {
-            return cat.get();
-        }
-        return new Cat();
+    public List<Cat> getCatByName(String name) {
+        return catRepository.getCatByName(name);
     }
 
-
-    public Dog getById(String id) {
+    public Dog getDogById(int id) {
         Optional<Dog> dog = dogRepository.findById(id);
+        dogRepository.findById(1);
         if (dog.isPresent()) {
             return dog.get();
         }
         return new Dog();
     }
 
-    public Cat getCatById(String id) {
-        Optional<Cat> cat = catRepository.findById(id);
+    public Cat getCatById(int id) {
+        Optional<Cat> cat = catRepository.findById(String.valueOf(id));
         if (cat.isPresent()) {
             return  cat.get();
         }
         return new Cat();
     }
 
-    public void removeDog(String id) {
-        /*Optional<Dog> dog = repository.findById(name);
-         if (dog.isPresent()) {
-             repository.delete(dog.get());
-         }*/
-        dogRepository.deleteById(id);
 
+    public void removeDogById(int id) {
+        Optional<Dog> dog = dogRepository.findById(id);
+         if (dog.isPresent()) {
+             dogRepository.delete(dog.get());
+         }
     }
-    public void removeCat(String id) {
-        catRepository.deleteById(id);
+    public void removeCatById(int id) {
+        catRepository.deleteById(String.valueOf(id));
     }
     public void removeDog(Dog dog) {
         dogRepository.delete(dog);
-
     }
+
     public void removeCat(Cat cat) {
         catRepository.delete(cat);
     }
