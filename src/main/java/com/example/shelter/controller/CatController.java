@@ -2,12 +2,10 @@ package com.example.shelter.controller;
 
 import com.example.shelter.model.Cat;
 import com.example.shelter.model.Dog;
-import com.example.shelter.model.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.shelter.service.DogServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,9 +14,12 @@ import java.util.List;
 // https://www.semrush.com/blog/url-parameters/
 
 @RestController
-public class Controller {
-    @Autowired
-    Service service;
+public class CatController {
+
+    private final DogServiceImpl service;
+    public CatController(DogServiceImpl service) {
+        this.service = service;
+    }
 
     @GetMapping("/dogs")
     public List<Dog> getAllDogs(){
@@ -31,7 +32,6 @@ public class Controller {
     }
 
     @GetMapping("/dogs/name/{name}")
-    //@GetMapping("/dogs/name/{name}")
     public List<Dog> getDogByName(@PathVariable String name) {
         return service.getDogByName(name);
     }
@@ -62,7 +62,8 @@ public class Controller {
     // Post /api/dogs - stwórz psa
     @PostMapping("/dogs")
     public void createDog (@RequestBody Dog dog) {
-        service.createNewDog(dog.getId(), dog.getName());
+        service.createNewDog(dog.getId(), dog.getName(), dog.getSex(), dog.getSize(),
+                dog.getAge(), dog.getArrival(), dog.getLocation());
     }
 
     @PostMapping ("/cats")
@@ -71,7 +72,7 @@ public class Controller {
     }
 
 
-    // Delete /api/dogs/name - usuń psa z request body
+     // Delete /api/dogs/name - usuń psa z request body
     // w postmanie oczekuje na body czyli podać kod do wykonania
     @DeleteMapping ("/dogs")
     public void deleteDog(@RequestBody Dog dog) {
@@ -90,7 +91,12 @@ public class Controller {
     public void deleteCatById(@PathVariable int id) {
         service.removeCatById(id);
     }
+    @DeleteMapping("/dogs/name") // localhost:8080/dogs/name?name=dino
+    public String deleteByName(@RequestParam(value = "name") String name) {
+        service.removeDogByName(name);
+        return "Delete by name called " + name;
+    }
 }
-
-//[{"id":1,"name":"rudy"},{"id":2,"name":"dino"}, {"id":3,"name":"puris"}
+// {"id":1,"name":"rudy","sex":"male","size":"small","age":"3","arrival":"10.2022","located":"shelter"}
+//[{"id":1,"name":"rudy"},{"id":2,"name":"dino"}, {"id":3,"name":"puris"}, {"id":4,"name":"max"}, {"id":6,"name":"brutus"}
 // [{"id":1,"name":"prazek"},{"id":2,"name":"felek"}, {"id":3,"name":"kocisk"},

@@ -1,5 +1,7 @@
-package com.example.shelter.model;
+package com.example.shelter.service;
 
+import com.example.shelter.model.Cat;
+import com.example.shelter.model.Dog;
 import com.example.shelter.repository.CatRepository;
 import com.example.shelter.repository.DogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,19 +10,17 @@ import java.util.List;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service
-public class Service {
+public class DogServiceImpl {
 
     @Autowired
     DogRepository dogRepository;
     @Autowired
     CatRepository catRepository;
-
-    public Dog createNewDog(int id, String name) {
-        Dog newOne = new Dog(id, name);
+    public Dog createNewDog(int id, String name, String sex, String size, Integer age, String arrival, String located) {
+        Dog newOne = new Dog(id, name, sex, size, age, arrival, located);
         dogRepository.save(newOne);
         return newOne;
     }
-
     public Cat createNewCat (int id, String name) {
         Cat newOne = new Cat(id, name);
         catRepository.save(newOne);
@@ -76,5 +76,12 @@ public class Service {
 
     public void removeCat(Cat cat) {
         catRepository.delete(cat);
+    }
+
+    public void removeDogByName(String name) {
+        List<Dog> dog = dogRepository.getDogByName(name);
+        for (Dog dog1 : dog) {
+            dogRepository.delete(dog1);
+        }
     }
 }
