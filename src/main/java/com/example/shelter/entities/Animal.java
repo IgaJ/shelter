@@ -1,4 +1,4 @@
 package com.example.shelter.entities;
 
-public abstract class Animal {
+public class Animal {
 }

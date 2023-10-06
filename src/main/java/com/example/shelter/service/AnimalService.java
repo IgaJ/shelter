@@ -1,23 +1,21 @@
 package com.example.shelter.service;
 
-import com.example.shelter.model.Animal;
-import com.example.shelter.model.Cat;
-import com.example.shelter.model.Dog;
+import com.example.shelter.model.AnimalDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AnimalService {
 
-    Animal createNewAnimal();
+    List<AnimalDTO> listAnimals();
 
-    List<Animal> listAnimals();
+    Optional<AnimalDTO> getAnimalById(UUID id);
 
-    Animal getAnimalById();
+    AnimalDTO getAnimalByName(String name);
 
-    Animal getAnimalByName(String name);
 
-    void deleteAnimalById(UUID id);
+    AnimalDTO createNewAnimal(AnimalDTO animal);
 
-    void deleteAnimal(Animal animal);
+    void deleteAnimal(AnimalDTO animal);
 }

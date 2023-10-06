@@ -1,32 +1,49 @@
 package com.example.shelter.controller;
 
-import com.example.shelter.model.Cat;
-import com.example.shelter.model.Dog;
-import com.example.shelter.service.DogServiceImpl;
-import org.springframework.web.bind.annotation.*;
 
-
-import java.util.List;
-
-
-//TODO get by name i get by id za pomocą query parameters
-// https://www.baeldung.com/spring-request-param
-// https://www.semrush.com/blog/url-parameters/
-
+/*@Slf4j
+@RequiredArgsConstructor
 @RestController
+@RequestMapping("/cats")*/
+/*
 public class CatController {
 
-    private final DogServiceImpl service;
-    public CatController(DogServiceImpl service) {
-        this.service = service;
-    }
+    public static final String CAT_PATH_ID = "/cat/id/{catId}";
 
-    @GetMapping("/dogs")
-    public List<Dog> getAllDogs(){
-        return service.getAllDogs();
-    }
+    private final CatServiceJPAImpl service;
 
     @GetMapping("/cats")
+    public List<AnimalDTO> listCats() {
+
+        return service.listAnimals();
+    }
+
+    @GetMapping("/name/{name}")
+    public CatDTO getCatByName(@PathVariable(value = "catName") String name) {
+        return service.getAnimalByName(name);
+    }
+
+    @GetMapping("/id/{id}")
+    public CatDTO getCatById(@PathVariable int id) {
+        return service.getAnimalById(id);
+    }
+
+    @PostMapping("/cats")
+    public ResponseEntity createNewCat(@RequestBody CatDTO cat) {
+        CatDTO savedCat = (CatDTO) service.createNewAnimal(cat);
+
+        HttpHeaders headers = new HttpHeaders(); // header do podejrzenia w Postmanie
+        headers.add("Location", "/cats/id/" + savedCat.getId());
+
+        return new ResponseEntity(headers,HttpStatus.CREATED); // tu dodany headers (response ma podawać status i header)
+    }
+*/
+
+
+
+
+
+    /*@GetMapping("/cats")
     public List<Cat> getAllCats() {
         return service.getAllCats();
     }
@@ -95,8 +112,8 @@ public class CatController {
     public String deleteByName(@RequestParam(value = "name") String name) {
         service.removeDogByName(name);
         return "Delete by name called " + name;
-    }
-}
+    }*/
+
 // {"id":1,"name":"rudy","sex":"male","size":"small","age":"3","arrival":"10.2022","located":"shelter"}
 //[{"id":1,"name":"rudy"},{"id":2,"name":"dino"}, {"id":3,"name":"puris"}, {"id":4,"name":"max"}, {"id":6,"name":"brutus"}
 // [{"id":1,"name":"prazek"},{"id":2,"name":"felek"}, {"id":3,"name":"kocisk"},
