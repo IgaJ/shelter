@@ -8,14 +8,13 @@ import java.util.UUID;
 
 public interface AnimalService {
 
+    AnimalDTO saveNewAnimal(AnimalDTO animal);
+
     List<AnimalDTO> listAnimals();
 
     Optional<AnimalDTO> getAnimalById(UUID id);
 
     AnimalDTO getAnimalByName(String name);
-
-
-    AnimalDTO createNewAnimal(AnimalDTO animal);
 
     void deleteAnimal(AnimalDTO animal);
 }

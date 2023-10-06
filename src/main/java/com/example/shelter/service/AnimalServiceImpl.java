@@ -6,26 +6,32 @@ import com.example.shelter.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
 
-    AnimalRepository animalRepository;
-    AnimalMapper animalMapper;
+    private final AnimalRepository animalRepository;
+    private final AnimalMapper animalMapper;
 
+    @Override
+    public AnimalDTO saveNewAnimal(AnimalDTO animal) {
+        return animalMapper.animalToAnimalDTO(animalRepository.save(animalMapper.animalDTOToAnimal(animal)));
+    }
 
     @Override
     public List<AnimalDTO> listAnimals() {
-        return null;
+        return animalRepository.findAll()
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<AnimalDTO> getAnimalById(UUID id) {
-        return Optional.empty();
+        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElse(null)));
     }
 
     @Override
@@ -34,12 +40,6 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDTO createNewAnimal(AnimalDTO animal) {
-        return null;
-    }
-
-    @Override
     public void deleteAnimal(AnimalDTO animal) {
-
     }
 }
