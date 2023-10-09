@@ -14,7 +14,11 @@ public interface AnimalService {
 
     Optional<AnimalDTO> getAnimalById(UUID id);
 
-    AnimalDTO getAnimalByName(String name);
+    List<AnimalDTO> getAnimalByName(String name);
 
-    void deleteAnimal(AnimalDTO animal);
+    void deleteById(UUID id);
+
+    List<AnimalDTO> getByAge(Integer age);
+
+    List<AnimalDTO> getVaccinated(String vaccinated);
 }

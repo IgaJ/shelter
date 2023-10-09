@@ -42,11 +42,25 @@ public class AnimalController {
     }
 
     @GetMapping("/name/{name}")
-    public AnimalDTO getAnimalByName(@PathVariable ("name") String name) {
-        return null;
+    public List<AnimalDTO> getAnimalByName(@PathVariable ("name") String name) {
+        return animalService.getAnimalByName(name);
     }
 
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity deleteById(@PathVariable ("id") UUID id) {
+        animalService.deleteById(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
+    @GetMapping("/age/{age}")
+    public List<AnimalDTO> getAnimalByAge(@PathVariable ("age") Integer age) {
+        return animalService.getByAge(age);
+    }
+
+    @GetMapping("/vaccinated/{vaccinated}")
+    public List<AnimalDTO> getVaccinated(@PathVariable ("vaccinated") String vaccinated) {
+        return animalService.getVaccinated(vaccinated);
+    }
 }
 
 

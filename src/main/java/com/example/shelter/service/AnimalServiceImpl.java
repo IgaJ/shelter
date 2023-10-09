@@ -1,6 +1,5 @@
 package com.example.shelter.service;
 
-import com.example.shelter.entities.Animal;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.model.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
@@ -36,11 +35,33 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDTO getAnimalByName(String name) {
-        return null;
+    public List<AnimalDTO> getAnimalByName(String name) {
+        return animalRepository.getAnimalByName(name)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteAnimal(AnimalDTO animal) {
+    public void deleteById(UUID id) {
+        if(animalRepository.existsById(id)) {
+            animalRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public List<AnimalDTO> getByAge(Integer age) {
+        return animalRepository.getAnimalByAge(age)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDTO> getVaccinated(String vaccinated) {
+        return animalRepository.getVaccinated(vaccinated)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
     }
 }

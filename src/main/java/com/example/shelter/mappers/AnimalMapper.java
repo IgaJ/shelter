@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface AnimalMapper {
-    Animal animalDTOToAnimal (AnimalDTO dto);
+    Animal animalDTOToAnimal(AnimalDTO dto);
     AnimalDTO animalToAnimalDTO (Animal animal);
+
 }

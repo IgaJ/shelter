@@ -1,10 +1,7 @@
 package com.example.shelter.entities;
 
 import com.example.shelter.model.AnimalSpecies;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -28,6 +25,9 @@ public class Animal {
     @NotNull
     public AnimalSpecies species;
 
+    @NotNull
+    public String vaccinated;
+
     public String name;
     public String sex;
     public String size;
@@ -40,4 +40,5 @@ public class Animal {
     @NotNull
     @NotBlank
     public String location;
+
 }

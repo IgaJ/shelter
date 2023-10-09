@@ -16,6 +16,9 @@ public class AnimalDTO {
     @NotNull
     public AnimalSpecies species;
 
+    @NotNull
+    public String vaccinated;
+
     public String name;
     public String sex;
     public String size;
@@ -28,4 +31,5 @@ public class AnimalDTO {
     @NotNull
     @NotBlank
     public String location;
+
 }
