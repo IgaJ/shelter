@@ -41,6 +41,11 @@ public class AnimalController {
         return animalService.getAnimalById(id).orElseThrow(null);
     }
 
+    @GetMapping("/name/{name}")
+    public AnimalDTO getAnimalByName(@PathVariable ("name") String name) {
+        return null;
+    }
+
 
 }
 

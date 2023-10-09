@@ -1,5 +1,6 @@
 package com.example.shelter.service;
 
+import com.example.shelter.entities.Animal;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.model.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
