@@ -17,14 +17,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/animals")
 public class AnimalController {
-
-    public static final String CAT_PATH_ID = "/cats/id/{id}";
-    public static final String DOG_PATH_ID = "/dogs/id/{id}";
-
     private final AnimalService animalService;
 
     @PostMapping
-    public ResponseEntity saveNewAnimal (@RequestBody AnimalDTO animalDTO) {
+    public ResponseEntity<AnimalDTO> saveNewAnimal (@RequestBody AnimalDTO animalDTO) {
         AnimalDTO savedAnimal = animalService.saveNewAnimal(animalDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/animals/id/" + savedAnimal.getId().toString());
@@ -36,31 +32,48 @@ public class AnimalController {
         return animalService.listAnimals();
     }
 
-    @GetMapping("/id/{id}")
+    // skłądnia
+    //localhost:8080/animals?name=Rudy
+    @GetMapping(params = "name") // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr
+    public List<AnimalDTO> getAnimalByName(/*@RequestParam*/ String name) {
+        return animalService.getAnimalByName(name);
+    }
+
+    @GetMapping(params = "age")
+    public List<AnimalDTO> getAnimalByAge(@RequestParam Integer age) {
+        return animalService.getByAge(age);
+    }
+    @GetMapping(params = "vaccinated")
+    public List<AnimalDTO> getVaccinated(@RequestParam String vaccinated) {
+        return animalService.getVaccinated(vaccinated);
+    }
+
+    @GetMapping("/{id}") // nawias do PathVariable // id zaraz po ukośniku
     public AnimalDTO getAnimalById(@PathVariable ("id") UUID id) {
         return animalService.getAnimalById(id).orElseThrow(null);
     }
 
-    @GetMapping("/name/{name}")
-    public List<AnimalDTO> getAnimalByName(@PathVariable ("name") String name) {
-        return animalService.getAnimalByName(name);
-    }
+    //animals?name=fafik
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity deleteById(@PathVariable ("id") UUID id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable ("id") UUID id) {
         animalService.deleteById(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("/age/{age}")
-    public List<AnimalDTO> getAnimalByAge(@PathVariable ("age") Integer age) {
-        return animalService.getByAge(age);
-    }
-
-    @GetMapping("/vaccinated/{vaccinated}")
-    public List<AnimalDTO> getVaccinated(@PathVariable ("vaccinated") String vaccinated) {
-        return animalService.getVaccinated(vaccinated);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+
+/*
+
+/api/v1/animals  -> GET/POST
+/api/v1/animals?maxAge=5&minAge=2 - request params
+/api/v1/animals/id -> GET/PUT/PATCH/DELETE  (tym sposobem robimy update i działemy na jednym)
+/api/v1/owners/id/animals/id
+
+//wysylanie przez parametry zapytania url: animals?parametr1=wartosc&parametr2=wartosc&....  -> @RequestParam lub bez adnotacji
+//wysylanie przez czesc sciezki najczesciej do id - @PathVariable
+//wysylanie przez cialo zapytania, najczesciej obiekty w formacie json - @RequestBody -> referancja do obiektu DTO
+//wysylanie danych w naglowkach zapytania (header) -> dane logowania, login i hasło
+
+* */
 
 
