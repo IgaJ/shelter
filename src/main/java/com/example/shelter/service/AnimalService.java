@@ -1,6 +1,6 @@
 package com.example.shelter.service;
 
-import com.example.shelter.model.AnimalDTO;
+import com.example.shelter.dto.AnimalDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +21,8 @@ public interface AnimalService {
     List<AnimalDTO> getByAge(Integer age);
 
     List<AnimalDTO> getVaccinated(String vaccinated);
+
+    List<AnimalDTO> getAnimalsByBox(Integer box);
+
+    List<AnimalDTO> getAnimalByAdoption(String adoptionReady);
 }

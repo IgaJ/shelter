@@ -1,0 +1,57 @@
+[
+  {
+    "id": "ecfcb140-a1a3-4e44-a7f7-0715483ca94f",
+    "species": "CAT",
+    "vaccinated": "yes",
+    "name": "Tola",
+    "sex": "female",
+    "size": "-",
+    "age": 0,
+    "arrival": "10-2023",
+    "box": 1
+  },
+  {
+    "id": "2f69db6d-a71a-4df2-92f0-e649072ea2be",
+    "species": "CAT",
+    "vaccinated": "no",
+    "name": "Felek",
+    "sex": "male",
+    "size": "-",
+    "age": 1,
+    "arrival": "05-2023",
+    "box": 1
+  },
+  {
+    "id": "59c7f15e-528f-4bf9-a250-470ef920c247",
+    "species": "DOG",
+    "vaccinated": "yes",
+    "name": "Rudy",
+    "sex": "male",
+    "size": "small",
+    "age": 3,
+    "arrival": "10-2022",
+    "box": 2
+  },
+  {
+    "id": "bbb48639-68ba-4f11-a1d0-938f737c0c23",
+    "species": "DOG",
+    "vaccinated": "yes",
+    "name": "Miso",
+    "sex": "male",
+    "size": "small",
+    "age": 0,
+    "arrival": "05-2023",
+    "box": 2
+  },
+  {
+    "id": "dfe592ed-eb7c-494c-a8ef-0c5270974734",
+    "species": "DOG",
+    "vaccinated": "no",
+    "name": "Fala",
+    "sex": "female",
+    "size": "medium",
+    "age": 1,
+    "arrival": "01-2023",
+    "box": 3
+  }
+]

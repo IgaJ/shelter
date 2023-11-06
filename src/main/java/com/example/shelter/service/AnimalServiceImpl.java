@@ -1,7 +1,7 @@
 package com.example.shelter.service;
 
 import com.example.shelter.mappers.AnimalMapper;
-import com.example.shelter.model.AnimalDTO;
+import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,6 +60,22 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public List<AnimalDTO> getVaccinated(String vaccinated) {
         return animalRepository.getVaccinated(vaccinated)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDTO> getAnimalsByBox(Integer box) {
+        return animalRepository.getAnimalsByBox(box)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDTO> getAnimalByAdoption(String adoptionReady) {
+        return animalRepository.getAnimalsByAdoption(adoptionReady)
                 .stream()
                 .map(animal -> animalMapper.animalToAnimalDTO(animal))
                 .collect(Collectors.toList());

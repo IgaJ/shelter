@@ -1,6 +1,6 @@
 package com.example.shelter.controller;
 
-import com.example.shelter.model.AnimalDTO;
+import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class AnimalController {
 
     // skłądnia
     //localhost:8080/animals?name=Rudy
-    @GetMapping(params = "name") // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr
+    @GetMapping(params = "name") // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr inaczej ambiguance
     public List<AnimalDTO> getAnimalByName(/*@RequestParam*/ String name) {
         return animalService.getAnimalByName(name);
     }
@@ -46,6 +46,16 @@ public class AnimalController {
     @GetMapping(params = "vaccinated")
     public List<AnimalDTO> getVaccinated(@RequestParam String vaccinated) {
         return animalService.getVaccinated(vaccinated);
+    }
+
+    @GetMapping(params = "box")
+    public List<AnimalDTO> getAnimalsByBox(@RequestParam Integer box) {
+        return animalService.getAnimalsByBox(box);
+    }
+
+    @GetMapping(params = "adoptionReady")
+    public List<AnimalDTO> getAnimalByAdoption(@RequestParam String adoptionReady) {
+        return animalService.getAnimalByAdoption(adoptionReady);
     }
 
     @GetMapping("/{id}") // nawias do PathVariable // id zaraz po ukośniku

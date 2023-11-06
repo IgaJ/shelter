@@ -1,4 +1,4 @@
-package com.example.shelter.model;
+package com.example.shelter.entity;
 
 public enum AnimalSpecies {
     CAT,DOG
