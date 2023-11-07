@@ -16,5 +16,6 @@ public class ShelterApplication {
 // 2 - localDateTime (przyjecie, vaccinated), zwracanie wyników różnie posortowanych)
 // 3 - jak zrobić żeby wyświetlać w tabeli wartość String enum zamiast miejsca na liście - custom converter implements AttributeConverter
 // enum adoptionReady Y/N. If Y - select. if N - print info - z enumem czy Stringiem?
-// volunteer - łączone tabele: spacery (data, name), sprzatanie (data, box), szkolenie (data)
-// jeśli data <7dni, to box do sprzątania (select box to be cleaned), jeśłi spacer <2 dni to pies do wyprowadzenia (select dogs to be walked)
+// łączone tabele: spacery (data, animal name, volunteer name), sprzatanie (data, box, volunteer name), pielegnacja (data, animal name, care description, visit description)
+// dodać zachowania:
+// jeśli data sprzątania <7dni, to box do sprzątania (set box lastCleanongDate to now), jeśli spacer <2 dni to spacer (set lastWalkDate to now)

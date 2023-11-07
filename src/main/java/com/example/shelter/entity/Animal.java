@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 @Getter
 @Setter
@@ -44,5 +47,13 @@ public class Animal {
     private String adoptionReady;
 
     private String description;
+
+    @ManyToMany
+    @Builder.Default
+    @JoinTable(name = "care_treatments", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "care_id"))
+    private Set<Care> careTreatments = new HashSet<>();
+
+
+
 
 }

@@ -19,13 +19,19 @@ import java.util.UUID;
 public class AnimalController {
     private final AnimalService animalService;
 
-    @PostMapping
+   /* @PostMapping
     public ResponseEntity<AnimalDTO> saveNewAnimal (@RequestBody AnimalDTO animalDTO) {
         AnimalDTO savedAnimal = animalService.saveNewAnimal(animalDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/animals/id/" + savedAnimal.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }*/
+
+    @PostMapping
+    public String saveAnimal (@RequestBody AnimalDTO animalDto) {
+        return animalService.saveNewAnimal(animalDto).toString();
     }
+
 
     @GetMapping
     public List<AnimalDTO> listAnimals() {
@@ -53,9 +59,9 @@ public class AnimalController {
         return animalService.getAnimalsByBox(box);
     }
 
-    @GetMapping(params = "adoptionReady")
-    public List<AnimalDTO> getAnimalByAdoption(@RequestParam String adoptionReady) {
-        return animalService.getAnimalByAdoption(adoptionReady);
+    @GetMapping(params = "adoption")
+    public List<AnimalDTO> getAnimalByAdoption(@RequestParam String adoption) {
+        return animalService.getAnimalByAdoption(adoption);
     }
 
     @GetMapping("/{id}") // nawias do PathVariable // id zaraz po ukośniku
