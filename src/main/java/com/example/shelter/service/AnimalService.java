@@ -12,17 +12,25 @@ public interface AnimalService {
 
     List<AnimalDTO> listAnimals();
 
-    Optional<AnimalDTO> getAnimalById(UUID id);
-
     List<AnimalDTO> getAnimalByName(String name);
-
-    void deleteById(UUID id);
 
     List<AnimalDTO> getByAge(Integer age);
 
-    List<AnimalDTO> getVaccinated(String vaccinated);
+    List<AnimalDTO> getBySex(String sex);
 
-    List<AnimalDTO> getAnimalsByBox(Integer box);
+    List<AnimalDTO> getAnimalsBySize(String size);
 
-    List<AnimalDTO> getAnimalByAdoption(String adoptionReady);
+    Optional<AnimalDTO> getAnimalById(UUID id);
+
+    Boolean deleteById(UUID id);
+
+    Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO);
+
+
+    AnimalDTO vaccinate(UUID id);
+
+    List<AnimalDTO> listNonVaccinated();
+
+    List<AnimalDTO> listAvailableForAdoption();
 }
+

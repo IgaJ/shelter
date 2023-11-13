@@ -1,20 +1,21 @@
 package com.example.shelter.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "volunteers")
+@Table(name = "Volunteers")
 public class Volunteer {
-
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -22,6 +23,8 @@ public class Volunteer {
     private UUID id;
 
     @NotNull
+    @NotBlank
     private String name;
+
 
 }

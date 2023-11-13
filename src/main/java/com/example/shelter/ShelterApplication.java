@@ -12,8 +12,13 @@ public class ShelterApplication {
 
 }
 
+// spr implementację patchById
+// spr impl detele by id (boolean zamiast void)
+// select by date before lub inaczej - query w repo
+// spr profilowanie (sql/h2)
+
+
 // 1 - testy
-// 2 - localDateTime (przyjecie, vaccinated), zwracanie wyników różnie posortowanych)
 // 3 - jak zrobić żeby wyświetlać w tabeli wartość String enum zamiast miejsca na liście - custom converter implements AttributeConverter
 // enum adoptionReady Y/N. If Y - select. if N - print info - z enumem czy Stringiem?
 // łączone tabele: spacery (data, animal name, volunteer name), sprzatanie (data, box, volunteer name), pielegnacja (data, animal name, care description, visit description)

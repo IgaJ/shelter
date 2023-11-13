@@ -5,7 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -17,25 +21,21 @@ public class AnimalDTO {
     @NotNull
     private AnimalSpecies species;
 
-    @NotNull
-    public String vaccinated;
-
     private String name;
     private String sex;
     private String size;
     private Integer age;
 
-    @NotNull
-    @NotBlank
-    private String arrival;
+    private Date arrivalDate;
 
-    private Integer box;
-
-    private Integer chip;
-
-    private String adoptionReady;
+    private String box;
 
     private String description;
+    private Boolean adopted;
+    private Boolean vaccinated;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate vaccinationDate;
 
 
 }

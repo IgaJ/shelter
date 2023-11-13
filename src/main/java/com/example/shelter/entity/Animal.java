@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,30 +31,28 @@ public class Animal {
     @NotNull
     private AnimalSpecies species;
 
-    @NotNull
-    public String vaccinated;
-
     private String name;
     private String sex;
     private String size;
     private Integer age;
 
-    @NotNull
-    @NotBlank
-    private String arrival;
+    private Date arrivalDate;
 
-    private Integer box;
-
-    private Integer chip;
-
-    private String adoptionReady;
+    private String box;
 
     private String description;
+    private Boolean adopted;
+    private Boolean vaccinated;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate vaccinationDate;
+
+/*
     @ManyToMany
     @Builder.Default
     @JoinTable(name = "care_treatments", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "care_id"))
     private Set<Care> careTreatments = new HashSet<>();
+*/
 
 
 
