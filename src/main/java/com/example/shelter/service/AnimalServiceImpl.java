@@ -4,11 +4,13 @@ import com.example.shelter.entity.Animal;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
+import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -18,24 +20,26 @@ import java.util.stream.Collectors;
 public class AnimalServiceImpl implements AnimalService {
 
     private final AnimalRepository animalRepository;
+    private final BoxRepository boxRepository;
     private final AnimalMapper animalMapper;
 
 
 
     @Override
     public AnimalDTO saveNewAnimal(AnimalDTO animal) {
-        Animal newAnimal = new Animal();
+        Animal newAnimal = new Animal(); // todo mapper to customizacji
         newAnimal.setSpecies(animal.getSpecies());
         newAnimal.setName(animal.getName());
         newAnimal.setSex(animal.getSex());
         newAnimal.setSize(animal.getSize());
         newAnimal.setAge(animal.getAge());
         newAnimal.setArrivalDate(animal.getArrivalDate());
-        newAnimal.getBox().setNumber(0);
+        //newAnimal.getBox().setNumber(0);
         newAnimal.setId(animal.getId());
         newAnimal.setDescription(animal.getDescription());
         newAnimal.setAdopted(false);
         newAnimal.setVaccinated(false);
+        //boxRepository.
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
@@ -73,7 +77,7 @@ public class AnimalServiceImpl implements AnimalService {
         Animal newAnimal = animalRepository.findById(id).orElse(null); // co zrobić z optionalem?
         if (newAnimal != null) {
             newAnimal.setVaccinated(true);
-            newAnimal.setVaccinationDate(LocalDate.now());
+            newAnimal.setVaccinationDate(LocalDateTime.now());
             animalRepository.save(newAnimal);
             return animalMapper.animalToAnimalDTO(newAnimal);
         } else {
@@ -137,10 +141,10 @@ public class AnimalServiceImpl implements AnimalService {
                 atomicReference.set(Optional.empty());
                 return;
             }*/
-            if (animalDTO.getAdopted() != null && animalDTO.getAdopted()) {
+           /* if (animalDTO.getAdopted() != null && animalDTO.getAdopted()) {
                 if ((foundAnimal.getBox().getNumber() == 0) || (foundAnimal.getVaccinations().size() == 0)) { // jeżeli box=0 (kwarantanna) i nie jest szczepione - jeśli data ostatniego szczenienia > rok
-                    /*atomicReference.set(Optional.empty());
-                    return;*/
+                    *//*atomicReference.set(Optional.empty());
+                    return;*//*
                     throw new AnimalServiceException("zwierzę nie przygotowane do adopcji");
                 }
                 foundAnimal.setAdopted(animalDTO.getAdopted());
@@ -172,7 +176,7 @@ public class AnimalServiceImpl implements AnimalService {
                 foundAnimal.setVaccinationDate(animalDTO.getVaccinationDate());
             }
 
-            atomicReference.set(Optional.of(animalMapper.animalToAnimalDTO(animalRepository.save(foundAnimal))));
+            atomicReference.set(Optional.of(animalMapper.animalToAnimalDTO(animalRepository.save(foundAnimal))));*/
         }, () -> {
             atomicReference.set(Optional.empty());
         });

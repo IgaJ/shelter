@@ -1,8 +1,6 @@
 package com.example.shelter.service;
 
-import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.dto.VaccinationDTO;
-import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Vaccination;
 import com.example.shelter.mappers.VaccinationMapper;
 import com.example.shelter.repository.VaccinationRepository;
@@ -24,7 +22,7 @@ public class VaccinationServiceImpl implements VaccinationService {
     public VaccinationDTO saveNewVaccination(VaccinationDTO vaccinationDTO, Integer id) {
         Vaccination newVaccination = new Vaccination();
         newVaccination.setId(vaccinationDTO.getId());
-        newVaccination.setCreatedDate(LocalDate.now());
+        newVaccination.setVaccinationDate(LocalDate.now());
         newVaccination.getAnimal().setVaccinated(true);
         return vaccinationMapper.toVaccinationDTO(vaccinationRepository.save(newVaccination));
     }

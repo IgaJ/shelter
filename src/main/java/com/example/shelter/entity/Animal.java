@@ -44,9 +44,18 @@ public class Animal {
     private Boolean vaccinated;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate vaccinationDate;
+    private LocalDateTime vaccinationDate;
+    private LocalDateTime lastWalkDate;
+
+    private Box box;
+    private Adoption adoption;
+    private Vaccination vaccination;
+    private Walk walk;
 
     @OneToMany
+    private Set<Action> actions = new HashSet<>();
+
+/*    @OneToMany
     @JoinTable(name = "vaccinations", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "vaccination_id"))
     private Set<Vaccination> vaccinations = new HashSet<>();
 
@@ -60,7 +69,7 @@ public class Animal {
 
     @ManyToOne
     @JoinTable(name = "adopted_animals", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "adoption_id"))
-    private Adoption adoption;
+    private Adoption adoption;*/
 
 
 

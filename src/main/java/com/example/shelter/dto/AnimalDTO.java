@@ -35,7 +35,8 @@ public class AnimalDTO {
     private Boolean vaccinated;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate vaccinationDate;
+    private LocalDateTime vaccinationDate;
+    private LocalDateTime lastWalkDate;
     private Box box;
     private Adoption adoption;
 
