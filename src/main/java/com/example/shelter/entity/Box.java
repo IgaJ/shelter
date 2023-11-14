@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -17,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Walk {
+public class Box {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -25,16 +27,14 @@ public class Walk {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
+    private Integer number;
+
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate walkDate;
+    private LocalDate cleaningDate;
 
-    @ManyToOne
-    @JoinTable(name = "walks_animals", joinColumns = @JoinColumn(name = "walk_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-    private Animal animal;
-
-    @ManyToOne
-    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "walk_id"), inverseJoinColumns = @JoinColumn(name = "volunteer_id"))
-    private Volunteer volunteer;
+    @OneToMany
+    @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    private Set <Animal> animals = new HashSet<>();
 
 }

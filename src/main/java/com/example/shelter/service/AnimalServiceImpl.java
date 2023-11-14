@@ -31,7 +31,7 @@ public class AnimalServiceImpl implements AnimalService {
         newAnimal.setSize(animal.getSize());
         newAnimal.setAge(animal.getAge());
         newAnimal.setArrivalDate(animal.getArrivalDate());
-        newAnimal.setBox("kwarantanna");
+        newAnimal.getBox().setNumber(0);
         newAnimal.setId(animal.getId());
         newAnimal.setDescription(animal.getDescription());
         newAnimal.setAdopted(false);
@@ -138,7 +138,7 @@ public class AnimalServiceImpl implements AnimalService {
                 return;
             }*/
             if (animalDTO.getAdopted() != null && animalDTO.getAdopted()) {
-                if (foundAnimal.getBox().equals("kwarantanna") || !foundAnimal.getVaccinated()) {
+                if ((foundAnimal.getBox().getNumber() == 0) || (foundAnimal.getVaccinations().size() == 0)) { // jeżeli box=0 (kwarantanna) i nie jest szczepione - jeśli data ostatniego szczenienia > rok
                     /*atomicReference.set(Optional.empty());
                     return;*/
                     throw new AnimalServiceException("zwierzę nie przygotowane do adopcji");
@@ -158,8 +158,8 @@ public class AnimalServiceImpl implements AnimalService {
             if (animalDTO.getArrivalDate() != null) {
                 foundAnimal.setArrivalDate(animalDTO.getArrivalDate());
             }
-            if (StringUtils.hasText(animalDTO.getBox())) {
-                foundAnimal.setBox(animalDTO.getBox());
+            if (animalDTO.getBox().getNumber() != null) {
+                foundAnimal.getBox().setNumber(animalDTO.getBox().getNumber());
             }
             if (StringUtils.hasText(animalDTO.getDescription())) {
                 foundAnimal.setDescription(animalDTO.getDescription());

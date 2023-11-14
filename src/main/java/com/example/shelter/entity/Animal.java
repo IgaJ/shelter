@@ -39,8 +39,6 @@ public class Animal {
 
     private Date arrivalDate;
 
-    private String box;
-
     private String description;
     private Boolean adopted;
     private Boolean vaccinated;
@@ -51,6 +49,19 @@ public class Animal {
     @OneToMany
     @JoinTable(name = "vaccinations", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "vaccination_id"))
     private Set<Vaccination> vaccinations = new HashSet<>();
+
+    @OneToMany
+    @JoinTable(name = "walks_animals", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "walk_id"))
+    private Set <Walk> walks = new HashSet<>();
+
+    @ManyToOne
+    @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "box_id"))
+    private Box box;
+
+    @ManyToOne
+    @JoinTable(name = "adopted_animals", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "adoption_id"))
+    private Adoption adoption;
+
 
 
 /*

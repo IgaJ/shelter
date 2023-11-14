@@ -36,12 +36,4 @@ public class Vaccination {
     @JoinTable(name = "vaccinations", joinColumns = @JoinColumn(name = "vaccination_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
     private Animal animal;
 
-
-
-
-
-
-
-
-
 }

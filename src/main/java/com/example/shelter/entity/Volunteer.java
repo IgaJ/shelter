@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -25,6 +27,12 @@ public class Volunteer {
     @NotNull
     @NotBlank
     private String name;
+
+    @OneToMany
+    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "volunteer_id"), inverseJoinColumns = @JoinColumn(name = "walk_id"))
+    private Set<Walk> walks = new HashSet<>();
+
+
 
 
 }

@@ -17,7 +17,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Walk {
+public class Adoption {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -27,14 +28,14 @@ public class Walk {
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate walkDate;
+    private LocalDate adoptionDate;
 
-    @ManyToOne
-    @JoinTable(name = "walks_animals", joinColumns = @JoinColumn(name = "walk_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    private Boolean isReady;
+
+    @OneToMany
+    @JoinTable(name = "adopted_animals", joinColumns = @JoinColumn(name = "adoption_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
     private Animal animal;
 
-    @ManyToOne
-    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "walk_id"), inverseJoinColumns = @JoinColumn(name = "volunteer_id"))
-    private Volunteer volunteer;
+
 
 }

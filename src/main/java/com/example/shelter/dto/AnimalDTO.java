@@ -1,6 +1,8 @@
 package com.example.shelter.dto;
 
+import com.example.shelter.entity.Adoption;
 import com.example.shelter.entity.AnimalSpecies;
+import com.example.shelter.entity.Box;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -28,14 +30,14 @@ public class AnimalDTO {
 
     private Date arrivalDate;
 
-    private String box;
-
     private String description;
     private Boolean adopted;
     private Boolean vaccinated;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate vaccinationDate;
+    private Box box;
+    private Adoption adoption;
 
 
 }
