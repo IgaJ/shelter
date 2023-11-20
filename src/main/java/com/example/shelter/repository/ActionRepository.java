@@ -12,14 +12,8 @@ import java.util.UUID;
 
 @Repository
 public interface ActionRepository extends JpaRepository <Action, UUID> {
-<<<<<<< HEAD
-    @Query("SELECT d FROM Action d WHERE d.actionType = :actionType")
-    List<Action> listActions(@Param("actionType") ActionType actionType);
-=======
 
     @Query("SELECT d FROM Action d WHERE d.actionType = :actionType")
     List<Action> listActions(@Param("actionType") ActionType actionType);
 
-
->>>>>>> origin/master
 }

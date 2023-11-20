@@ -8,7 +8,7 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -31,10 +31,13 @@ public class Box {
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate cleaningDate;
+    private LocalDateTime cleaningDate;
 
+    private Set <Animal> animals = new HashSet<>();
+
+/*
     @OneToMany
     @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-    private Set <Animal> animals = new HashSet<>();
+*/
 
 }

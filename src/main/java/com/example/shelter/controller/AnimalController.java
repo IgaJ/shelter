@@ -86,7 +86,6 @@ public class AnimalController {
         return new ResponseEntity<>(vaccinated.getId(), HttpStatus.NO_CONTENT);
     }
 
-
     public ResponseEntity<?> listReadyForAdoption() {
         List<AnimalDTO> ready = animalService.listAvailableForAdoption();
         return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);

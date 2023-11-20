@@ -27,11 +27,4 @@ public class Volunteer {
     @NotNull
     @NotBlank
     private String name;
-
-    private Set<Walk> walks = new HashSet<>();
-
-   /* @OneToMany
-    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "volunteer_id"), inverseJoinColumns = @JoinColumn(name = "walk_id"))
-
-*/
 }
