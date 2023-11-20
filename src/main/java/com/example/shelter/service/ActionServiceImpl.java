@@ -9,19 +9,34 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 @Service
 @RequiredArgsConstructor
 public class ActionServiceImpl implements ActionService {
     // akcja na zwierzęciu i boxie. Akcja zawsze dodawana komuś (zwierzęciu...)
 
+<<<<<<< HEAD
     private final ActionRepository actionRepository;
     private final ActionMapper actionMapper;
+=======
+
+    private final ActionRepository actionRepository;
+    private final ActionMapper actionMapper;
+
+>>>>>>> origin/master
     private final AnimalRepository animalRepository;
     private final BoxRepository boxRepository;
     private final AdoptionRepository adoptionRepository;
     private final VaccinationRepository vaccinationRepository;
     private final WalkRepository walkRepository;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
     @Override
     public ActionDTO saveNewAction(ActionDTO actionDTO, UUID id) {
         Action newAction = new Action();
@@ -41,15 +56,34 @@ public class ActionServiceImpl implements ActionService {
 
     void adopt(Animal animal) {
         animal.setAdopted(true);
+<<<<<<< HEAD
+=======
+        Adoption adoption = animal.getAdoption();
+        adoption.setAdoptionDate(LocalDateTime.now());
+        adoptionRepository.save(adoption);
+>>>>>>> origin/master
     }
 
     void vaccinate(Animal animal) {
         animal.setVaccinated(true);
+<<<<<<< HEAD
         animal.setVaccinationDate(LocalDateTime.now());
+=======
+        Vaccination vaccination = animal.getVaccination();
+        vaccination.setVaccinationDate(LocalDateTime.now());
+        vaccinationRepository.save(vaccination);
+>>>>>>> origin/master
     }
 
     void walk(Animal animal) {
         animal.setLastWalkDate(LocalDateTime.now());
+<<<<<<< HEAD
+=======
+        Walk walk = animal.getWalk();
+        walk.setAnimal(animal);
+        walk.setWalkDate(LocalDateTime.now());
+        walkRepository.save(walk);
+>>>>>>> origin/master
     }
 
     void clean(Animal animal) {

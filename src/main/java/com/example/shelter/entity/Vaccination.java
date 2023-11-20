@@ -10,7 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -30,11 +30,10 @@ public class Vaccination {
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime vaccinationDate;
+    private LocalDate createdDate;
 
-/*
     @ManyToOne
     @JoinTable(name = "vaccinations", joinColumns = @JoinColumn(name = "vaccination_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-*/
+    private Animal animal;
 
 }

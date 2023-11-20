@@ -10,6 +10,10 @@ import java.util.UUID;
 @Builder
 @Data
 public class ActionDTO {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
     private UUID id;
 
     private ActionType actionType;

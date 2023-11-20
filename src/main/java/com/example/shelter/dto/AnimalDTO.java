@@ -1,13 +1,16 @@
 package com.example.shelter.dto;
 
+import com.example.shelter.entity.Adoption;
 import com.example.shelter.entity.AnimalSpecies;
 import com.example.shelter.entity.Box;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -32,9 +35,9 @@ public class AnimalDTO {
     private Boolean vaccinated;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime vaccinationDate;
-    private LocalDateTime lastWalkDate;
-
+    private LocalDate vaccinationDate;
     private Box box;
+    private Adoption adoption;
+
 
 }
