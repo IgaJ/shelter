@@ -15,5 +15,4 @@ public interface ActionRepository extends JpaRepository <Action, UUID> {
 
     @Query("SELECT d FROM Action d WHERE d.actionType = :actionType")
     List<Action> listActions(@Param("actionType") ActionType actionType);
-
 }

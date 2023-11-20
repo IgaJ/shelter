@@ -34,7 +34,7 @@ public class ActionServiceImpl implements ActionService {
             case CLEANING -> clean(animal);
         }
         newAction.setDate(LocalDateTime.now());
-        animal.getActions().add(newAction);
+        //animal.getActions().add(newAction);
         return actionMapper.toActionDTO(actionRepository.save(newAction));
     }
 
@@ -52,8 +52,9 @@ public class ActionServiceImpl implements ActionService {
     }
 
     void clean(Animal animal) {
-        Box box = animal.getBox();
+/*        Box box = animal.getBox();
         box.setCleaningDate(LocalDateTime.now());
-        boxRepository.save(box);
+        boxRepository.save(box);*/
+        System.out.println("Cleaning");
     }
 }

@@ -1,16 +1,13 @@
 package com.example.shelter.service;
 
-import com.example.shelter.entity.ActionType;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;

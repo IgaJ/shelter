@@ -44,8 +44,11 @@ public class Animal {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime vaccinationDate;
     private LocalDateTime lastWalkDate;
+
+    @ManyToOne
     private Box box;
 
+    @ManyToMany
     private Set<Action> actions = new HashSet<>();
 
 /*

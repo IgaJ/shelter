@@ -33,6 +33,7 @@ public class Box {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;
 
+    @OneToMany
     private Set <Animal> animals = new HashSet<>();
 
 /*

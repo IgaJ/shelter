@@ -25,9 +25,7 @@ public class Action {
     private UUID id;
 
     private ActionType actionType;
-
     private LocalDateTime date;
-
 
     // póki co listy animals nie ma. Jest lista Actions w Animal. Do zmiany gdy będzie potrzeba
 }
