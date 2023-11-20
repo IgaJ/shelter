@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -27,14 +28,7 @@ public class Walk {
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate walkDate;
-
-    @ManyToOne
-    @JoinTable(name = "walks_animals", joinColumns = @JoinColumn(name = "walk_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-    private Animal animal;
-
-    @ManyToOne
-    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "walk_id"), inverseJoinColumns = @JoinColumn(name = "volunteer_id"))
+    private LocalDateTime walkDate;
     private Volunteer volunteer;
 
 }

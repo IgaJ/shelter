@@ -1,15 +1,12 @@
 package com.example.shelter.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.h2.api.UserToRolesMapper;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,34 +41,9 @@ public class Animal {
     private Boolean vaccinated;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate vaccinationDate;
+    private LocalDateTime vaccinationDate;
+    private LocalDateTime lastWalkDate;
 
-    @OneToMany
-    @JoinTable(name = "vaccinations", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "vaccination_id"))
-    private Set<Vaccination> vaccinations = new HashSet<>();
-
-    @OneToMany
-    @JoinTable(name = "walks_animals", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "walk_id"))
-    private Set <Walk> walks = new HashSet<>();
-
-    @ManyToOne
-    @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "box_id"))
     private Box box;
-
-    @ManyToOne
-    @JoinTable(name = "adopted_animals", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "adoption_id"))
-    private Adoption adoption;
-
-
-
-/*
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(name = "care_treatments", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "care_id"))
-    private Set<Care> careTreatments = new HashSet<>();
-*/
-
-
-
-
+    private Set<Action> actions = new HashSet<>();
 }

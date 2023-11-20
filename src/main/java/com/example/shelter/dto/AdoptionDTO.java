@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -15,8 +16,5 @@ public class AdoptionDTO {
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate adoptionDate;
-
-    private Boolean isReady;
-
+    private LocalDateTime adoptionDate;
 }

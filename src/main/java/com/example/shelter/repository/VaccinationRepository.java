@@ -10,5 +10,4 @@ import java.util.UUID;
 
 @Repository
 public interface VaccinationRepository extends JpaRepository <Vaccination, UUID> {
-
 }

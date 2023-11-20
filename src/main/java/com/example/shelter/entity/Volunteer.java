@@ -28,11 +28,10 @@ public class Volunteer {
     @NotBlank
     private String name;
 
-    @OneToMany
-    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "volunteer_id"), inverseJoinColumns = @JoinColumn(name = "walk_id"))
     private Set<Walk> walks = new HashSet<>();
 
+   /* @OneToMany
+    @JoinTable(name = "walks_volunteers", joinColumns = @JoinColumn(name = "volunteer_id"), inverseJoinColumns = @JoinColumn(name = "walk_id"))
 
-
-
+*/
 }

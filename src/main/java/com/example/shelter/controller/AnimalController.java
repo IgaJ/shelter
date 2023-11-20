@@ -21,7 +21,7 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @PostMapping
-    public ResponseEntity<AnimalDTO> saveNewAnimal (@RequestBody AnimalDTO animalDTO) {
+    public ResponseEntity<AnimalDTO> saveNewAnimal(@RequestBody AnimalDTO animalDTO) {
         AnimalDTO savedAnimal = animalService.saveNewAnimal(animalDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/animals/id/" + savedAnimal.getId().toString());
@@ -33,7 +33,8 @@ public class AnimalController {
         return animalService.listAnimals();
     }
 
-    @GetMapping(params = "name") // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr inaczej ambiguance
+    @GetMapping(params = "name")
+    // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr inaczej ambiguance
     public List<AnimalDTO> getAnimalByName(/*@RequestParam*/ String name) {
         return animalService.getAnimalByName(name);
     }
@@ -54,12 +55,12 @@ public class AnimalController {
     }
 
     @GetMapping("/{id}") // nawias do PathVariable // id zaraz po ukośniku
-    public AnimalDTO getAnimalById(@PathVariable ("id") UUID id) {
+    public AnimalDTO getAnimalById(@PathVariable("id") UUID id) {
         return animalService.getAnimalById(id).orElseThrow(null);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable ("id") UUID id) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") UUID id) {
         animalService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -90,22 +91,14 @@ public class AnimalController {
         List<AnimalDTO> ready = animalService.listAvailableForAdoption();
         return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
     }
-
-
-
-
-
-
+}
 
     // 1. list non vaccinated,usunac boolean z repository. Repository zwraca liste niezaszczepionych, listę przechowuje frontend
     // 2. z listy user wybiera zwierze po id,  zaszczep(id). Zwraca np int liczba zaszcepionych lub id zaszczepionych
-}
-
 /*
 
     // skłądnia
     //localhost:8080/animals?name=Rudy
-
 
 /api/v1/animals  -> GET/POST
 /api/v1/animals?maxAge=5&minAge=2 - request params

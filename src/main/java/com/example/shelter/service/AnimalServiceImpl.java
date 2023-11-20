@@ -1,5 +1,6 @@
 package com.example.shelter.service;
 
+import com.example.shelter.entity.ActionType;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.dto.AnimalDTO;
@@ -8,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -19,8 +20,6 @@ public class AnimalServiceImpl implements AnimalService {
 
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
-
-
 
     @Override
     public AnimalDTO saveNewAnimal(AnimalDTO animal) {
@@ -61,7 +60,6 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-
     public List<AnimalDTO> listAvailable(Boolean vaccinated, Boolean adopted) {
         return animalRepository.findAllByVaccinatedAndAdopted(vaccinated, adopted)
                 .stream()
@@ -73,7 +71,7 @@ public class AnimalServiceImpl implements AnimalService {
         Animal newAnimal = animalRepository.findById(id).orElse(null); // co zrobić z optionalem?
         if (newAnimal != null) {
             newAnimal.setVaccinated(true);
-            newAnimal.setVaccinationDate(LocalDate.now());
+            newAnimal.setVaccinationDate(LocalDateTime.now());
             animalRepository.save(newAnimal);
             return animalMapper.animalToAnimalDTO(newAnimal);
         } else {
@@ -119,12 +117,10 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Boolean deleteById(UUID id) {
+    public void deleteById(UUID id) {
         if (animalRepository.existsById(id)) {
             animalRepository.deleteById(id);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -138,7 +134,7 @@ public class AnimalServiceImpl implements AnimalService {
                 return;
             }*/
             if (animalDTO.getAdopted() != null && animalDTO.getAdopted()) {
-                if ((foundAnimal.getBox().getNumber() == 0) || (foundAnimal.getVaccinations().size() == 0)) { // jeżeli box=0 (kwarantanna) i nie jest szczepione - jeśli data ostatniego szczenienia > rok
+                if ((foundAnimal.getBox().getNumber() == 0) || (foundAnimal.getActions().contains(ActionType.ADOPTION))) { // jeżeli box=0 (kwarantanna) i nie jest szczepione - jeśli data ostatniego szczenienia > rok
                     /*atomicReference.set(Optional.empty());
                     return;*/
                     throw new AnimalServiceException("zwierzę nie przygotowane do adopcji");
