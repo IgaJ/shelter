@@ -1,9 +1,12 @@
 package com.example.shelter.service;
 
 import com.example.shelter.entity.Animal;
+import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
+import com.example.shelter.repository.BoxRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,10 +24,11 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
 
+    private final BoxRepository boxRepository;
 
-
+    @Transactional
     @Override
-    public AnimalDTO saveNewAnimal(AnimalDTO animal) {
+    public AnimalDTO saveNewAnimal(AnimalDTO animal) { // todo Box to be set with 0 (quarantine)
         Animal newAnimal = new Animal();
         newAnimal.setSpecies(animal.getSpecies());
         newAnimal.setName(animal.getName());
@@ -32,11 +36,17 @@ public class AnimalServiceImpl implements AnimalService {
         newAnimal.setSize(animal.getSize());
         newAnimal.setAge(animal.getAge());
         newAnimal.setArrivalDate(animal.getArrivalDate());
-        newAnimal.getBox().setNumber(0);
         newAnimal.setId(animal.getId());
         newAnimal.setDescription(animal.getDescription());
         newAnimal.setAdopted(false);
         newAnimal.setVaccinated(false);
+
+        Box newBox = new Box();
+        newBox.setNumber(0);
+        //newBox.getAnimals().add(newAnimal);
+        newAnimal.addBox(newBox);
+        //newAnimal.setBox(newBox);
+        boxRepository.save(newBox);
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
