@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -16,5 +17,11 @@ public class BoxDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;
+
+    // adnotacja onetomany niepotrzebna
+    private Set<AnimalDTO> animals; // zmienną uzupełnia mapper
+
+
+
 
 }

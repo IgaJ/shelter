@@ -40,6 +40,7 @@ public class ActionServiceImpl implements ActionService {
 
     void adopt(Animal animal) {
         animal.setAdopted(true);
+        animal.setAdoptionDate(LocalDateTime.now());
     }
 
     void vaccinate(Animal animal) {
@@ -52,7 +53,7 @@ public class ActionServiceImpl implements ActionService {
     }
 
     void clean(Animal animal) {
-        Box box = animal.getBox();
+        Box box = boxRepository.findBoxByAnimalId(animal.getId());
         box.setCleaningDate(LocalDateTime.now());
         boxRepository.save(box);
     }

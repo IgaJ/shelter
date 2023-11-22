@@ -46,26 +46,11 @@ public class Animal {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime vaccinationDate;
+    private LocalDateTime adoptionDate;
     private LocalDateTime lastWalkDate;
 
-    @ManyToOne
-    @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "box_id"))
-    private Box box;
 
     @ManyToMany
     private Set<Action> actions = new HashSet<>();
-
-    public void addBox(Box box) {
-        this.box = box;
-        box.getAnimals().add(this);
-
-    }
-
-/*
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(name = "care_treatments", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "care_id"))
-    private Set<Care> careTreatments = new HashSet<>();
-*/
 
 }

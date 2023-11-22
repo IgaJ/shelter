@@ -43,9 +43,7 @@ public class AnimalServiceImpl implements AnimalService {
 
         Box newBox = new Box();
         newBox.setNumber(0);
-        //newBox.getAnimals().add(newAnimal);
-        newAnimal.addBox(newBox);
-        //newAnimal.setBox(newBox);
+        newBox.getAnimals().add(newAnimal);
         boxRepository.save(newBox);
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
@@ -139,19 +137,24 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional
+    public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
+        return null;
+    }
+
+    //@Override
+    /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional
         AtomicReference<Optional<AnimalDTO>> atomicReference = new AtomicReference<>();
 
         animalRepository.findById(animalId).ifPresentOrElse(foundAnimal -> {
 
-        /*    if(cosposzlonietak){
+        *//*    if(cosposzlonietak){
                 atomicReference.set(Optional.empty());
                 return;
-            }*/
+            }*//*
             if (animalDTO.getAdopted() != null && animalDTO.getAdopted()) {
                 if ((foundAnimal.getBox().getNumber() == 0) || (foundAnimal.getVaccinationDate() == LocalDateTime.now().minus(1, ChronoUnit.YEARS))) { // jeżeli box=0 (kwarantanna) i nie jest szczepione - jeśli data ostatniego szczenienia > rok
-                    /*atomicReference.set(Optional.empty());
-                    return;*/
+                    *//*atomicReference.set(Optional.empty());
+                    return;*//*
                     throw new AnimalServiceException("zwierzę nie przygotowane do adopcji");
                 }
                 foundAnimal.setAdopted(animalDTO.getAdopted());
@@ -189,5 +192,5 @@ public class AnimalServiceImpl implements AnimalService {
         });
 
         return atomicReference.get();
-    }
+    }*/
 }

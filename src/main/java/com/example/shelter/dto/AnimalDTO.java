@@ -33,8 +33,8 @@ public class AnimalDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime vaccinationDate;
-    private LocalDateTime lastWalkDate;
-    private Box box;
+    private LocalDateTime adoptionDate;
 
+    private LocalDateTime lastWalkDate;
 
 }
