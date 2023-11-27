@@ -1,3 +1,3 @@
 # animal shelter manager
-<br>Spring boot training application
-<br>Work in progress
+<li>Spring boot training application
+<li>Work in progress
