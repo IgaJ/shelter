@@ -22,10 +22,11 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalMapper animalMapper;
 
     private final BoxRepository boxRepository;
+    private int maxInQuarantineBoxSize = 4;
 
     @Transactional
     @Override
-    public AnimalDTO saveNewAnimal(AnimalDTO animal) { // todo Box not to be set as new. Animal assigned to one 0 box by default
+    public AnimalDTO saveNewAnimal(AnimalDTO animal) { //
         Animal newAnimal = new Animal();
         newAnimal.setSpecies(animal.getSpecies());
         newAnimal.setName(animal.getName());
@@ -38,11 +39,32 @@ public class AnimalServiceImpl implements AnimalService {
         newAnimal.setAdopted(false);
         newAnimal.setVaccinated(false);
 
-        Box newBox = new Box();
-        newBox.setNumber(0);
-        newBox.getAnimals().add(newAnimal);
-        boxRepository.save(newBox);
+        // przydzielanie zwierzęcia do nowego boxu
+        // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
+
+        Box selected = findAvailableQuarantineBox();
+
+        if (selected == null) {
+            // jeśli nie ma to tworzę nowy box kwarantannę
+            Box newBox = new Box();
+            newBox.setIsQuarantine(true); // numer boxu domyślnie set to null, do przestawienia w funkcji zmiany boxu po kwarantannie
+            newBox.getAnimals().add(newAnimal);
+            boxRepository.save(newBox);
+        } else {
+            selected.getAnimals().add(newAnimal);
+            boxRepository.save(selected);
+        }
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
+    }
+
+    public Box findAvailableQuarantineBox() {
+        // wszystkie boxy-kwarantanny gdzie jest miejsce
+        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxInQuarantineBoxSize, true).orElse(null);
+        if (availableQuarantineBoxes != null) {
+            return availableQuarantineBoxes.get(0); // pierwszy z listy
+        } else {
+            return null;
+        }
     }
 
     @Override

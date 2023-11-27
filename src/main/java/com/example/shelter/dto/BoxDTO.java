@@ -13,7 +13,9 @@ import java.util.UUID;
 public class BoxDTO {
     private UUID id;
 
-    private Integer number; // 0 = kwarantanna
+    private Integer number;
+    private Boolean isQuarantine;
+
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;

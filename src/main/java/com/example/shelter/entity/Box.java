@@ -28,6 +28,7 @@ public class Box {
     private UUID id;
 
     private Integer number;
+    private Boolean isQuarantine;
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
