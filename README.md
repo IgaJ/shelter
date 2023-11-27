@@ -1,2 +1,3 @@
-# shelter
-Simple spring boot training application - animal shelter manager - work in progress
+# animal shelter manager
+<br>Spring boot training application
+<br>Work in progress
