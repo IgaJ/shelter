@@ -37,9 +37,4 @@ public class Box {
     @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
     private Set <Animal> animals = new HashSet<>();
 
-    /*
-    @OneToMany
-    @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-*/
-
 }

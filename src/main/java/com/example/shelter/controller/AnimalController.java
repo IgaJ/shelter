@@ -60,9 +60,10 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
         animalService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        String message = "deleted: ";
+        return new ResponseEntity<>(message + id, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")

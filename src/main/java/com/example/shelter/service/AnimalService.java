@@ -22,7 +22,7 @@ public interface AnimalService {
 
     Optional<AnimalDTO> getAnimalById(UUID id);
 
-    Boolean deleteById(UUID id);
+    void deleteById(UUID id);
 
     Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO);
 

@@ -9,12 +9,9 @@ import com.example.shelter.repository.BoxRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +25,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Transactional
     @Override
-    public AnimalDTO saveNewAnimal(AnimalDTO animal) { // todo Box to be set with 0 (quarantine)
+    public AnimalDTO saveNewAnimal(AnimalDTO animal) { // todo Box not to be set as new. Animal assigned to one 0 box by default
         Animal newAnimal = new Animal();
         newAnimal.setSpecies(animal.getSpecies());
         newAnimal.setName(animal.getName());
@@ -128,13 +125,15 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Boolean deleteById(UUID id) {
-        if (animalRepository.existsById(id)) {
-            animalRepository.deleteById(id);
-            return true;
+    public void deleteById(UUID id) {
+        Box box = boxRepository.findBoxByAnimalId(id); // znajduję box w którym jest dany animal
+        Animal foundAnimal = animalRepository.findById(id).orElse(null); // znajduję wskazany po id animal;
+        if ((box != null) && (foundAnimal != null)) {
+            box.getAnimals().remove(foundAnimal); // najpierw usuwam ze skojarzonego boxu
         }
-        return false;
+        animalRepository.deleteById(id); // potem z tabeli animals
     }
+
 
     @Override
     public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
