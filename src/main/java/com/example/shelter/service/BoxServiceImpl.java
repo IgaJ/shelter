@@ -6,7 +6,9 @@ import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +25,13 @@ public class BoxServiceImpl implements BoxService {
     @Override
     public BoxDTO getBoxByAnimalId(UUID animalId) {
         return boxMapper.toBoxDTO(boxRepository.findBoxByAnimalId(animalId));
+    }
+
+    @Override
+    public List<BoxDTO> listBoxes() {
+        return boxRepository.findAll()
+                .stream()
+                .map(box -> boxMapper.toBoxDTO(box))
+                .collect(Collectors.toList());
     }
 }
