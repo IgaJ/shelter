@@ -62,7 +62,7 @@ public class AnimalController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
         animalService.deleteById(id);
-        String message = "deleted: ";
+        String message = "Deleted: ";
         return new ResponseEntity<>(message + id, HttpStatus.OK);
     }
 

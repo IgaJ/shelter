@@ -1,6 +1,7 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.BoxDTO;
+import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.BoxMapper;
 import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,15 @@ public class BoxServiceImpl implements BoxService {
                 .stream()
                 .map(box -> boxMapper.toBoxDTO(box))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        Box box = boxRepository.findById(id).orElse(null);
+        if ((box != null) && (box.getAnimals().isEmpty())) {
+            boxRepository.deleteById(id);
+        } else {
+            throw new BoxServiceException("box impossible to delete, move animals");
+        }
     }
 }

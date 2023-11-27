@@ -12,4 +12,6 @@ public interface BoxService {
     BoxDTO getBoxByAnimalId(UUID animalId);
 
     List<BoxDTO> listBoxes();
+
+    void deleteById(UUID id);
 }

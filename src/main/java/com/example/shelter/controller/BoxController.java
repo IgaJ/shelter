@@ -4,6 +4,7 @@ import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,5 +26,13 @@ public class BoxController {
     @GetMapping("/{id}")
     public BoxDTO getBoxById(@PathVariable("id") UUID id) {
         return boxService.getBoxById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
+        boxService.deleteById(id);
+        String message = "Deleted: ";
+        return new ResponseEntity<>(message + id, HttpStatus.OK);
+
     }
 }
