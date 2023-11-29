@@ -41,8 +41,8 @@ public class Animal {
     private Date arrivalDate;
 
     private String description;
-    private Boolean adopted;
-    private Boolean vaccinated;
+    private Boolean adopted = false;
+    private Boolean vaccinated = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime vaccinationDate;

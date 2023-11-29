@@ -34,15 +34,12 @@ public class AnimalServiceImpl implements AnimalService {
         newAnimal.setSize(animal.getSize());
         newAnimal.setAge(animal.getAge());
         newAnimal.setArrivalDate(animal.getArrivalDate());
-        newAnimal.setId(animal.getId());
+        //newAnimal.setId(animal.getId());
         newAnimal.setDescription(animal.getDescription());
-        newAnimal.setAdopted(false);
-        newAnimal.setVaccinated(false);
 
         // przydzielanie zwierzęcia do nowego boxu
         // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
 
-        animalRepository.save(newAnimal);
         Box selected = findAvailableQuarantineBox();
 
         if (selected == null) {
@@ -50,9 +47,11 @@ public class AnimalServiceImpl implements AnimalService {
             Box newBox = new Box();
             newBox.setIsQuarantine(true); // numer boxu domyślnie set to null, do przestawienia w funkcji zmiany boxu po kwarantannie
             newBox.getAnimals().add(newAnimal);
+            animalRepository.save(newAnimal);
             boxRepository.save(newBox);
         } else {
             selected.getAnimals().add(newAnimal);
+            animalRepository.save(newAnimal);
             boxRepository.save(selected);
         }
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
@@ -60,7 +59,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     public Box findAvailableQuarantineBox() {
         // wszystkie boxy-kwarantanny gdzie jest miejsce
-        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true).orElse(null);
+        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0); // pierwszy z listy
         } else {
@@ -70,7 +69,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     public Box findAvailableBox() {
         // wszystkie boxy gdzie jest miejsce
-        List<Box> availableBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, false).orElse(null);
+        List<Box> availableBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, false);
         if (availableBoxes != null) {
             return availableBoxes.get(0); // pierwszy z listy
         } else {
@@ -108,16 +107,18 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public AnimalDTO vaccinate(UUID id) {
-        Animal newAnimal = animalRepository.findById(id).orElse(null); // co zrobić z optionalem?
-        if (newAnimal != null) {
-            newAnimal.setVaccinated(true);
-            newAnimal.setVaccinationDate(LocalDateTime.now());
-            animalRepository.save(newAnimal);
-            return animalMapper.animalToAnimalDTO(newAnimal);
+    public Optional <AnimalDTO> vaccinate(UUID id) {
+        Optional <Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
+        if (optionalAnimal.isPresent()) {
+            Animal animal = optionalAnimal.get();
+            animal.setVaccinated(true);
+            animal.setVaccinationDate(LocalDateTime.now());
+            animalRepository.save(animal);
+            return Optional.ofNullable(animalMapper.animalToAnimalDTO(animal));
         } else {
-            return null;
+            return Optional.empty();
         }
+
     }
 
     @Override
@@ -158,13 +159,13 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public void deleteById(UUID id) {
-        Box box = boxRepository.findBoxByAnimalId(id); // znajduję box w którym jest dany animal
-        Animal foundAnimal = animalRepository.findById(id).orElse(null); // znajduję wskazany po id animal;
-        if ((box != null) && (foundAnimal != null)) {
-            box.getAnimals().remove(foundAnimal); // najpierw usuwam ze skojarzonego boxu
+    public void deleteById(UUID AnimalId) {
+        Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
+        Box box = boxRepository.findBoxByAnimalId(AnimalId); // znajduję box w którym jest dany animal
+        if (box != null) {
+            box.getAnimals().remove(foundAnimal); // jeśli box się znalazł (zwierzę było przypisane do boxu), usuwam zwierzę
         }
-        animalRepository.deleteById(id); // potem z tabeli animals
+        animalRepository.deleteById(AnimalId); // następnie z tabeli animals (jeśli zwierzę nie było przypisane, również usuwa)
     }
 
 
@@ -174,7 +175,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 }
 
-    //@Override
+//@Override
     /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional
         AtomicReference<Optional<AnimalDTO>> atomicReference = new AtomicReference<>();
 
