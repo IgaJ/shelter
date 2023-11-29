@@ -1,68 +1,57 @@
 [
   {
     "species": "CAT",
-    "vaccinated": "no",
     "name": "Felek",
     "sex": "male",
     "size": "-",
     "age": 0,
-    "arrival": "05-2023",
-    "box": 10,
-    "chip": 10178524,
-    "adoptionReady": "no",
-    "description": "vaccination"
+    "arrivalDate": "2023-05-01",
+    "description": "-"
   },
 
   {
     "species": "CAT",
-    "vaccinated": "yes",
     "name": "Tola",
     "sex": "female",
     "size": "-",
     "age": 1,
-    "arrival": "04-2023",
-    "box": 10,
-    "chip": 11014896,
-    "adoptionReady": "yes"
+    "arrivalDate": "2023-04-25"
   },
   {
     "species": "DOG",
-    "vaccinated": "yes",
     "name": "Purek",
     "sex": "male",
     "size": "small",
     "age": 3,
-    "arrival": "01-2023",
-    "box": 1,
-    "chip": 10147854,
-    "adoptionReady": "no",
-    "description": "training"
+    "arrivalDate": "2023-01-23"
   },
   {
     "species": "DOG",
-    "vaccinated": "yes",
     "name": "Miso",
     "sex": "male",
     "size": "medium",
     "age": 2,
-    "arrival": "10-2023",
-    "box": 2,
-    "chip": 42547899001,
-    "adoptionReady": "yes"
+    "arrivalDate": "2023-10-15"
   },
   {
     "species": "DOG",
     "vaccinated": "yes",
-    "name": "Purek",
+    "name": "Puris",
     "sex": "male",
     "size": "small",
-    "age": 3,
-    "arrival": "01-2023",
-    "box": 1,
-    "chip": 10147854,
-    "adoptionReady": "no",
-    "description": "training"
-  }]
+    "age": 2,
+    "arrivalDate": "2023-03-12"
+  },
+  {
+    "species": "DOG",
+    "vaccinated": "yes",
+    "name": "Fala",
+    "sex": "female",
+    "size": "medium",
+    "age": 4,
+    "arrivalDate": "2023-09-03"
+  }
+]
 
 
 
