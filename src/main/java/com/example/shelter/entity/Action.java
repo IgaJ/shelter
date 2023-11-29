@@ -1,9 +1,6 @@
 package com.example.shelter.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -27,5 +24,8 @@ public class Action {
     private ActionType actionType;
     private LocalDateTime date;
 
-    // póki co listy animals nie ma. Jest lista Actions w Animal. Do zmiany gdy będzie potrzeba
+    @ManyToOne
+    @JoinColumn(name = "animal_id")
+    private Animal animal;
 }
+// póki co listy animals nie ma. Jest lista Actions w Animal. Do zmiany gdy będzie potrzeba

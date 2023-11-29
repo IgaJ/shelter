@@ -50,7 +50,7 @@ public class Animal {
     private LocalDateTime lastWalkDate;
 
 
-    @ManyToMany
+    @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
     private Set<Action> actions = new HashSet<>();
 
 }

@@ -24,10 +24,13 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public ActionDTO saveNewAction(ActionDTO actionDTO, UUID id) {
-        Action newAction = new Action();
         Animal animal = animalRepository.findById(id).orElseThrow(); // todo exceprtion napisać
+        animalRepository.save(animal);
+
+        Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
+            //case ADMISSION -> admiss(animal);
             case ADOPTION -> adopt(animal);
             case VACCINATION -> vaccinate(animal);
             case WALK -> walk(animal);
@@ -35,8 +38,15 @@ public class ActionServiceImpl implements ActionService {
         }
         newAction.setDate(LocalDateTime.now());
         animal.getActions().add(newAction);
-        return actionMapper.toActionDTO(actionRepository.save(newAction));
+        actionRepository.save(newAction);
+        return actionMapper.toActionDTO(newAction);
     }
+
+/*
+    private void admiss(Animal animal) {
+        animal.get
+    }
+*/
 
     void adopt(Animal animal) {
         animal.setAdopted(true);
