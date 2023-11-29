@@ -1,6 +1,7 @@
 package com.example.shelter.dto;
 
 import com.example.shelter.entity.ActionType;
+import com.example.shelter.entity.Animal;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,4 +17,7 @@ public class ActionDTO {
     private ActionType actionType;
 
     private LocalDateTime actionDate;
+
+    private Animal animal;
+
 }

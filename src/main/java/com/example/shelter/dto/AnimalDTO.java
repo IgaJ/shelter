@@ -1,5 +1,6 @@
 package com.example.shelter.dto;
 
+import com.example.shelter.entity.Action;
 import com.example.shelter.entity.AnimalSpecies;
 import com.example.shelter.entity.Box;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -36,5 +39,8 @@ public class AnimalDTO {
     private LocalDateTime adoptionDate;
 
     private LocalDateTime lastWalkDate;
+
+    private Set<Action> actions;
+
 
 }
