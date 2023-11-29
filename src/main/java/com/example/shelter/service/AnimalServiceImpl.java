@@ -22,7 +22,7 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalMapper animalMapper;
 
     private final BoxRepository boxRepository;
-    private int maxInQuarantineBoxSize = 4;
+    private int maxAnimalsInBox = 4;
 
     @Transactional
     @Override
@@ -42,6 +42,7 @@ public class AnimalServiceImpl implements AnimalService {
         // przydzielanie zwierzęcia do nowego boxu
         // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
 
+        animalRepository.save(newAnimal);
         Box selected = findAvailableQuarantineBox();
 
         if (selected == null) {
@@ -59,9 +60,19 @@ public class AnimalServiceImpl implements AnimalService {
 
     public Box findAvailableQuarantineBox() {
         // wszystkie boxy-kwarantanny gdzie jest miejsce
-        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxInQuarantineBoxSize, true).orElse(null);
-        if (availableQuarantineBoxes != null) {
+        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true).orElse(null);
+        if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0); // pierwszy z listy
+        } else {
+            return null;
+        }
+    }
+
+    public Box findAvailableBox() {
+        // wszystkie boxy gdzie jest miejsce
+        List<Box> availableBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, false).orElse(null);
+        if (availableBoxes != null) {
+            return availableBoxes.get(0); // pierwszy z listy
         } else {
             return null;
         }
@@ -161,6 +172,7 @@ public class AnimalServiceImpl implements AnimalService {
     public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
         return null;
     }
+}
 
     //@Override
     /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional
@@ -214,4 +226,3 @@ public class AnimalServiceImpl implements AnimalService {
 
         return atomicReference.get();
     }*/
-}
