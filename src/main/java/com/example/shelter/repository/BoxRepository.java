@@ -20,6 +20,6 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     List<Box> findBoxesWithSizeLessThanAndQuarantine(@Param("maxSize") int maxSize, @Param("isQuarantine") Boolean isQuarantine);
 
     @Query("SELECT COUNT(*) FROM Box b WHERE b.isQuarantine = :isQuarantine")
-    int findBoxesWithQuarantine(@Param("isQuarantine") Boolean isQuarantine);
+    Optional<Integer> findBoxesWithQuarantine(@Param("isQuarantine") Boolean isQuarantine);
 
 }

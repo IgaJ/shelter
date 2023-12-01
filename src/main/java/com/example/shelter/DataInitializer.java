@@ -19,15 +19,11 @@ public class DataInitializer {
 
     @PostConstruct
     public void initializeBoxes() {
-        for (int i = 0; i <= 5 ; i++) {
-            Box box = new Box();
-            box.setNumber(i);
-            boxService.saveNewBox(true, i);
+        for (int i = 0; i <= 4 ; i++) {
+            boxService.saveNewBox(true);
         }
-        for (int j = 6; j <= 10 ; j++) {
-            Box box = new Box();
-            box.setNumber(j);
-            boxService.saveNewBox(false, j);
+        for (int j = 5; j <= 9 ; j++) {
+            boxService.saveNewBox(false);
         }
     }
 }

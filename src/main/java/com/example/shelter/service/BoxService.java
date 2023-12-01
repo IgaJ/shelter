@@ -15,5 +15,5 @@ public interface BoxService {
 
     void deleteById(UUID id);
 
-    BoxDTO saveNewBox(Boolean isQuarantine, int number);
+    BoxDTO saveNewBox(Boolean isQuarantine);
 }

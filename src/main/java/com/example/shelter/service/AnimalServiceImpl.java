@@ -21,6 +21,8 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
 
+    private final BoxService boxService;
+
     private final BoxRepository boxRepository;
     private int maxAnimalsInBox = 4;
 
@@ -34,7 +36,6 @@ public class AnimalServiceImpl implements AnimalService {
         newAnimal.setSize(animal.getSize());
         newAnimal.setAge(animal.getAge());
         newAnimal.setArrivalDate(animal.getArrivalDate());
-        //newAnimal.setId(animal.getId());
         newAnimal.setDescription(animal.getDescription());
 
         // przydzielane nowego zwierzęcia do boxu
@@ -45,15 +46,16 @@ public class AnimalServiceImpl implements AnimalService {
         int number = giveNumberOfBoxes(true)+1;
 
         if (selected == null) { // jeśli nie ma dostępnych boxów z kwarantanną to tworzę nowy
+            boxService.saveNewBox(true);
+
             Box newBox = new Box();
-            newBox.setIsQuarantine(true);
-            newBox.setNumber(number);
-            newAnimal.setBoxNumberAssignment(number);
+            //newBox.setIsQuarantine(true);
+            //newAnimal.setBoxNumberAssignment(number);
             newBox.getAnimals().add(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(newBox);
         } else {
-            newAnimal.setBoxNumberAssignment(selected.getNumber());
+            newAnimal.setBox(selected.getNumber());
             selected.getAnimals().add(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);
@@ -72,7 +74,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     public int giveNumberOfBoxes(Boolean quarantine) {
-        return boxRepository.findBoxesWithQuarantine(quarantine);
+        return boxRepository.findBoxesWithQuarantine(quarantine).orElse(0);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class AnimalDTO {
     private Integer age;
 
     private Date arrivalDate;
-    private int boxNumberAssignment;
+    private int box;
 
     private String description;
     private Boolean adopted;

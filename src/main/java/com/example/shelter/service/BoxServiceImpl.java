@@ -21,15 +21,15 @@ public class BoxServiceImpl implements BoxService {
 
 
     @Override
-    public BoxDTO saveNewBox(Boolean isQuarantine, int number) {
+    public BoxDTO saveNewBox(Boolean isQuarantine) {
         Box newBox = new Box();
         newBox.setIsQuarantine(isQuarantine);
-        newBox.setNumber(number);
+        newBox.setNumber(giveNumberOfBoxes(isQuarantine)+1);
         return boxMapper.toBoxDTO(boxRepository.save(newBox));
     }
 
     public int giveNumberOfBoxes(Boolean quarantine) {
-        return boxRepository.findBoxesWithQuarantine(quarantine);
+        return boxRepository.findBoxesWithQuarantine(quarantine).orElse(0);
     }
 
     @Override

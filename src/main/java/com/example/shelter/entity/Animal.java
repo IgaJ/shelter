@@ -39,7 +39,7 @@ public class Animal {
     private Integer age;
 
     private Date arrivalDate;
-    private int boxNumberAssignment;
+    private int box;
 
 
     private String description;
