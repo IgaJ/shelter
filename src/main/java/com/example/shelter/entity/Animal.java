@@ -39,6 +39,8 @@ public class Animal {
     private Integer age;
 
     private Date arrivalDate;
+    private int boxNumberAssignment;
+
 
     private String description;
     private Boolean adopted = false;

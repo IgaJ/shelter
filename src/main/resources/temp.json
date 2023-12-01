@@ -35,7 +35,6 @@
   },
   {
     "species": "DOG",
-    "vaccinated": "yes",
     "name": "Puris",
     "sex": "male",
     "size": "small",
@@ -44,12 +43,27 @@
   },
   {
     "species": "DOG",
-    "vaccinated": "yes",
     "name": "Fala",
     "sex": "female",
     "size": "medium",
     "age": 4,
     "arrivalDate": "2023-09-03"
+  },
+  {
+    "species": "DOG",
+    "name": "Seka",
+    "sex": "female",
+    "size": "large",
+    "age": 2,
+    "arrivalDate": "2022-12-06"
+  },
+  {
+    "species": "DOG",
+    "name": "Miki",
+    "sex": "male",
+    "size": "small",
+    "age": 6,
+    "arrivalDate": "2021-05-20"
   }
 ]
 

@@ -1,6 +1,7 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.BoxDTO;
+import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.BoxMapper;
 import com.example.shelter.repository.BoxRepository;
@@ -17,6 +18,19 @@ public class BoxServiceImpl implements BoxService {
 
     private final BoxRepository boxRepository;
     private final BoxMapper boxMapper;
+
+
+    @Override
+    public BoxDTO saveNewBox(Boolean isQuarantine, int number) {
+        Box newBox = new Box();
+        newBox.setIsQuarantine(isQuarantine);
+        newBox.setNumber(number);
+        return boxMapper.toBoxDTO(boxRepository.save(newBox));
+    }
+
+    public int giveNumberOfBoxes(Boolean quarantine) {
+        return boxRepository.findBoxesWithQuarantine(quarantine);
+    }
 
     @Override
     public BoxDTO getBoxById(UUID id) {

@@ -37,19 +37,23 @@ public class AnimalServiceImpl implements AnimalService {
         //newAnimal.setId(animal.getId());
         newAnimal.setDescription(animal.getDescription());
 
-        // przydzielanie zwierzęcia do nowego boxu
+        // przydzielane nowego zwierzęcia do boxu
+        // zawsze do kwarantanny
         // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
 
         Box selected = findAvailableQuarantineBox();
+        int number = giveNumberOfBoxes(true)+1;
 
-        if (selected == null) {
-            // jeśli nie ma to tworzę nowy box kwarantannę
+        if (selected == null) { // jeśli nie ma dostępnych boxów z kwarantanną to tworzę nowy
             Box newBox = new Box();
-            newBox.setIsQuarantine(true); // numer boxu domyślnie set to null, do przestawienia w funkcji zmiany boxu po kwarantannie
+            newBox.setIsQuarantine(true);
+            newBox.setNumber(number);
+            newAnimal.setBoxNumberAssignment(number);
             newBox.getAnimals().add(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(newBox);
         } else {
+            newAnimal.setBoxNumberAssignment(selected.getNumber());
             selected.getAnimals().add(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);
@@ -58,7 +62,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     public Box findAvailableQuarantineBox() {
-        // wszystkie boxy-kwarantanny gdzie jest miejsce
+        // pierwszy box-kwarantanna gdzie jest miejsce
         List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0); // pierwszy z listy
@@ -67,14 +71,8 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
-    public Box findAvailableBox() {
-        // wszystkie boxy gdzie jest miejsce
-        List<Box> availableBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, false);
-        if (availableBoxes != null) {
-            return availableBoxes.get(0); // pierwszy z listy
-        } else {
-            return null;
-        }
+    public int giveNumberOfBoxes(Boolean quarantine) {
+        return boxRepository.findBoxesWithQuarantine(quarantine);
     }
 
     @Override

@@ -29,6 +29,7 @@ public class AnimalDTO {
     private Integer age;
 
     private Date arrivalDate;
+    private int boxNumberAssignment;
 
     private String description;
     private Boolean adopted;
@@ -37,7 +38,6 @@ public class AnimalDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime vaccinationDate;
     private LocalDateTime adoptionDate;
-
     private LocalDateTime lastWalkDate;
 
     private Set<Action> actions;
