@@ -30,6 +30,10 @@ public class Box {
     private Integer number;
     private Boolean isQuarantine;
 
+    public Integer getNumber() {
+        return number;
+    }
+
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;

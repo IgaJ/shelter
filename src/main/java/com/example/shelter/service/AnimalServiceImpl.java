@@ -24,7 +24,7 @@ public class AnimalServiceImpl implements AnimalService {
     private final BoxService boxService;
 
     private final BoxRepository boxRepository;
-    private int maxAnimalsInBox = 4;
+    private int maxAnimalsInBox = 4;  // it can be public static as
 
     @Transactional
     @Override
@@ -40,20 +40,10 @@ public class AnimalServiceImpl implements AnimalService {
 
         // przydzielane nowego zwierzęcia do boxu
         // zawsze do kwarantanny
-        // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
+        Box selected = findAvailableQuarantineBox(); // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
 
-        Box selected = findAvailableQuarantineBox();
-        int number = giveNumberOfBoxes(true)+1;
-
-        if (selected == null) { // jeśli nie ma dostępnych boxów z kwarantanną to tworzę nowy
-            boxService.saveNewBox(true);
-
-            Box newBox = new Box();
-            //newBox.setIsQuarantine(true);
-            //newAnimal.setBoxNumberAssignment(number);
-            newBox.getAnimals().add(newAnimal);
-            animalRepository.save(newAnimal);
-            boxRepository.save(newBox);
+        if (selected == null) {
+            saveNewQuarantineBox(newAnimal);
         } else {
             newAnimal.setBox(selected.getNumber());
             selected.getAnimals().add(newAnimal);
@@ -63,18 +53,17 @@ public class AnimalServiceImpl implements AnimalService {
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    public Box findAvailableQuarantineBox() {
-        // pierwszy box-kwarantanna gdzie jest miejsce
+    public void saveNewQuarantineBox(Animal newAnimal) {
+        boxService.saveNewBox(newAnimal, true);
+    }
+
+    public Box findAvailableQuarantineBox() { // pierwszy box-kwarantanna gdzie jest miejsce
         List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
         if (!availableQuarantineBoxes.isEmpty()) {
-            return availableQuarantineBoxes.get(0); // pierwszy z listy
+            return availableQuarantineBoxes.get(0);
         } else {
             return null;
         }
-    }
-
-    public int giveNumberOfBoxes(Boolean quarantine) {
-        return boxRepository.findBoxesWithQuarantine(quarantine).orElse(0);
     }
 
     @Override
@@ -118,7 +107,6 @@ public class AnimalServiceImpl implements AnimalService {
         } else {
             return Optional.empty();
         }
-
     }
 
     @Override
@@ -164,10 +152,10 @@ public class AnimalServiceImpl implements AnimalService {
         Box box = boxRepository.findBoxByAnimalId(AnimalId); // znajduję box w którym jest dany animal
         if (box != null) {
             box.getAnimals().remove(foundAnimal); // jeśli box się znalazł (zwierzę było przypisane do boxu), usuwam zwierzę
+            boxRepository.save(box);
         }
         animalRepository.deleteById(AnimalId); // następnie z tabeli animals (jeśli zwierzę nie było przypisane, również usuwa)
     }
-
 
     @Override
     public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {

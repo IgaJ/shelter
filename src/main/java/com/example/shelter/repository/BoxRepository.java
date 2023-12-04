@@ -22,4 +22,7 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     @Query("SELECT COUNT(*) FROM Box b WHERE b.isQuarantine = :isQuarantine")
     Optional<Integer> findBoxesWithQuarantine(@Param("isQuarantine") Boolean isQuarantine);
 
+    @Query("SELECT COUNT(*) FROM Box b")
+    Optional<Integer> countAllBoxes();
+
 }
