@@ -27,9 +27,11 @@ public class BoxServiceImpl implements BoxService {
 
     @Override // overload method, to add animal to box
     public BoxDTO saveNewBox(Animal animal, Boolean isQuarantine) {
+        int number = findBoxWithHigherNumber().get().getNumber()+1;
         Box newBox = new Box();
         newBox.setIsQuarantine(isQuarantine);
-        newBox.setNumber(countAllBoxes()+1);
+        newBox.setNumber(number);
+        animal.setBox(number);
         newBox.getAnimals().add(animal);
         animalRepository.save(animal);
         boxRepository.save(newBox);
@@ -37,19 +39,25 @@ public class BoxServiceImpl implements BoxService {
     }
 
     @Override
-    public BoxDTO saveNewBox(Boolean isQuarantine) {
+    public BoxDTO saveNewBox(Boolean isQuarantine) { // for dataInitializer
         Box newBox = new Box();
         newBox.setIsQuarantine(isQuarantine);
-        newBox.setNumber(countAllBoxes()+1); // todo jak nadawać numery nowemu boxowi np. po usunięciu starych
-        // daj ostatni z listy, get number, +1.
+        newBox.setNumber(countAllBoxes()+1);
         return boxMapper.toBoxDTO(boxRepository.save(newBox));
     }
 
+    @Override
     public int countAllBoxes() {
         return boxRepository.countAllBoxes().orElse(0);
     }
 
-
+    @Override
+    public Optional<Box> findBoxWithHigherNumber() {
+        List<Box> boxes = boxRepository.findAll();
+        return boxes
+                .stream()
+                .max(Comparator.comparing(Box::getNumber));
+    }
 
     @Override
     public BoxDTO getBoxById(UUID id) {
