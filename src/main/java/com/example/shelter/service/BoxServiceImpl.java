@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class BoxServiceImpl implements BoxService {
-
     private final BoxRepository boxRepository;
     private final BoxMapper boxMapper;
     private final AnimalRepository animalRepository;
@@ -44,7 +43,7 @@ public class BoxServiceImpl implements BoxService {
     private Box saveNewBox(Boolean isQuarantine) {
         Box newBox = Box.builder()
                 .isQuarantine(isQuarantine)
-                .number(findBoxWithHigherNumber()+1)
+                .boxNumber(findHighestBoxNumber()+1)
                 .animals(new HashSet<>())
                 .build();
         return boxRepository.save(newBox);
@@ -56,35 +55,11 @@ public class BoxServiceImpl implements BoxService {
     }*/
 
     @Override
-    public int findBoxWithHigherNumber() {
+    public int findHighestBoxNumber() {
         return boxRepository.giveHighestBoxNumber();
     }
 
-    @Override
-    public BoxDTO changeBox(UUID animalId, BoxDTO boxDTO) {
-        // znajduję zwierzę po id
-        Animal animal = animalRepository.getAnimalById(animalId);
-        // znajduję jego dotychczasowy currentBox
-        Box currentBox = boxRepository.findBoxByAnimalId(animalId);
-        // spr czy żądany box jest dostepny (jest w nim miejsce)
-        Box requestedBox = findAvailableBox(boxDTO.getNumber());
-        if (requestedBox != null) {
-            if (animal != null) {
-                requestedBox.getAnimals().add(animal); // dodaję zwierzę do żądanego boxu
-                currentBox.getAnimals().remove(animal); // w dotychczasowym usuwam zwierzę
-                boxRepository.save(requestedBox);
-                boxRepository.save(currentBox);
-                animalRepository.save(animal);
-            } else {
-                throw new AnimalServiceException("nie ma takiego zwierzęcia");
-            }
-        } else {
-            throw new BoxServiceException("nie ma takiego boksu");
-        }
-        return boxMapper.toBoxDTO(requestedBox);
-    }
-
-    public Box findAvailableBox(Integer boxNumber) {
+    public Box findAvailableBox(int boxNumber) {
         return boxRepository.findBoxWithSizeLessThanAndBoxNumber(maxAnimalsInBox, boxNumber);
     }
 
@@ -116,7 +91,7 @@ public class BoxServiceImpl implements BoxService {
         }
     }
 
-    @Transactional // sprawia że operacja otoczona jest transakcją
+    @Transactional // sprawia że operacja otoczona jest transakcją inaczej hibernate nie widzi otwartej transakcji
     @Override
     public void deleteByNumber(Integer number) {
         Box box = boxRepository.findByNumber(number).orElse(null);
@@ -125,6 +100,5 @@ public class BoxServiceImpl implements BoxService {
         } else {
             throw new BoxServiceException("box with animals impossible to delete, move animals first");
         }
-
     }
 }

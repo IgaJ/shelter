@@ -2,10 +2,8 @@ package com.example.shelter.service;
 
 import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.entity.Animal;
-import com.example.shelter.entity.Box;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface BoxService {
@@ -24,9 +22,9 @@ public interface BoxService {
 
    // public int countAllBoxes();
 
-    public int findBoxWithHigherNumber();
+    public int findHighestBoxNumber();
 
-    BoxDTO changeBox(UUID animalId, BoxDTO boxDTO);
+   // BoxDTO changeBox(UUID animalId, BoxDTO boxDTO);
 
     void deleteByNumber(Integer number);
 }

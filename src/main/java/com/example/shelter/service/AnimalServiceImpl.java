@@ -1,5 +1,6 @@
 package com.example.shelter.service;
 
+import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.AnimalMapper;
@@ -17,12 +18,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
-
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
-
     private final BoxService boxService;
-
     private final BoxRepository boxRepository;
     private int maxAnimalsInBox = 4;  // it can be public static as
 
@@ -39,7 +37,7 @@ public class AnimalServiceImpl implements AnimalService {
                 .description(animal.getDescription())
                 .build();
         // przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
-        Box selected = findAvailableBox(); // metoda daje pierwszy box gdzie jest miejsce lub null
+        Box selected = findAvailableBoxWithSize(); // metoda daje pierwszy box gdzie jest miejsce lub null
         if (selected == null) {
             boxService.addNewBox(newAnimal, true);
         } else {
@@ -53,13 +51,33 @@ public class AnimalServiceImpl implements AnimalService {
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    public Box findAvailableBox() {
+    public Box findAvailableBoxWithSize() {
         List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0);
         } else {
             return null;
         }
+    }
+
+    public AnimalDTO changeBox(UUID animalId, BoxDTO boxDTO) {
+        Animal animal = animalRepository.getAnimalById(animalId);
+        Box current = animal.getBox();
+        Box requested = findAvailableBoxWithBoxNumber(boxDTO.getBoxNumber()); // dodać obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
+        if (requested != null) {
+            requested.addAnimal(animal);
+            current.getAnimals().remove(animal);
+            boxRepository.save(requested);
+            boxRepository.save(current);
+            animalRepository.save(animal);
+        } else {
+            throw new BoxServiceException("sprawdź czy żądany box jest dostępny (nie ma numeru/nie ma miejsc)");
+        }
+        return animalMapper.animalToAnimalDTO(animal);
+    }
+
+    public Box findAvailableBoxWithBoxNumber(Integer boxNumber) {
+        return boxRepository.findBoxWithSizeLessThanAndBoxNumber(maxAnimalsInBox, boxNumber);
     }
 
     @Override
@@ -83,7 +101,6 @@ public class AnimalServiceImpl implements AnimalService {
                 .map(animal -> animalMapper.animalToAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
-
 
     public List<AnimalDTO> listAvailable(Boolean vaccinated, Boolean adopted) {
         return animalRepository.findAllByVaccinatedAndAdopted(vaccinated, adopted)

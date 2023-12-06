@@ -1,6 +1,7 @@
 package com.example.shelter.controller;
 
 import com.example.shelter.dto.AnimalDTO;
+import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.service.AnimalService;
 import com.example.shelter.service.AnimalServiceException;
 import lombok.RequiredArgsConstructor;
@@ -77,12 +78,18 @@ public class AnimalController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestBody BoxDTO boxDTO) {
+        AnimalDTO changed = animalService.changeBox(animalId, boxDTO);
+        String message = "Box changed to: ";
+        return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
+    }
+
     @GetMapping(params = "vaccinated")
     public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
         return animalService.listNonVaccinated();
     }
 
-    // Jaki param w @GetMapping?
     public ResponseEntity<?> vaccinate(UUID id) { // zmiana cechy robimy updatem zamiast operacji na zasobie
         Optional<AnimalDTO> vaccinated = animalService.vaccinate(id);
         return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
@@ -93,24 +100,17 @@ public class AnimalController {
         return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
     }
 }
-
-    // 1. list non vaccinated,usunac boolean z repository. Repository zwraca liste niezaszczepionych, listę przechowuje frontend
-    // 2. z listy user wybiera zwierze po id,  zaszczep(id). Zwraca np int liczba zaszcepionych lub id zaszczepionych
-/*
-
     // skłądnia
     //localhost:8080/animals?name=Rudy
 
-/api/v1/animals  -> GET/POST
-/api/v1/animals?maxAge=5&minAge=2 - request params
-/api/v1/animals/id -> GET/PUT/PATCH/DELETE  (tym sposobem robimy update i działemy na jednym)
-/api/v1/owners/id/animals/id
+// /api/v1/animals  -> GET/POST
+// /api/v1/animals?maxAge=5&minAge=2 - request params
+// /api/v1/animals/id -> GET/PUT/PATCH/DELETE  (tym sposobem robimy update i działemy na jednym)
+// /api/v1/owners/id/animals/id
 
 //wysylanie przez parametry zapytania url: animals?parametr1=wartosc&parametr2=wartosc&....  -> @RequestParam lub bez adnotacji
 //wysylanie przez czesc sciezki najczesciej do id - @PathVariable
 //wysylanie przez cialo zapytania, najczesciej obiekty w formacie json - @RequestBody -> referancja do obiektu DTO
 //wysylanie danych w naglowkach zapytania (header) -> dane logowania, login i hasło
-
-* */
 
 

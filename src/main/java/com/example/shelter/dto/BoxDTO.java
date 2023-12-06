@@ -13,7 +13,7 @@ import java.util.UUID;
 public class BoxDTO {
     private UUID id;
 
-    private Integer number;
+    private Integer boxNumber;
     private Boolean isQuarantine;
 
 
@@ -22,8 +22,4 @@ public class BoxDTO {
 
     // adnotacja onetomany niepotrzebna
     private Set<AnimalDTO> animals; // zmienną uzupełnia mapper
-
-
-
-
 }

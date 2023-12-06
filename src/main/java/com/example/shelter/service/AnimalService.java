@@ -1,6 +1,7 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.AnimalDTO;
+import com.example.shelter.dto.BoxDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,5 +32,7 @@ public interface AnimalService {
     List<AnimalDTO> listNonVaccinated();
 
     List<AnimalDTO> listAvailableForAdoption();
+
+    AnimalDTO changeBox(UUID animalId, BoxDTO boxDTO);
 }
 

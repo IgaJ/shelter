@@ -25,7 +25,7 @@ public class Box {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
-    private Integer number;
+    private Integer boxNumber;
     private Boolean isQuarantine;
 
     @CreatedDate
