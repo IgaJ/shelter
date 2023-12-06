@@ -29,14 +29,15 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     @Override
     public AnimalDTO saveNewAnimal(AnimalDTO animal) { //
-        Animal newAnimal = new Animal();
-        newAnimal.setSpecies(animal.getSpecies());
-        newAnimal.setName(animal.getName());
-        newAnimal.setSex(animal.getSex());
-        newAnimal.setSize(animal.getSize());
-        newAnimal.setAge(animal.getAge());
-        newAnimal.setArrivalDate(animal.getArrivalDate());
-        newAnimal.setDescription(animal.getDescription());
+        Animal newAnimal = Animal.builder()
+                .species(animal.getSpecies())
+                .name(animal.getName())
+                .sex(animal.getSex())
+                .size(animal.getSize())
+                .age(animal.getAge())
+                .arrivalDate(animal.getArrivalDate())
+                .description(animal.getDescription())
+                .build();
 
         // przydzielane nowego zwierzęcia do boxu
         // zawsze do kwarantanny
@@ -45,7 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
         if (selected == null) {
             saveNewQuarantineBox(newAnimal);
         } else {
-            newAnimal.setBox(selected.getNumber());
+            //newAnimal.setBox(selected.getNumber());
             selected.getAnimals().add(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);
@@ -54,7 +55,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     public void saveNewQuarantineBox(Animal newAnimal) {
-        boxService.saveNewBox(newAnimal, true);
+        boxService.addNewBox(newAnimal, true);
     }
 
     public Box findAvailableQuarantineBox() { // pierwszy box-kwarantanna gdzie jest miejsce
@@ -96,8 +97,8 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public Optional <AnimalDTO> vaccinate(UUID id) {
-        Optional <Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
+    public Optional<AnimalDTO> vaccinate(UUID id) {
+        Optional<Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
         if (optionalAnimal.isPresent()) {
             Animal animal = optionalAnimal.get();
             animal.setVaccinated(true);

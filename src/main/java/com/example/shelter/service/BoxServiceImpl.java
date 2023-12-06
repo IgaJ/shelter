@@ -23,32 +23,48 @@ public class BoxServiceImpl implements BoxService {
     private final BoxMapper boxMapper;
     private final AnimalRepository animalRepository;
 
+    private int maxAnimalsInBox = 4;
 
 
     @Override // overload method, to add animal to box
-    public BoxDTO saveNewBox(Animal animal, Boolean isQuarantine) {
-        int number = findBoxWithHigherNumber().get().getNumber()+1;
-        Box newBox = new Box();
-        newBox.setIsQuarantine(isQuarantine);
-        newBox.setNumber(number);
-        animal.setBox(number);
-        newBox.getAnimals().add(animal);
+    public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
+       /* int number = findBoxWithHigherNumber().orElseThrow(()->new BoxServiceException("Brak boxów")).getNumber() + 1; // nadaje numer kolejny po ostatnim // todo wpisać przepis na wyjątek z lambdązamiast wpisać sam wyjątek
+        Box newBox = Box.builder()
+                .isQuarantine(isQuarantine)
+                .number(number)
+                .build();*/
+        Box newBox = saveNewBox(isQuarantine);
+        //newBox.addAnimal(animal);
+
+       /* int number = findBoxWithHigherNumber().orElse(Box.builder().number(1).build()).getNumber() + 1; // nadaje numer kolejny po ostatnim // todo wpisać przepis na wyjątek z lambdązamiast wpisać sam wyjątek
+        Box newBox = Box.builder()
+                .isQuarantine(isQuarantine)
+                .number(number)
+                .build();*/
+        /*newBox.setIsQuarantine(isQuarantine);
+        newBox.setNumber(number);*/
+        animal.setBox(newBox);
+    //    newBox.addAnimal(animal); // niepoprawne użycie gettera (newBox.get().add()) ma być dedykowana metoda add
         animalRepository.save(animal);
         boxRepository.save(newBox);
         return boxMapper.toBoxDTO(newBox);
     }
 
     @Override
-    public BoxDTO saveNewBox(Boolean isQuarantine) { // for dataInitializer
-        Box newBox = new Box();
-        newBox.setIsQuarantine(isQuarantine);
-        newBox.setNumber(countAllBoxes()+1);
-        return boxMapper.toBoxDTO(boxRepository.save(newBox));
+    public BoxDTO addNewBox(Boolean isQuarantine) { // for dataInitializer
+        return boxMapper.toBoxDTO(saveNewBox(isQuarantine));
     }
+
+private Box saveNewBox(Boolean isQuarantine){
+    Box newBox = new Box();
+    newBox.setIsQuarantine(isQuarantine);
+    newBox.setNumber(countAllBoxes() + 1);
+    return boxRepository.save(newBox);
+}
 
     @Override
     public int countAllBoxes() {
-        return boxRepository.countAllBoxes().orElse(0);
+        return boxRepository.countAllBoxes();
     }
 
     @Override
@@ -57,6 +73,35 @@ public class BoxServiceImpl implements BoxService {
         return boxes
                 .stream()
                 .max(Comparator.comparing(Box::getNumber));
+    }
+
+    @Override
+    public BoxDTO changeBox(UUID animalId, BoxDTO boxDTO) {
+        // znajduję zwierzę po id
+        Animal animal = animalRepository.getAnimalById(animalId);
+        // znajduję jego dotychczasowy currentBox
+        Box currentBox = boxRepository.findBoxByAnimalId(animalId);
+        // spr czy żądany box jest dostepny (jest w nim miejsce)
+        Box requestedBox = findAvailableBox(boxDTO.getNumber());
+        if (requestedBox != null) {
+            if (animal != null) {
+                requestedBox.getAnimals().add(animal); // dodaję zwierzę do żądanego boxu
+                currentBox.getAnimals().remove(animal); // w dotychczasowym usuwam zwierzę
+                //animal.requestedBox.getNumber()); // zwierzęciu setuję numer boxu
+                boxRepository.save(requestedBox);
+                boxRepository.save(currentBox);
+                animalRepository.save(animal);
+            } else {
+                throw new AnimalServiceException("nie ma takiego zwierzęcia");
+            }
+        } else {
+            throw new BoxServiceException("nie  ma takiego boksu");
+        }
+        return boxMapper.toBoxDTO(requestedBox);
+    }
+
+    public Box findAvailableBox(Integer boxNumber) {
+        return boxRepository.findBoxWithSizeLessThanAndBoxNumber(maxAnimalsInBox, boxNumber);
     }
 
     @Override

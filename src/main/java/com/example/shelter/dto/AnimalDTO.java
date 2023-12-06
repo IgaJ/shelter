@@ -29,7 +29,7 @@ public class AnimalDTO {
     private Integer age;
 
     private Date arrivalDate;
-    private int box;
+    private int boxNumber; // todo mapper do adnotacji by tłumaczył Box na int boxNumber
 
     private String description;
     private Boolean adopted;

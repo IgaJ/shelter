@@ -30,5 +30,8 @@ public interface AnimalRepository extends JpaRepository <Animal, UUID> {
     List<Animal> getAvailableForAdoption();
 
     List<Animal> findAllByVaccinatedAndAdopted(Boolean vaccinated, Boolean adopted);
+
+    @Query("SELECT d FROM Animal d WHERE d.id = :id")
+    Animal getAnimalById(@Param("id") UUID id);
 }
 

@@ -18,11 +18,13 @@ public interface BoxService {
 
     void deleteById(UUID id);
 
-    BoxDTO saveNewBox(Animal animal, Boolean isQuarantine);
+    BoxDTO addNewBox(Animal animal, Boolean isQuarantine);
 
-    BoxDTO saveNewBox(Boolean isQuarantine);
+    BoxDTO addNewBox(Boolean isQuarantine);
 
     public int countAllBoxes();
 
     public Optional<Box> findBoxWithHigherNumber();
+
+    BoxDTO changeBox(UUID animalId, BoxDTO boxDTO);
 }

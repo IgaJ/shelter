@@ -39,7 +39,9 @@ public class Animal {
     private Integer age;
 
     private Date arrivalDate;
-    private int box;
+
+    @ManyToOne
+    private Box box;
 
 
     private String description;

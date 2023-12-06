@@ -1,11 +1,8 @@
 package com.example.shelter;
 
-import com.example.shelter.entity.Box;
 import com.example.shelter.service.BoxService;
-import com.example.shelter.service.BoxServiceImpl;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,10 +17,10 @@ public class DataInitializer {
     @PostConstruct
     public void initializeBoxes() {
         for (int i = 0; i <= 4 ; i++) {
-            boxService.saveNewBox(true);
+            boxService.addNewBox(true);
         }
-        for (int j = 5; j <= 9 ; j++) {
-            boxService.saveNewBox(false);
+        for (int i = 5; i <= 9 ; i++) {
+            boxService.addNewBox(false);
         }
     }
 }

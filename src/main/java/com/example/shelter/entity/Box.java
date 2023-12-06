@@ -9,9 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -30,16 +28,16 @@ public class Box {
     private Integer number;
     private Boolean isQuarantine;
 
-    public Integer getNumber() {
-        return number;
-    }
-
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;
 
-    @OneToMany
-    @JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    @OneToMany(mappedBy = "box") //mapowane przez drugą stronę (Animal) przez pole o zawie "box" - nie towrzy się druga tabela
+    //@JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
     private Set <Animal> animals = new HashSet<>();
 
+    public void addAnimal(Animal animal) {
+        animals.add(animal);
+        animal.setBox(this);
+    }
 }

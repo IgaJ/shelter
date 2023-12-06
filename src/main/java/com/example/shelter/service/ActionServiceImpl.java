@@ -18,7 +18,7 @@ public class ActionServiceImpl implements ActionService {
     private final ActionRepository actionRepository;
     private final ActionMapper actionMapper;
     private final AnimalRepository animalRepository;
-    private final BoxRepository boxRepository;
+    private final BoxRepository boxRepository; // serwisy zamiast repozytoriów tutaj
 
 
 

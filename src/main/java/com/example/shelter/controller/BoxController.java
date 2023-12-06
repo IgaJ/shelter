@@ -1,9 +1,11 @@
 package com.example.shelter.controller;
 
 import com.example.shelter.dto.BoxDTO;
+import com.example.shelter.entity.Box;
 import com.example.shelter.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,12 @@ public class BoxController {
     @GetMapping("/{id}")
     public BoxDTO getBoxById(@PathVariable("id") UUID id) {
         return boxService.getBoxById(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BoxDTO> updateBox(@PathVariable("id") UUID animalId, @RequestBody BoxDTO boxDTO) {
+        BoxDTO updatedBox = boxService.changeBox(animalId, boxDTO);
+        return new ResponseEntity<>(updatedBox, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
