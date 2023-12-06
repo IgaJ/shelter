@@ -23,14 +23,13 @@ public class BoxServiceImpl implements BoxService {
 
     private int maxAnimalsInBox = 4;
 
-
     @Override // overload method, to add animal to box
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
         Box newBox = saveNewBox(isQuarantine);
         animal.setBox(newBox);
-        if (newBox.getAnimals() == null) { // dodane sprawdzenie czy jest zainicjalizowany set
+ /*       if (newBox.getAnimals() == null) { // dodane sprawdzenie czy jest zainicjalizowany set
             newBox.setAnimals(new HashSet<>());
-        }
+        }*/
         newBox.addAnimal(animal); // niepoprawne użycie gettera (newBox.get().add()) ma być dedykowana metoda add
         animalRepository.save(animal);
         boxRepository.save(newBox);
@@ -46,6 +45,7 @@ public class BoxServiceImpl implements BoxService {
         Box newBox = Box.builder()
                 .isQuarantine(isQuarantine)
                 .number(findBoxWithHigherNumber()+1)
+                .animals(new HashSet<>())
                 .build();
         return boxRepository.save(newBox);
     }

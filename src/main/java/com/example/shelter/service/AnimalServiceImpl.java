@@ -43,9 +43,9 @@ public class AnimalServiceImpl implements AnimalService {
         if (selected == null) {
             boxService.addNewBox(newAnimal, true);
         } else {
-            if(selected.getAnimals() == null) {
+            /*if(selected.getAnimals() == null) {
                 selected.setAnimals(new HashSet<>());
-            }
+            }*/
             selected.addAnimal(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);

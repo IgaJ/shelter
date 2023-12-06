@@ -34,10 +34,13 @@ public class Box {
 
     @OneToMany(mappedBy = "box") //mapowane przez drugą stronę (Animal) przez pole o zawie "box" - nie towrzy się druga tabela
     //@JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-    private Set <Animal> animals = new HashSet<>(); // czemu nie inicjalizuje?
+    private Set <Animal> animals; // czemu nie inicjalizuje przy tworzeniu nowego boxu? Przeniosłąm inicjalzację do bs.saveNewBox
 
     public void addAnimal(Animal animal) {
         animals.add(animal); // trzeba było ddoać sprawdzenie w as.saveNewAnimal czy kolekcja jest null i inicjalizację
         animal.setBox(this);
     }
 }
+// Zależności opóźnione (lazy):
+//Jeśli relacja animals jest ustawiona na tryb "lazy loading", Hibernate nie załaduje zestawu animals, dopóki nie zostanie użyta ta właściwość. W takim przypadku, upewnij się,
+// że w momencie używania animals (np. w metodzie addAnimal lub w innym miejscu) sesja Hibernate jest wciąż aktywna.

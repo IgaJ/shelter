@@ -43,7 +43,6 @@ public class Animal {
     @ManyToOne
     private Box box;
 
-
     private String description;
     private Boolean adopted = false;
     private Boolean vaccinated = false;
@@ -52,7 +51,6 @@ public class Animal {
     private LocalDateTime vaccinationDate;
     private LocalDateTime adoptionDate;
     private LocalDateTime lastWalkDate;
-
 
     @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
     private Set<Action> actions = new HashSet<>();

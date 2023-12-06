@@ -32,10 +32,10 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     @Query("SELECT b FROM Box b WHERE b.number = :number")
     Optional<Box> findByNumber(@Param("number") Integer number);
 
-    @Modifying // dodana anotacja modifying bo z samym query hibernate oczekuje zapytania select nie delete
+    @Modifying // dodana @modifying bo z @query hibernate oczekuje zapytania select nie delete
     @Query("DELETE FROM Box b WHERE b.number = :number")
     void deleteByNumber(@Param("number") Integer number);
 
-    @Query("SELECT COALESCE(MAX(b.number), 0) FROM Box b") // coalesce do przypadku gdy niema wartości max
+    @Query("SELECT COALESCE(MAX(b.number), 0) FROM Box b") // coalesce do obsługi przypadku gdy niema wartości max
     int giveHighestBoxNumber();
 }
