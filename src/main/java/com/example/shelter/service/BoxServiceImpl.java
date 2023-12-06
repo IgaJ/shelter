@@ -28,23 +28,9 @@ public class BoxServiceImpl implements BoxService {
 
     @Override // overload method, to add animal to box
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
-       /* int number = findBoxWithHigherNumber().orElseThrow(()->new BoxServiceException("Brak boxów")).getNumber() + 1; // nadaje numer kolejny po ostatnim // todo wpisać przepis na wyjątek z lambdązamiast wpisać sam wyjątek
-        Box newBox = Box.builder()
-                .isQuarantine(isQuarantine)
-                .number(number)
-                .build();*/
         Box newBox = saveNewBox(isQuarantine);
-        //newBox.addAnimal(animal);
-
-       /* int number = findBoxWithHigherNumber().orElse(Box.builder().number(1).build()).getNumber() + 1; // nadaje numer kolejny po ostatnim // todo wpisać przepis na wyjątek z lambdązamiast wpisać sam wyjątek
-        Box newBox = Box.builder()
-                .isQuarantine(isQuarantine)
-                .number(number)
-                .build();*/
-        /*newBox.setIsQuarantine(isQuarantine);
-        newBox.setNumber(number);*/
         animal.setBox(newBox);
-    //    newBox.addAnimal(animal); // niepoprawne użycie gettera (newBox.get().add()) ma być dedykowana metoda add
+        newBox.addAnimal(animal); // niepoprawne użycie gettera (newBox.get().add()) ma być dedykowana metoda add
         animalRepository.save(animal);
         boxRepository.save(newBox);
         return boxMapper.toBoxDTO(newBox);
@@ -55,12 +41,13 @@ public class BoxServiceImpl implements BoxService {
         return boxMapper.toBoxDTO(saveNewBox(isQuarantine));
     }
 
-private Box saveNewBox(Boolean isQuarantine){
-    Box newBox = new Box();
-    newBox.setIsQuarantine(isQuarantine);
-    newBox.setNumber(countAllBoxes() + 1);
-    return boxRepository.save(newBox);
-}
+    private Box saveNewBox(Boolean isQuarantine) {
+        Box newBox = Box.builder()
+                .isQuarantine(isQuarantine)
+                .number(countAllBoxes()+1)
+                .build();
+        return boxRepository.save(newBox);
+    }
 
     @Override
     public int countAllBoxes() {
@@ -87,7 +74,6 @@ private Box saveNewBox(Boolean isQuarantine){
             if (animal != null) {
                 requestedBox.getAnimals().add(animal); // dodaję zwierzę do żądanego boxu
                 currentBox.getAnimals().remove(animal); // w dotychczasowym usuwam zwierzę
-                //animal.requestedBox.getNumber()); // zwierzęciu setuję numer boxu
                 boxRepository.save(requestedBox);
                 boxRepository.save(currentBox);
                 animalRepository.save(animal);
@@ -95,7 +81,7 @@ private Box saveNewBox(Boolean isQuarantine){
                 throw new AnimalServiceException("nie ma takiego zwierzęcia");
             }
         } else {
-            throw new BoxServiceException("nie  ma takiego boksu");
+            throw new BoxServiceException("nie ma takiego boksu");
         }
         return boxMapper.toBoxDTO(requestedBox);
     }
@@ -128,7 +114,7 @@ private Box saveNewBox(Boolean isQuarantine){
         if ((box != null) && (box.getAnimals().isEmpty())) {
             boxRepository.deleteById(id);
         } else {
-            throw new BoxServiceException("box with animals impossible to delete, first move animals");
+            throw new BoxServiceException("box with animals impossible to delete, move animals first");
         }
     }
 }

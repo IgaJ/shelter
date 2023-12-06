@@ -49,7 +49,7 @@ public class AnimalServiceImplTest {
                 .findBoxesWithSizeLessThanAndQuarantine(captor1.capture(), captor.capture()))
                 .thenReturn(boxes);
 
-        Assertions.assertNotNull(animalService.findAvailableQuarantineBox());
+        Assertions.assertNotNull(animalService.findAvailableBox());
         Assertions.assertEquals(true, captor.getValue());
         Assertions.assertEquals(4, captor1.getValue());
     }
@@ -58,7 +58,7 @@ public class AnimalServiceImplTest {
     void test3() {
         Mockito.when(boxRepository.findBoxesWithSizeLessThanAndQuarantine(ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean()))
                 .thenReturn(Collections.emptyList());
-        Assertions.assertNull(animalService.findAvailableQuarantineBox());
+        Assertions.assertNull(animalService.findAvailableBox());
     }
 
 }

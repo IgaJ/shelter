@@ -38,27 +38,19 @@ public class AnimalServiceImpl implements AnimalService {
                 .arrivalDate(animal.getArrivalDate())
                 .description(animal.getDescription())
                 .build();
-
-        // przydzielane nowego zwierzęcia do boxu
-        // zawsze do kwarantanny
-        Box selected = findAvailableQuarantineBox(); // metoda daje pierwszy box kwarantannę gdzie jest miejsce lub null
-
+        // przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
+        Box selected = findAvailableBox(); // metoda daje pierwszy box gdzie jest miejsce lub null
         if (selected == null) {
-            saveNewQuarantineBox(newAnimal);
+            boxService.addNewBox(newAnimal, true);
         } else {
-            //newAnimal.setBox(selected.getNumber());
-            selected.getAnimals().add(newAnimal);
+            selected.addAnimal(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);
         }
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    public void saveNewQuarantineBox(Animal newAnimal) {
-        boxService.addNewBox(newAnimal, true);
-    }
-
-    public Box findAvailableQuarantineBox() { // pierwszy box-kwarantanna gdzie jest miejsce
+    public Box findAvailableBox() {
         List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0);
