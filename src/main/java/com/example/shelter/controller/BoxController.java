@@ -36,11 +36,17 @@ public class BoxController {
         return new ResponseEntity<>(updatedBox, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}") // prefix id dodany żeby uniknąć ambiguos handler methods
     public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
         boxService.deleteById(id);
         String message = "Deleted: ";
         return new ResponseEntity<>(message + id, HttpStatus.OK);
+    }
 
+    @DeleteMapping("/number/{number}") // prefix number dodany żeby uniknąć ambiguos handler methods
+    public ResponseEntity<String> deleteByNumber(@PathVariable("number") Integer number) {
+        boxService.deleteByNumber(number);
+        String message = "Deleted: ";
+        return new ResponseEntity<>(message + number, HttpStatus.OK);
     }
 }

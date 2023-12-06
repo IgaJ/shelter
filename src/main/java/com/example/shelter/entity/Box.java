@@ -34,10 +34,10 @@ public class Box {
 
     @OneToMany(mappedBy = "box") //mapowane przez drugą stronę (Animal) przez pole o zawie "box" - nie towrzy się druga tabela
     //@JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
-    private Set <Animal> animals = new HashSet<>();
+    private Set <Animal> animals = new HashSet<>(); // czemu nie inicjalizuje?
 
     public void addAnimal(Animal animal) {
-        animals.add(animal);
+        animals.add(animal); // trzeba było ddoać sprawdzenie w as.saveNewAnimal czy kolekcja jest null i inicjalizację
         animal.setBox(this);
     }
 }

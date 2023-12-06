@@ -22,9 +22,11 @@ public interface BoxService {
 
     BoxDTO addNewBox(Boolean isQuarantine);
 
-    public int countAllBoxes();
+   // public int countAllBoxes();
 
-    public Optional<Box> findBoxWithHigherNumber();
+    public int findBoxWithHigherNumber();
 
     BoxDTO changeBox(UUID animalId, BoxDTO boxDTO);
+
+    void deleteByNumber(Integer number);
 }

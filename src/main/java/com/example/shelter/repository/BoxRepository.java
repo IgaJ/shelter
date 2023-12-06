@@ -2,6 +2,7 @@ package com.example.shelter.repository;
 
 import com.example.shelter.entity.Box;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,13 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     @Query("SELECT COUNT(*) FROM Box b")
     int countAllBoxes();
 
+    @Query("SELECT b FROM Box b WHERE b.number = :number")
+    Optional<Box> findByNumber(@Param("number") Integer number);
+
+    @Modifying // dodana anotacja modifying bo z samym query hibernate oczekuje zapytania select nie delete
+    @Query("DELETE FROM Box b WHERE b.number = :number")
+    void deleteByNumber(@Param("number") Integer number);
+
+    @Query("SELECT COALESCE(MAX(b.number), 0) FROM Box b") // coalesce do przypadku gdy niema wartości max
+    int giveHighestBoxNumber();
 }

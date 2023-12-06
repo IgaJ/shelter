@@ -6,9 +6,9 @@ import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
 import com.example.shelter.repository.BoxRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -43,6 +43,9 @@ public class AnimalServiceImpl implements AnimalService {
         if (selected == null) {
             boxService.addNewBox(newAnimal, true);
         } else {
+            if(selected.getAnimals() == null) {
+                selected.setAnimals(new HashSet<>());
+            }
             selected.addAnimal(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);

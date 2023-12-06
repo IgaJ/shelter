@@ -8,11 +8,9 @@ import com.example.shelter.repository.AnimalRepository;
 import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +28,9 @@ public class BoxServiceImpl implements BoxService {
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
         Box newBox = saveNewBox(isQuarantine);
         animal.setBox(newBox);
+        if (newBox.getAnimals() == null) { // dodane sprawdzenie czy jest zainicjalizowany set
+            newBox.setAnimals(new HashSet<>());
+        }
         newBox.addAnimal(animal); // niepoprawne użycie gettera (newBox.get().add()) ma być dedykowana metoda add
         animalRepository.save(animal);
         boxRepository.save(newBox);
@@ -44,22 +45,19 @@ public class BoxServiceImpl implements BoxService {
     private Box saveNewBox(Boolean isQuarantine) {
         Box newBox = Box.builder()
                 .isQuarantine(isQuarantine)
-                .number(countAllBoxes()+1)
+                .number(findBoxWithHigherNumber()+1)
                 .build();
         return boxRepository.save(newBox);
     }
 
-    @Override
+/*    @Override
     public int countAllBoxes() {
         return boxRepository.countAllBoxes();
-    }
+    }*/
 
     @Override
-    public Optional<Box> findBoxWithHigherNumber() {
-        List<Box> boxes = boxRepository.findAll();
-        return boxes
-                .stream()
-                .max(Comparator.comparing(Box::getNumber));
+    public int findBoxWithHigherNumber() {
+        return boxRepository.giveHighestBoxNumber();
     }
 
     @Override
@@ -116,5 +114,17 @@ public class BoxServiceImpl implements BoxService {
         } else {
             throw new BoxServiceException("box with animals impossible to delete, move animals first");
         }
+    }
+
+    @Transactional // sprawia że operacja otoczona jest transakcją
+    @Override
+    public void deleteByNumber(Integer number) {
+        Box box = boxRepository.findByNumber(number).orElse(null);
+        if ((box != null) && (box.getAnimals().isEmpty())) {
+            boxRepository.deleteByNumber(number);
+        } else {
+            throw new BoxServiceException("box with animals impossible to delete, move animals first");
+        }
+
     }
 }
