@@ -35,6 +35,6 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     @Query("DELETE FROM Box b WHERE b.boxNumber = :boxNumber")
     void deleteByNumber(@Param("boxNumber") Integer boxNumber);
 
-    @Query("SELECT COALESCE(MAX(b.boxNumber), 0) FROM Box b") // coalesce do obsługi przypadku gdy niema wartości max
+    @Query("SELECT COALESCE(MAX(b.boxNumber), 0) FROM Box b") // COALESCE - zwraca pierwszą niepustą wartość. Jeśli MAX(b.boxNumber) zwróci null (brak rekordów) to coalesce zwróci 0
     int giveHighestBoxNumber();
 }

@@ -25,7 +25,9 @@ public class Box {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
+    @Column(unique = true) // czy to coś w ogóle robi skoro numer jest nadawany automatycznie?
     private Integer boxNumber;
+
     private Boolean isQuarantine;
 
     @CreatedDate
@@ -37,7 +39,7 @@ public class Box {
     private Set <Animal> animals; // czemu nie inicjalizuje przy tworzeniu nowego boxu? Przeniosłąm inicjalzację do bs.saveNewBox
 
     public void addAnimal(Animal animal) {
-        animals.add(animal); // trzeba było ddoać sprawdzenie w as.saveNewAnimal czy kolekcja jest null i inicjalizację
+        animals.add(animal); // ostatecznie iniciualizacja w bs.saveNewBox. Trzeba było ddoać sprawdzenie w as.saveNewAnimal czy kolekcja jest null i inicjalizację
         animal.setBox(this);
     }
 }

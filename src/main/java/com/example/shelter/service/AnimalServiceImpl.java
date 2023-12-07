@@ -37,7 +37,7 @@ public class AnimalServiceImpl implements AnimalService {
                 .description(animal.getDescription())
                 .build();
         // przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
-        Box selected = findAvailableBoxWithSize(); // metoda daje pierwszy box gdzie jest miejsce lub null
+        Box selected = findAvailableBoxWithSizeAndQuarantine(); // metoda daje pierwszy box gdzie jest miejsce lub null
         if (selected == null) {
             boxService.addNewBox(newAnimal, true);
         } else {
@@ -51,7 +51,7 @@ public class AnimalServiceImpl implements AnimalService {
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    public Box findAvailableBoxWithSize() {
+    public Box findAvailableBoxWithSizeAndQuarantine() {
         List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0);

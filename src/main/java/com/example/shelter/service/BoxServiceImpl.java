@@ -59,10 +59,6 @@ public class BoxServiceImpl implements BoxService {
         return boxRepository.giveHighestBoxNumber();
     }
 
-    public Box findAvailableBox(int boxNumber) {
-        return boxRepository.findBoxWithSizeLessThanAndBoxNumber(maxAnimalsInBox, boxNumber);
-    }
-
     @Override
     public BoxDTO getBoxById(UUID id) {
         return boxMapper.toBoxDTO(boxRepository.findById(id).orElseThrow());
@@ -98,7 +94,7 @@ public class BoxServiceImpl implements BoxService {
         if ((box != null) && (box.getAnimals().isEmpty())) {
             boxRepository.deleteByNumber(number);
         } else {
-            throw new BoxServiceException("box with animals impossible to delete, move animals first");
+            throw new BoxServiceException("Box impossible to delete. Animals are present or no such box number");
         }
     }
 }

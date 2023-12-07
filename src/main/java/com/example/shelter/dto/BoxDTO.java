@@ -16,7 +16,6 @@ public class BoxDTO {
     private Integer boxNumber;
     private Boolean isQuarantine;
 
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;
 

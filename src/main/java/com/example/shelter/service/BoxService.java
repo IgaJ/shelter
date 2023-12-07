@@ -24,7 +24,5 @@ public interface BoxService {
 
     public int findHighestBoxNumber();
 
-   // BoxDTO changeBox(UUID animalId, BoxDTO boxDTO);
-
     void deleteByNumber(Integer number);
 }
