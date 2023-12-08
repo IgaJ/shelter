@@ -94,7 +94,12 @@ public class BoxServiceImpl implements BoxService {
         if ((box != null) && (box.getAnimals().isEmpty())) {
             boxRepository.deleteByNumber(number);
         } else {
-            throw new BoxServiceException("Box impossible to delete. Animals are present or no such box number");
+            if (box == null) {
+                throw new BoxServiceException("Invalid box number");
+            }
+            if (!box.getAnimals().isEmpty()) {
+                throw new BoxServiceException("Animals in box to be deleted");
+            }
         }
     }
 }

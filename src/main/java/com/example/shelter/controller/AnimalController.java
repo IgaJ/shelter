@@ -80,7 +80,7 @@ public class AnimalController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestBody BoxDTO boxDTO) {
-        AnimalDTO changed = animalService.changeBox(animalId, boxDTO);
+        AnimalDTO changed = animalService.changeBoxToGivenBoxNumber(animalId, boxDTO);
         String message = "Box changed to: ";
         return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
     }
