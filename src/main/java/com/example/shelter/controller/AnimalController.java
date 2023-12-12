@@ -85,40 +85,37 @@ public class AnimalController {
         return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
     }
 
-/*    @PutMapping("/{id}")
-    public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestParam ("noQuarantineStatus") String noQuarantineStatus) {
-        AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithNoQuarantineStatus(animalId);
-        String message = "Box changed to: ";
-        return new ResponseEntity<>(message + changed.getBoxNumber() + " with no quarantine status ", HttpStatus.OK);
-    }*/
-
-/*
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestParam ("yesQuarantineStatus") String yesQuarantineStatus) { // todo poprawić updateBox2
-        AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithYesQuarantineStatus(animalId);
-        String message = "Box changed to: ";
-        return new ResponseEntity<>(message + changed.getBoxNumber() + " with yes quarantine status ", HttpStatus.OK);
-    }
-*/
-
-
-    @GetMapping(params = "vaccinated")
-    public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
-        return animalService.listNonVaccinated();
+    @PutMapping(value = "/{id}", params = "isQuarantine")
+    public ResponseEntity<String> updateBoxWithQuarantineStatus(@PathVariable("id") UUID animalId, @RequestParam ("isQuarantine") Boolean isQuarantine) {
+        if (!isQuarantine) {
+            AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithNoQuarantineStatus(animalId);
+            String message = "Box changed to: ";
+            return new ResponseEntity<>(message + changed.getBoxNumber() + " with quarantine status set to false ", HttpStatus.OK);
+        } else {
+            AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithYesQuarantineStatus(animalId);
+            String message = "Box changed to: ";
+            return new ResponseEntity<>(message + changed.getBoxNumber() + " with quarantine status set to true ", HttpStatus.OK);
+        }
     }
 
-    public ResponseEntity<?> vaccinate(UUID id) { // zmiana cechy robimy updatem zamiast operacji na zasobie
-        Optional<AnimalDTO> vaccinated = animalService.vaccinate(id);
-        return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
-    }
 
-    public ResponseEntity<?> listReadyForAdoption() {
-        List<AnimalDTO> ready = animalService.listAvailableForAdoption();
-        return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
+        @GetMapping(params = "vaccinated")
+        public List<AnimalDTO> getNonVaccinated (@RequestParam Boolean vaccinated, AnimalDTO animalDTO){
+            return animalService.listNonVaccinated();
+        }
+
+        public ResponseEntity<?> vaccinate (UUID id){ // zmiana cechy robimy updatem zamiast operacji na zasobie
+            Optional<AnimalDTO> vaccinated = animalService.vaccinate(id);
+            return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
+        }
+
+        public ResponseEntity<?> listReadyForAdoption () {
+            List<AnimalDTO> ready = animalService.listAvailableForAdoption();
+            return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
+        }
     }
-}
-    // skłądnia
-    //localhost:8080/animals?name=Rudy
+// skłądnia
+//localhost:8080/animals?name=Rudy
 
 // /api/v1/animals  -> GET/POST
 // /api/v1/animals?maxAge=5&minAge=2 - request params

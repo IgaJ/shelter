@@ -50,7 +50,7 @@ public class AnimalServiceImpl implements AnimalService {
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    Box findAvailableBoxWithSizeAndQuarantine() {
+    Box findAvailableBoxWithSizeAndQuarantine() { // todo Optional zamiast zwracania nulla
         List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0);
@@ -161,7 +161,7 @@ public class AnimalServiceImpl implements AnimalService {
             return boxRepository.findBoxWithSizeLessThanAndBoxNumber(boxNumber);
         }
 
-        public List<Box> findBoxesWithPlace ( int maxAnimalsInBox){
+        public List<Box> findBoxesWithPlace (){
             return boxRepository.findBoxesWithNumberOfAnimalsLessThan();
         }
 

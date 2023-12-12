@@ -1,7 +1,6 @@
 package com.example.shelter.controller;
 
 import com.example.shelter.dto.AnimalDTO;
-import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.AnimalSpecies;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.repository.AnimalRepository;
