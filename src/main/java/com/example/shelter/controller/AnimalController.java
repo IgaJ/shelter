@@ -85,12 +85,12 @@ public class AnimalController {
         return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+/*    @PutMapping("/{id}")
     public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestParam ("noQuarantineStatus") String noQuarantineStatus) {
         AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithNoQuarantineStatus(animalId);
         String message = "Box changed to: ";
         return new ResponseEntity<>(message + changed.getBoxNumber() + " with no quarantine status ", HttpStatus.OK);
-    }
+    }*/
 
 /*
     @PutMapping("/{id}")

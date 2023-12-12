@@ -30,6 +30,9 @@ public class Box {
 
     private Boolean isQuarantine;
 
+    @Builder.Default
+    private int maxAnimals = 4;
+
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;

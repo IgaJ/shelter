@@ -46,17 +46,16 @@ public class AnimalServiceImplTest {
         ArgumentCaptor<Boolean> captor = ArgumentCaptor.forClass(Boolean.class);
         ArgumentCaptor<Integer> captor1 = ArgumentCaptor.forClass(Integer.class);
         Mockito.when(boxRepository
-                .findBoxesWithSizeLessThanAndQuarantine(captor1.capture(), captor.capture()))
+                .findBoxesWithSizeLessThanAndQuarantine(captor.capture()))
                 .thenReturn(boxes);
 
         Assertions.assertNotNull(animalService.findAvailableBoxWithSizeAndQuarantine());
         Assertions.assertEquals(true, captor.getValue());
-        Assertions.assertEquals(4, captor1.getValue());
     }
 
     @Test
     void test3() {
-        Mockito.when(boxRepository.findBoxesWithSizeLessThanAndQuarantine(ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean()))
+        Mockito.when(boxRepository.findBoxesWithSizeLessThanAndQuarantine(ArgumentMatchers.anyBoolean()))
                 .thenReturn(Collections.emptyList());
         Assertions.assertNull(animalService.findAvailableBoxWithSizeAndQuarantine());
     }

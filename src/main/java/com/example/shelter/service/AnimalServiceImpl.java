@@ -22,7 +22,6 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalMapper animalMapper;
     private final BoxService boxService;
     private final BoxRepository boxRepository;
-    private int maxAnimalsInBox = 4;  // it can be public static as
 
     @Transactional
     @Override
@@ -51,8 +50,8 @@ public class AnimalServiceImpl implements AnimalService {
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    private Box findAvailableBoxWithSizeAndQuarantine() {
-        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
+    Box findAvailableBoxWithSizeAndQuarantine() {
+        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(true);
         if (!availableQuarantineBoxes.isEmpty()) {
             return availableQuarantineBoxes.get(0);
         } else {
@@ -77,7 +76,7 @@ public class AnimalServiceImpl implements AnimalService {
         Optional<Box> requestedBox = boxRepository.findByNumber(boxDTO.getBoxNumber()); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
         if (requestedBox.isPresent()) {
             Box unwrapperOptional = requestedBox.get(); // odpakowanie z optionala
-            if (unwrapperOptional.getAnimals().size() < 4) {
+            if (unwrapperOptional.getAnimals().size() < 4) { // todo spr gdzie sprawdzam ilość miejsc w boksie, Teraz jest zmienna w polu w box.
                 unwrapperOptional.addAnimal(animal);
                 currentBox.getAnimals().remove(animal);
                 boxRepository.save(unwrapperOptional);
@@ -130,7 +129,7 @@ public class AnimalServiceImpl implements AnimalService {
 
         public Box findFirstBoxWithPlaceAndNoQuarantine ()
         { // pierwszy dowolny box gdzie jest miejsce oraz nie kest kwarantanną
-            List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThan(maxAnimalsInBox);
+            List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThan();
             Optional<Box> chosen = boxes.stream()
                     .filter(box -> box.getIsQuarantine().equals(false))
                     .findFirst();
@@ -144,7 +143,7 @@ public class AnimalServiceImpl implements AnimalService {
 
         public Box findFirstBoxWithPlaceAndNoQuarantine2 ()
         { // pierwszy dowolny box gdzie jest miejsce oraz nie kest kwarantanną
-            List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThan(maxAnimalsInBox);
+            List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThan();
             return boxes.stream()
                     .filter(box -> box.getIsQuarantine().equals(false))
                     .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu bez kwarantanny"));
@@ -152,18 +151,18 @@ public class AnimalServiceImpl implements AnimalService {
 
     public Box findFirstBoxWithPlaceAndWithQuarantine ()
     { // pierwszy dowolny box gdzie jest miejsce oraz jest kwarantanną
-        List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThan(maxAnimalsInBox);
+        List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThan();
         return boxes.stream()
                 .filter(box -> box.getIsQuarantine().equals(true))
                 .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu z kwarantanną"));
     }
 
         public Box findAvailableBoxWithBoxNumber (Integer boxNumber){
-            return boxRepository.findBoxWithSizeLessThanAndBoxNumber(maxAnimalsInBox, boxNumber);
+            return boxRepository.findBoxWithSizeLessThanAndBoxNumber(boxNumber);
         }
 
         public List<Box> findBoxesWithPlace ( int maxAnimalsInBox){
-            return boxRepository.findBoxesWithNumberOfAnimalsLessThan(maxAnimalsInBox);
+            return boxRepository.findBoxesWithNumberOfAnimalsLessThan();
         }
 
         @Override

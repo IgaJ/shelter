@@ -16,14 +16,14 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     @Query("SELECT b FROM Box b JOIN b.animals a WHERE a.id = :animalId") // zapytanie do tabel łączonych
     Box findBoxByAnimalId(@Param("animalId") UUID id);
 
-    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < :maxSize AND (: isQuarantine IS NULL OR b.isQuarantine = :isQuarantine)")
-    List<Box> findBoxesWithSizeLessThanAndQuarantine(@Param("maxSize") int maxSize, @Param("isQuarantine") Boolean isQuarantine);
+    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals AND (: isQuarantine IS NULL OR b.isQuarantine = :isQuarantine)")
+    List<Box> findBoxesWithSizeLessThanAndQuarantine(@Param("isQuarantine") Boolean isQuarantine);
 
-    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < :maxSize AND b.boxNumber = :boxNumber")
-    Box findBoxWithSizeLessThanAndBoxNumber(@Param("maxSize") int maxSize, @Param("boxNumber") Integer boxNumber);
+    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals AND b.boxNumber = :boxNumber")
+    Box findBoxWithSizeLessThanAndBoxNumber(@Param("boxNumber") Integer boxNumber);
 
-    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < :maxSize")
-    List<Box> findBoxesWithNumberOfAnimalsLessThan(@Param("maxSize") int maxSize);
+    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals")
+    List<Box> findBoxesWithNumberOfAnimalsLessThan();
 
 
     @Query("SELECT COUNT(*) FROM Box b WHERE b.isQuarantine = :isQuarantine")
