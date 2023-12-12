@@ -33,6 +33,10 @@ public interface AnimalService {
 
     List<AnimalDTO> listAvailableForAdoption();
 
-    AnimalDTO changeBox(UUID animalId, BoxDTO boxDTO);
+    AnimalDTO changeBoxToGivenBoxNumber(UUID animalId, BoxDTO boxDTO);
+
+    public AnimalDTO changeBoxToAnyBoxNumberWithNoQuarantineStatus(UUID animalId);
+
+    public AnimalDTO changeBoxToAnyBoxNumberWithYesQuarantineStatus(UUID animalId);
 }
 

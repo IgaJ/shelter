@@ -22,8 +22,12 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < :maxSize AND b.boxNumber = :boxNumber")
     Box findBoxWithSizeLessThanAndBoxNumber(@Param("maxSize") int maxSize, @Param("boxNumber") Integer boxNumber);
 
+    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < :maxSize")
+    List<Box> findBoxesWithNumberOfAnimalsLessThan(@Param("maxSize") int maxSize);
+
+
     @Query("SELECT COUNT(*) FROM Box b WHERE b.isQuarantine = :isQuarantine")
-    Optional<Integer> findBoxesWithQuarantine(@Param("isQuarantine") Boolean isQuarantine);
+    Optional<Integer> findNumberOfBoxesWithQuarantine(@Param("isQuarantine") Boolean isQuarantine);
 
     @Query("SELECT COUNT(*) FROM Box b")
     int countAllBoxes();
@@ -37,4 +41,5 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
 
     @Query("SELECT COALESCE(MAX(b.boxNumber), 0) FROM Box b") // COALESCE - zwraca pierwszą niepustą wartość. Jeśli MAX(b.boxNumber) zwróci null (brak rekordów) to coalesce zwróci 0
     int giveHighestBoxNumber();
+
 }
