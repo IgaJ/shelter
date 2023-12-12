@@ -85,6 +85,23 @@ public class AnimalController {
         return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestParam ("noQuarantineStatus") String noQuarantineStatus) {
+        AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithNoQuarantineStatus(animalId);
+        String message = "Box changed to: ";
+        return new ResponseEntity<>(message + changed.getBoxNumber() + " with no quarantine status ", HttpStatus.OK);
+    }
+
+/*
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestParam ("yesQuarantineStatus") String yesQuarantineStatus) { // todo poprawić updateBox2
+        AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithYesQuarantineStatus(animalId);
+        String message = "Box changed to: ";
+        return new ResponseEntity<>(message + changed.getBoxNumber() + " with yes quarantine status ", HttpStatus.OK);
+    }
+*/
+
+
     @GetMapping(params = "vaccinated")
     public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
         return animalService.listNonVaccinated();
