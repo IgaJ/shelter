@@ -20,8 +20,6 @@ public class BoxServiceImpl implements BoxService {
     private final BoxMapper boxMapper;
     private final AnimalRepository animalRepository;
 
-    private int maxAnimalsInBox = 4;
-
     @Override // overload method, to add animal to box
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
         Box newBox = saveNewBox(isQuarantine);
@@ -101,5 +99,18 @@ public class BoxServiceImpl implements BoxService {
                 throw new BoxServiceException("Animals in box to be deleted");
             }
         }
+    }
+
+    @Override
+    public BoxDTO findBoxWithSizeLessThanBoxCapacityAndBoxNumber(Integer boxNumber) {
+        return boxMapper.toBoxDTO(boxRepository.findBoxWithSizeLessThanBoxCapacityAndBoxNumber(boxNumber));
+    }
+
+    @Override
+    public List<BoxDTO> findBoxesWithPlace() {
+        return boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity()
+                .stream()
+                .map(box -> boxMapper.toBoxDTO(box))
+                .collect(Collectors.toList());
     }
 }

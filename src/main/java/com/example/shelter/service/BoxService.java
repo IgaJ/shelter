@@ -22,7 +22,11 @@ public interface BoxService {
 
    // public int countAllBoxes();
 
-    public int findHighestBoxNumber();
+    int findHighestBoxNumber();
 
     void deleteByNumber(Integer number);
+
+    BoxDTO findBoxWithSizeLessThanBoxCapacityAndBoxNumber(Integer boxNumber);
+
+    List<BoxDTO> findBoxesWithPlace();
 }

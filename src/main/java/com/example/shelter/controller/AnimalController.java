@@ -98,7 +98,6 @@ public class AnimalController {
         }
     }
 
-
         @GetMapping(params = "vaccinated")
         public List<AnimalDTO> getNonVaccinated (@RequestParam Boolean vaccinated, AnimalDTO animalDTO){
             return animalService.listNonVaccinated();
@@ -124,7 +123,7 @@ public class AnimalController {
 
 //wysylanie przez parametry zapytania url: animals?parametr1=wartosc&parametr2=wartosc&....  -> @RequestParam lub bez adnotacji
 //wysylanie przez czesc sciezki najczesciej do id - @PathVariable
-//wysylanie przez cialo zapytania, najczesciej obiekty w formacie json - @RequestBody -> referancja do obiektu DTO
+//wysylanie przez cialo zapytania, najczesciej obiekty w formacie json - @RequestBody -> referencja do obiektu DTO
 //wysylanie danych w naglowkach zapytania (header) -> dane logowania, login i hasło
 
 

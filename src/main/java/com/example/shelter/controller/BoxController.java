@@ -17,6 +17,7 @@ import java.util.UUID;
 @RequestMapping("/boxes")
 public class BoxController {
     private final BoxService boxService;
+
     @GetMapping
     public List<BoxDTO> listBoxes() {
         return boxService.listBoxes();
@@ -25,6 +26,23 @@ public class BoxController {
     @GetMapping("/{id}")
     public BoxDTO getBoxById(@PathVariable("id") UUID id) {
         return boxService.getBoxById(id);
+    }
+
+    @GetMapping("/check/{boxNumber}") // chceck if available by boxNumber
+    public ResponseEntity<String> checkIfAvailableByBoxNumber(@PathVariable("boxNumber") Integer boxNumber) {
+        String message = " available";
+        String error = " unavailable";
+        BoxDTO available = boxService.findBoxWithSizeLessThanBoxCapacityAndBoxNumber(boxNumber);
+        if (available != null) {
+            return new ResponseEntity<>(available.getBoxNumber() + message, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(boxNumber + error, HttpStatus.valueOf(400));
+        }
+    }
+
+    @GetMapping("/available")
+    public List<BoxDTO> findBoxesWithPlace() {
+        return boxService.findBoxesWithPlace();
     }
 
     @DeleteMapping("/id/{id}") // prefix id dodany żeby uniknąć ambiguos handler methods

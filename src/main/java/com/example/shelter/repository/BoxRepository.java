@@ -17,13 +17,13 @@ public interface BoxRepository extends JpaRepository <Box, UUID> {
     Box findBoxByAnimalId(@Param("animalId") UUID id);
 
     @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals AND (: isQuarantine IS NULL OR b.isQuarantine = :isQuarantine)")
-    List<Box> findBoxesWithSizeLessThanAndQuarantine(@Param("isQuarantine") Boolean isQuarantine);
+    List<Box> findBoxesWithSizeLessThanBoxCapacityAndQuarantine(@Param("isQuarantine") Boolean isQuarantine);
 
     @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals AND b.boxNumber = :boxNumber")
-    Box findBoxWithSizeLessThanAndBoxNumber(@Param("boxNumber") Integer boxNumber);
+    Box findBoxWithSizeLessThanBoxCapacityAndBoxNumber(@Param("boxNumber") Integer boxNumber);
 
     @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals")
-    List<Box> findBoxesWithNumberOfAnimalsLessThan();
+    List<Box> findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
 
 
     @Query("SELECT COUNT(*) FROM Box b WHERE b.isQuarantine = :isQuarantine")
