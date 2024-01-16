@@ -71,19 +71,15 @@ public class AnimalServiceImpl implements AnimalService {
     public AnimalDTO changeBoxToGivenBoxNumber(UUID animalId, BoxDTO boxDTO) { // 1.
         Animal animal = animalRepository.getAnimalById(animalId);
         Box currentBox = animal.getBox();
-        Optional<Box> requestedBox = boxRepository.findByNumber(boxDTO.getBoxNumber()); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
-        if (requestedBox.isPresent()) {
-            Box unwrapperOptional = requestedBox.get(); // odpakowanie z optionala
-            if (unwrapperOptional.getAnimals().size() < unwrapperOptional.getMaxAnimals()) {
-                unwrapperOptional.addAnimal(animal);
-                currentBox.getAnimals().remove(animal);
-                boxRepository.save(unwrapperOptional);
-                boxRepository.save(currentBox);
-                animalRepository.save(animal);
-                return animalMapper.animalToAnimalDTO(animal);
-            } else {
-                throw new BoxServiceException("We wskazanym boksie nie ma miejsca");
-            }
+        Box box = boxRepository.findByNumber(boxDTO.getBoxNumber())
+                .orElseThrow(() -> new BoxServiceException("We wskazanym boksie nie ma miejsca")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
+        if (box.getAnimals().size() < box.getMaxAnimals()) {
+            box.addAnimal(animal);
+            currentBox.getAnimals().remove(animal);
+            boxRepository.save(box);
+            boxRepository.save(currentBox);
+            animalRepository.save(animal);
+            return animalMapper.animalToAnimalDTO(animal);
         } else {
             throw new BoxServiceException("Nie ma boksu o wskazanym numerze");
         }
@@ -125,116 +121,115 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
-        public Box findFirstBoxWithPlaceAndNoQuarantine()
-        { // pierwszy dowolny box gdzie jest miejsce oraz nie kest kwarantanną
-            List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
-            return boxes.stream()
-                    .filter(box -> box.getIsQuarantine().equals(false))
-                    .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu bez kwarantanny"));
-        }
+    public Box findFirstBoxWithPlaceAndNoQuarantine() { // pierwszy dowolny box gdzie jest miejsce oraz nie kest kwarantanną
+        List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
+        return boxes.stream()
+                .filter(box -> box.getIsQuarantine().equals(false))
+                .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu bez kwarantanny"));
+    }
 
-    public Box findFirstBoxWithPlaceAndWithQuarantine ()
-    { // pierwszy dowolny box gdzie jest miejsce oraz jest kwarantanną
+    public Box findFirstBoxWithPlaceAndWithQuarantine() { // pierwszy dowolny box gdzie jest miejsce oraz jest kwarantanną
         List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
         return boxes.stream()
                 .filter(box -> box.getIsQuarantine().equals(true))
                 .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu z kwarantanną"));
     }
-        @Override
-        public List<AnimalDTO> listAnimals () {
-            return animalRepository.findAll()
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
 
-        public List<AnimalDTO> listNonVaccinated () {
-            return animalRepository.getNonVaccinated(false)
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
+    @Override
+    public List<AnimalDTO> listAnimals() {
+        return animalRepository.findAll()
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
 
-        public List<AnimalDTO> listAvailableForAdoption () {
-            return animalRepository.getAvailableForAdoption()
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
+    public List<AnimalDTO> listNonVaccinated() {
+        return animalRepository.getNonVaccinated(false)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
 
-        public List<AnimalDTO> listAvailable (Boolean vaccinated, Boolean adopted){
-            return animalRepository.findAllByVaccinatedAndAdopted(vaccinated, adopted)
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
+    public List<AnimalDTO> listAvailableForAdoption() {
+        return animalRepository.getAvailableForAdoption()
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
 
-        public Optional<AnimalDTO> vaccinate (UUID id){
-            Optional<Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
-            if (optionalAnimal.isPresent()) {
-                Animal animal = optionalAnimal.get();
-                animal.setVaccinated(true);
-                animal.setVaccinationDate(LocalDateTime.now());
-                animalRepository.save(animal);
-                return Optional.ofNullable(animalMapper.animalToAnimalDTO(animal));
-            } else {
-                return Optional.empty();
-            }
-        }
+    public List<AnimalDTO> listAvailable(Boolean vaccinated, Boolean adopted) {
+        return animalRepository.findAllByVaccinatedAndAdopted(vaccinated, adopted)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
 
-        @Override
-        public List<AnimalDTO> getAnimalByName (String name){
-            return animalRepository.getAnimalByName(name)
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
-
-        @Override
-        public List<AnimalDTO> getByAge (Integer age){
-            return animalRepository.getAnimalByAge(age)
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
-
-        @Override
-        public List<AnimalDTO> getBySex (String sex){
-            return animalRepository.getAnimalBySex(sex)
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
-
-        @Override
-        public List<AnimalDTO> getAnimalsBySize (String size){
-            return animalRepository.getAnimalBySize(size)
-                    .stream()
-                    .map(animal -> animalMapper.animalToAnimalDTO(animal))
-                    .collect(Collectors.toList());
-        }
-
-        @Override
-        public Optional<AnimalDTO> getAnimalById (UUID id){
-            return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElse(null)));
-        }
-
-        @Override
-        public void deleteById (UUID AnimalId){
-            Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
-            Box box = boxRepository.findBoxByAnimalId(AnimalId); // znajduję box w którym jest dany animal
-            if (box != null) {
-                box.getAnimals().remove(foundAnimal); // jeśli box się znalazł (zwierzę było przypisane do boxu), usuwam zwierzę
-                boxRepository.save(box);
-            }
-            animalRepository.deleteById(AnimalId); // następnie z tabeli animals (jeśli zwierzę nie było przypisane, również usuwa)
-        }
-
-        @Override
-        public Optional<AnimalDTO> patchAnimalById (UUID animalId, AnimalDTO animalDTO){
-            return null;
+    public Optional<AnimalDTO> vaccinate(UUID id) {
+        Optional<Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
+        if (optionalAnimal.isPresent()) {
+            Animal animal = optionalAnimal.get();
+            animal.setVaccinated(true);
+            animal.setVaccinationDate(LocalDateTime.now());
+            animalRepository.save(animal);
+            return Optional.ofNullable(animalMapper.animalToAnimalDTO(animal));
+        } else {
+            return Optional.empty();
         }
     }
+
+    @Override
+    public List<AnimalDTO> getAnimalByName(String name) {
+        return animalRepository.getAnimalByName(name)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDTO> getByAge(Integer age) {
+        return animalRepository.getAnimalByAge(age)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDTO> getBySex(String sex) {
+        return animalRepository.getAnimalBySex(sex)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnimalDTO> getAnimalsBySize(String size) {
+        return animalRepository.getAnimalBySize(size)
+                .stream()
+                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<AnimalDTO> getAnimalById(UUID id) {
+        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElse(null)));
+    }
+
+    @Override
+    public void deleteById(UUID AnimalId) {
+        Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
+        Box box = boxRepository.findBoxByAnimalId(AnimalId); // znajduję box w którym jest dany animal
+        if (box != null) {
+            box.getAnimals().remove(foundAnimal); // jeśli box się znalazł (zwierzę było przypisane do boxu), usuwam zwierzę
+            boxRepository.save(box);
+        }
+        animalRepository.deleteById(AnimalId); // następnie z tabeli animals (jeśli zwierzę nie było przypisane, również usuwa)
+    }
+
+    @Override
+    public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
+        return null;
+    }
+}
 
 //@Override
     /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional

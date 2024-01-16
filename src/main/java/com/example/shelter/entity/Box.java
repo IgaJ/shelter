@@ -45,6 +45,8 @@ public class Box {
         animals.add(animal); // ostatecznie iniciualizacja w bs.saveNewBox. Trzeba było ddoać sprawdzenie w as.saveNewAnimal czy kolekcja jest null i inicjalizację
         animal.setBox(this);
     }
+
+    // TODO dodać set z akcjami
 }
 // Zależności opóźnione (lazy):
 //Jeśli relacja animals jest ustawiona na tryb "lazy loading", Hibernate nie załaduje zestawu animals, dopóki nie zostanie użyta ta właściwość. W takim przypadku, upewnij się,

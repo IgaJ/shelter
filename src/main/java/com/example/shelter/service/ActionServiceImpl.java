@@ -23,10 +23,8 @@ public class ActionServiceImpl implements ActionService {
 
 
     @Override
-    public ActionDTO saveNewAction(ActionDTO actionDTO, UUID id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(); // todo exceprtion napisać
-        animalRepository.save(animal);
-
+    public ActionDTO saveNewAnimalAction(ActionDTO actionDTO) {
+        Animal animal = animalRepository.findById(actionDTO.getAnimalId()).orElseThrow(); // todo exceprtion napisać
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
@@ -34,13 +32,30 @@ public class ActionServiceImpl implements ActionService {
             case ADOPTION -> adopt(animal);
             case VACCINATION -> vaccinate(animal);
             case WALK -> walk(animal);
-            case CLEANING -> clean(animal);
         }
         newAction.setDate(LocalDateTime.now());
         animal.getActions().add(newAction);
         actionRepository.save(newAction);
+        animalRepository.save(animal);
         return actionMapper.toActionDTO(newAction);
     }
+
+    @Override
+    public ActionDTO saveNewBoxAction(ActionDTO actionDTO) {
+        Box box = boxRepository.findById(actionDTO.getBoxId()).orElseThrow(()-> new ActionServiceException("Nie ma takiego boksu"));
+        Action newAction = new Action();
+        newAction.setActionType(actionDTO.getActionType());
+        switch (actionDTO.getActionType()) {
+            case CLEANING -> clean(box);
+        }
+        newAction.setDate(LocalDateTime.now());
+        //box.getActions().add(newAction);
+        actionRepository.save(newAction); // akcje potem box
+        boxRepository.save(box);
+        return actionMapper.toActionDTO(newAction);
+    }
+
+
 
 /*
     private void admiss(Animal animal) {
@@ -62,9 +77,7 @@ public class ActionServiceImpl implements ActionService {
         animal.setLastWalkDate(LocalDateTime.now());
     }
 
-    void clean(Animal animal) {
-        Box box = boxRepository.findBoxByAnimalId(animal.getId());
+    void clean(Box box) {
         box.setCleaningDate(LocalDateTime.now());
-        boxRepository.save(box);
     }
 }
