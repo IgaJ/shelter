@@ -1,14 +1,17 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.ActionDTO;
-import com.example.shelter.entity.*;
+import com.example.shelter.entity.Action;
+import com.example.shelter.entity.Animal;
+import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.ActionMapper;
-import com.example.shelter.repository.*;
+import com.example.shelter.repository.ActionRepository;
+import com.example.shelter.repository.AnimalRepository;
+import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,61 +26,59 @@ public class ActionServiceImpl implements ActionService {
 
 
     @Override
-    public ActionDTO saveNewAnimalAction(ActionDTO actionDTO) {
-        Animal animal = animalRepository.findById(actionDTO.getAnimalId()).orElseThrow(); // todo exceprtion napisać
+    public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
+        Animal animal = animalRepository.findById(actionDTO.getAnimalId()).orElseThrow(() -> new ActionServiceException("Nie ma takiego zwierzęcia"));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
-            //case ADMISSION -> admiss(animal);
-            case ADOPTION -> adopt(animal);
-            case VACCINATION -> vaccinate(animal);
+            case ADMIT -> admit(animal);
+            case ADOPT -> adopt(animal);
+            case VACCINATE -> vaccinate(animal);
             case WALK -> walk(animal);
         }
         newAction.setDate(LocalDateTime.now());
-        animal.getActions().add(newAction);
+        animal.addAction(newAction);
         actionRepository.save(newAction);
         animalRepository.save(animal);
         return actionMapper.toActionDTO(newAction);
     }
 
     @Override
-    public ActionDTO saveNewBoxAction(ActionDTO actionDTO) {
+    public ActionDTO saveNewActionForBox(ActionDTO actionDTO) {
         Box box = boxRepository.findById(actionDTO.getBoxId()).orElseThrow(()-> new ActionServiceException("Nie ma takiego boksu"));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
-            case CLEANING -> clean(box);
+            case CLEAN -> clean(box);
         }
         newAction.setDate(LocalDateTime.now());
-        //box.getActions().add(newAction);
-        actionRepository.save(newAction); // akcje potem box
+        box.addAction(newAction);
+        actionRepository.save(newAction); // najpierw save akcji potem boxu (bo w boxie wskazanie na akcje)
         boxRepository.save(box);
         return actionMapper.toActionDTO(newAction);
     }
 
-
-
-/*
-    private void admiss(Animal animal) {
-        animal.get
+    private void admit(Animal animal) {
+        animal.setArrivalDate(LocalDateTime.now());
+        animal.setAdopted(false);
+        animal.setVaccinated(false);
     }
-*/
 
-    void adopt(Animal animal) {
+    private void adopt(Animal animal) {
         animal.setAdopted(true);
         animal.setAdoptionDate(LocalDateTime.now());
     }
 
-    void vaccinate(Animal animal) {
+    private void vaccinate(Animal animal) {
         animal.setVaccinated(true);
         animal.setVaccinationDate(LocalDateTime.now());
     }
 
-    void walk(Animal animal) {
+    private void walk(Animal animal) {
         animal.setLastWalkDate(LocalDateTime.now());
     }
 
-    void clean(Box box) {
+    private void clean(Box box) {
         box.setCleaningDate(LocalDateTime.now());
     }
 }

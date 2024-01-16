@@ -164,18 +164,14 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<AnimalDTO> vaccinate(UUID id) {
-        Optional<Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
-        if (optionalAnimal.isPresent()) {
-            Animal animal = optionalAnimal.get();
-            animal.setVaccinated(true);
-            animal.setVaccinationDate(LocalDateTime.now());
-            animalRepository.save(animal);
-            return Optional.ofNullable(animalMapper.animalToAnimalDTO(animal));
-        } else {
-            return Optional.empty();
-        }
-    }
+    public AnimalDTO vaccinate(UUID id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        animal.setVaccinated(true);
+        animal.setVaccinationDate(LocalDateTime.now());
+        animalRepository.save(animal);
+        return animalMapper.animalToAnimalDTO(animal);
+
+}
 
     @Override
     public List<AnimalDTO> getAnimalByName(String name) {
@@ -211,7 +207,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Optional<AnimalDTO> getAnimalById(UUID id) {
-        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElse(null)));
+        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
     }
 
     @Override
@@ -232,7 +228,7 @@ public class AnimalServiceImpl implements AnimalService {
 }
 
 //@Override
-    /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional
+    /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
         AtomicReference<Optional<AnimalDTO>> atomicReference = new AtomicReference<>();
 
         animalRepository.findById(animalId).ifPresentOrElse(foundAnimal -> {

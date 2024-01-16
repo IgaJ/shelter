@@ -26,7 +26,7 @@ public class AnimalDTO {
     private String size;
     private Integer age;
 
-    private Date arrivalDate;
+    private LocalDateTime arrivalDate;
     private int boxNumber; // todo mapper do adnotacji by tłumaczył Box na int boxNumber
 
     private String description;

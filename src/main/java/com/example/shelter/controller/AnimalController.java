@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -104,7 +103,7 @@ public class AnimalController {
         }
 
         public ResponseEntity<?> vaccinate (UUID id){ // zmiana cechy robimy updatem zamiast operacji na zasobie
-            Optional<AnimalDTO> vaccinated = animalService.vaccinate(id);
+            AnimalDTO vaccinated = animalService.vaccinate(id);
             return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
         }
 

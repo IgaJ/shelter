@@ -38,7 +38,7 @@ public class Animal {
     private String size;
     private Integer age;
 
-    private Date arrivalDate;
+    private LocalDateTime arrivalDate;
 
     @ManyToOne
     private Box box;
@@ -54,5 +54,9 @@ public class Animal {
 
     @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
     private Set<Action> actions = new HashSet<>();
+
+    public void addAction(Action action) {
+        actions.add(action);
+    }
 
 }

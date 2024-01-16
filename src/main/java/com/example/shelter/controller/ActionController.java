@@ -21,12 +21,12 @@ public class ActionController {
 
     @PostMapping("/animals/{id}/actions") // akcja jest podzasobem zwierzęcia
     public ResponseEntity<ActionDTO> saveNewActionToAnimal(@RequestBody ActionDTO actionDTO, @PathVariable UUID id) {
-        ActionDTO savedAction = actionService.saveNewAnimalAction(actionDTO);
+        ActionDTO savedAction = actionService.saveNewActionForAnimal(actionDTO);
         return new ResponseEntity<>(savedAction, HttpStatus.OK);
     }
     @PostMapping("/boxes/{id}/actions")
     public ResponseEntity<ActionDTO> saveNewActionToBox(@RequestBody ActionDTO actionDTO, @PathVariable UUID id) {
-        ActionDTO savedAction = actionService.saveNewBoxAction(actionDTO);
+        ActionDTO savedAction = actionService.saveNewActionForBox(actionDTO);
         return new ResponseEntity<>(savedAction, HttpStatus.OK);
     }
 
