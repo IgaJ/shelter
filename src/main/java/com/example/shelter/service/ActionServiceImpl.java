@@ -11,7 +11,7 @@ import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class ActionServiceImpl implements ActionService {
             case VACCINATE -> vaccinate(animal);
             case WALK -> walk(animal);
         }
-        newAction.setDate(LocalDateTime.now());
+        newAction.setActionDate(LocalDate.now());
         animal.addAction(newAction);
         actionRepository.save(newAction);
         animalRepository.save(animal);
@@ -51,7 +51,7 @@ public class ActionServiceImpl implements ActionService {
         switch (actionDTO.getActionType()) {
             case CLEAN -> clean(box);
         }
-        newAction.setDate(LocalDateTime.now());
+        newAction.setActionDate(LocalDate.now());
         box.addAction(newAction);
         actionRepository.save(newAction); // najpierw save akcji potem boxu (bo w boxie wskazanie na akcje)
         boxRepository.save(box);
@@ -59,26 +59,25 @@ public class ActionServiceImpl implements ActionService {
     }
 
     private void admit(Animal animal) {
-        animal.setArrivalDate(LocalDateTime.now());
+        animal.setArrivalDate(LocalDate.now());
         animal.setAdopted(false);
         animal.setVaccinated(false);
     }
 
     private void adopt(Animal animal) {
         animal.setAdopted(true);
-        animal.setAdoptionDate(LocalDateTime.now());
+        animal.setAdoptionDate(LocalDate.now());
     }
 
     private void vaccinate(Animal animal) {
         animal.setVaccinated(true);
-        animal.setVaccinationDate(LocalDateTime.now());
     }
 
     private void walk(Animal animal) {
-        animal.setLastWalkDate(LocalDateTime.now());
+        animal.setLastWalkDate(LocalDate.now());
     }
 
     private void clean(Box box) {
-        box.setCleaningDate(LocalDateTime.now());
+        box.setCleaningDate(LocalDate.now());
     }
 }

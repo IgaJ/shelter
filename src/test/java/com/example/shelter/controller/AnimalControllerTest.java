@@ -1,6 +1,4 @@
 package com.example.shelter.controller;
-
-import com.example.shelter.DataInitializer;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.entity.AnimalSpecies;
@@ -20,14 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcResultMatchersDsl;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +67,7 @@ class AnimalControllerTest {
         AnimalDTO animalDTO = AnimalDTO.builder()
                 .species(AnimalSpecies.valueOf("DOG"))
                 .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
+                .arrivalDate(LocalDate.now())
                 .build();
 
         ResponseEntity<?> responseEntity = animalController.saveNewAnimal(animalDTO);
@@ -85,12 +82,12 @@ class AnimalControllerTest {
         AnimalDTO animalDTO = AnimalDTO.builder()
                 .species(AnimalSpecies.valueOf("DOG"))
                 .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
+                .arrivalDate(LocalDate.now())
                 .build();
         AnimalDTO animalDTO2 = AnimalDTO.builder()
                 .species(AnimalSpecies.valueOf("DOG"))
                 .name("Fala")
-                .arrivalDate(Date.valueOf("2023-05-03"))
+                .arrivalDate(LocalDate.now())
                 .build();
 
         animalController.saveNewAnimal(animalDTO);
@@ -105,10 +102,10 @@ class AnimalControllerTest {
         AnimalDTO animalDTO = AnimalDTO.builder()
                 .species(AnimalSpecies.DOG)
                 .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
+                .arrivalDate(LocalDate.now())
                 .build();
 
-        UUID id = animalController.saveNewAnimal(animalDTO).getBody().getId();
+        Integer id = animalController.saveNewAnimal(animalDTO).getBody().getId();
         AnimalDTO dto = animalController.getAnimalById(id);
         assertThat(dto.getId()).isEqualTo(id);
     }
@@ -118,7 +115,7 @@ class AnimalControllerTest {
         AnimalDTO animalDTO = AnimalDTO.builder()
                 .species(AnimalSpecies.DOG)
                 .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
+                .arrivalDate(LocalDate.now())
                 .build();
 
         animalController.saveNewAnimal(animalDTO);
@@ -135,10 +132,10 @@ class AnimalControllerTest {
         AnimalDTO animalDTO = AnimalDTO.builder()
                 .species(AnimalSpecies.DOG)
                 .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
+                .arrivalDate(LocalDate.now())
                 .build();
 
-        UUID id = animalController.saveNewAnimal(animalDTO).getBody().getId();
+        Integer id = animalController.saveNewAnimal(animalDTO).getBody().getId();
 
         AnimalDTO newDTO = AnimalDTO.builder()
                 .name("Rudis")
@@ -162,43 +159,13 @@ class AnimalControllerTest {
         AnimalDTO animalDTO = AnimalDTO.builder()
                 .species(AnimalSpecies.DOG)
                 .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
+                .arrivalDate(LocalDate.now())
                 .build();
 
         AnimalDTO adto2 = animalController.saveNewAnimal(animalDTO).getBody();
         System.out.println(boxService.listBoxes().stream().map(BoxDTO::getBoxNumber).toList());
         System.out.println(animalDTO.getBoxNumber());
+        assert adto2 != null;
         Assertions.assertEquals( 1, adto2.getBoxNumber());
     }
-
-
-
-
-
-/*    @Rollback
-    @Transactional
-    @Test
-    void updatePatchById() {
-
-
-        AnimalDTO animalDTO = AnimalDTO.builder()
-                .species(AnimalSpecies.valueOf("DOG"))
-                .name("Rudy")
-                .arrivalDate(Date.valueOf("2022-10-11"))
-                .build();
-
-        AnimalDTO saved = animalService.saveNewAnimal(animalDTO);
-
-        String updatedName = "updated";
-        saved.setName(updatedName);
-
-        saved = (animalMapper.animalToAnimalDTO(animalRepository.findAll().get(0)));
-
-        ResponseEntity<?> responseEntity = animalController.updatePatchById(saved.getId(), animalDTO);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
-        Animal updated = animalRepository.findAll().get(0);
-        assertThat(updated.getName()).isEqualTo(updatedName);
-        assertThat(updated.getAdopted()).isNotNull();
-        System.out.println(animalDTO);
-    }*/
 }

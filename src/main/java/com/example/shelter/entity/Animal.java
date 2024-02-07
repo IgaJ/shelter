@@ -3,32 +3,23 @@ package com.example.shelter.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 @Getter
 @Setter
-@Builder
 @Entity
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "animals")
 public class Animal {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @NotNull
     private AnimalSpecies species;
@@ -38,7 +29,8 @@ public class Animal {
     private String size;
     private Integer age;
 
-    private LocalDateTime arrivalDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate arrivalDate;
 
     @ManyToOne
     private Box box;
@@ -48,9 +40,9 @@ public class Animal {
     private Boolean vaccinated = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime vaccinationDate;
-    private LocalDateTime adoptionDate;
-    private LocalDateTime lastWalkDate;
+    private LocalDate adoptionDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate lastWalkDate;
 
     @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
     private Set<Action> actions = new HashSet<>();

@@ -5,12 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
-
-@Builder
 @Data
+@Builder
 public class VolunteerDTO {
-    private UUID id;
+    private Integer id;
 
     @NotNull
     @NotBlank

@@ -9,11 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/boxes")
 public class BoxController {
     private final BoxService boxService;
@@ -24,7 +23,7 @@ public class BoxController {
     }
 
     @GetMapping("/{id}")
-    public BoxDTO getBoxById(@PathVariable("id") UUID id) {
+    public BoxDTO getBoxById(@PathVariable("id") Integer id) {
         return boxService.getBoxById(id);
     }
 
@@ -46,7 +45,7 @@ public class BoxController {
     }
 
     @DeleteMapping("/id/{id}") // prefix id dodany żeby uniknąć ambiguos handler methods
-    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
         boxService.deleteById(id);
         String message = "Deleted: ";
         return new ResponseEntity<>(message + id, HttpStatus.OK);

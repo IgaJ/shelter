@@ -7,16 +7,15 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
-@Builder
 @Data
+@Builder
 public class AnimalDTO {
 
-    private UUID id;
+    private Integer id;
 
     @NotNull
     private AnimalSpecies species;
@@ -26,7 +25,9 @@ public class AnimalDTO {
     private String size;
     private Integer age;
 
-    private LocalDateTime arrivalDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate arrivalDate;
+
     private int boxNumber; // todo mapper do adnotacji by tłumaczył Box na int boxNumber
 
     private String description;
@@ -35,7 +36,9 @@ public class AnimalDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime vaccinationDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime adoptionDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime lastWalkDate;
 
     private Set<Action> actions;

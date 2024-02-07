@@ -2,30 +2,24 @@ package com.example.shelter.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Box {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @Column(unique = true) // czy to coś w ogóle robi skoro numer jest nadawany automatycznie?
+    @Column(unique = true)
     private Integer boxNumber;
 
     private Boolean isQuarantine;
@@ -33,9 +27,8 @@ public class Box {
     @Builder.Default
     private int maxAnimals = 4;
 
-    @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime cleaningDate;
+    private LocalDate cleaningDate;
 
     @OneToMany(mappedBy = "box")
     //mapowane przez drugą stronę (Animal) przez pole o zawie "box" - nie towrzy się druga tabela

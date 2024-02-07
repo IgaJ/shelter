@@ -1,18 +1,18 @@
 package com.example.shelter.service;
 
+import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.AnimalMapper;
-import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
 import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,7 +68,7 @@ public class AnimalServiceImpl implements AnimalService {
     // 2b. gdy nie ma boxu z wolnymi miejscami - stwórz nowy box
 
 
-    public AnimalDTO changeBoxToGivenBoxNumber(UUID animalId, BoxDTO boxDTO) { // 1.
+    public AnimalDTO changeBoxToGivenBoxNumber(Integer animalId, BoxDTO boxDTO) { // 1.
         Animal animal = animalRepository.getAnimalById(animalId);
         Box currentBox = animal.getBox();
         Box box = boxRepository.findByNumber(boxDTO.getBoxNumber())
@@ -85,7 +85,7 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
-    public AnimalDTO changeBoxToAnyBoxNumberWithNoQuarantineStatus(UUID animalId) { // 2a
+    public AnimalDTO changeBoxToAnyBoxNumberWithNoQuarantineStatus(Integer animalId) { // 2a
         Animal animal = animalRepository.getAnimalById(animalId);
         Box currentBox = animal.getBox();
         Box newBox = findFirstBoxWithPlaceAndNoQuarantine();
@@ -103,7 +103,7 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
-    public AnimalDTO changeBoxToAnyBoxNumberWithYesQuarantineStatus(UUID animalId) { // 2b
+    public AnimalDTO changeBoxToAnyBoxNumberWithYesQuarantineStatus(Integer animalId) { // 2b
         Animal animal = animalRepository.getAnimalById(animalId);
         Box currentBox = animal.getBox();
         Box newBox = findFirstBoxWithPlaceAndWithQuarantine();
@@ -121,7 +121,7 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
-    public Box findFirstBoxWithPlaceAndNoQuarantine() { // pierwszy dowolny box gdzie jest miejsce oraz nie kest kwarantanną
+    public Box findFirstBoxWithPlaceAndNoQuarantine() { // pierwszy dowolny box gdzie jest miejsce oraz nie jest kwarantanną
         List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
         return boxes.stream()
                 .filter(box -> box.getIsQuarantine().equals(false))
@@ -164,10 +164,9 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public AnimalDTO vaccinate(UUID id) {
+    public AnimalDTO vaccinate(Integer id) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         animal.setVaccinated(true);
-        animal.setVaccinationDate(LocalDateTime.now());
         animalRepository.save(animal);
         return animalMapper.animalToAnimalDTO(animal);
 
@@ -206,12 +205,12 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Optional<AnimalDTO> getAnimalById(UUID id) {
+    public Optional<AnimalDTO> getAnimalById(Integer id) {
         return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
     }
 
     @Override
-    public void deleteById(UUID AnimalId) {
+    public void deleteById(Integer AnimalId) {
         Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
         Box box = boxRepository.findBoxByAnimalId(AnimalId); // znajduję box w którym jest dany animal
         if (box != null) {
@@ -222,7 +221,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
+    public Optional<AnimalDTO> patchAnimalById(Integer animalId, AnimalDTO animalDTO) {
         return null;
     }
 }

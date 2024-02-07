@@ -6,12 +6,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
-@Builder
 @Data
+@Builder
 public class BoxDTO {
-    private UUID id;
+    private Integer id;
 
     private Integer boxNumber;
     private Boolean isQuarantine;

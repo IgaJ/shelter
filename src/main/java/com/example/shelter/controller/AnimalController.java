@@ -12,11 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/animals")
 public class AnimalController {
     private final AnimalService animalService;
@@ -29,6 +28,30 @@ public class AnimalController {
         return new ResponseEntity<>(savedAnimal, headers, HttpStatus.CREATED);
     }
 
+/*    @GetMapping
+    public List<AnimalDTO> getAnimals(@RequestParam(required = false) String name,
+                                      @RequestParam(required = false) Integer age,
+                                      @RequestParam(required = false) String sex,
+                                      @RequestParam(required = false) String size,
+                                      @PathVariable(required = false) Integer id) {
+        if (id != null) {
+            return Collections.singletonList(animalService.getAnimalById(id).orElseThrow(null));
+        }
+        if (name != null) {
+            animalService.getAnimalByName(name);
+        }
+        if (age != null) {
+            animalService.getByAge(age);
+        }
+        if (sex != null) {
+            animalService.getBySex(sex);
+        }
+        if (size != null) {
+            animalService.getAnimalsBySize(size);
+        }
+        return animalService.listAnimals();
+    }*/
+
     @GetMapping
     public List<AnimalDTO> listAnimals() {
         return animalService.listAnimals();
@@ -36,7 +59,7 @@ public class AnimalController {
 
     @GetMapping(params = "name")
     // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr inaczej ambiguance
-    public List<AnimalDTO> getAnimalByName(/*@RequestParam*/ String name) {
+    public List<AnimalDTO> getAnimalByName(@RequestParam String name) {
         return animalService.getAnimalByName(name);
     }
 
@@ -56,19 +79,19 @@ public class AnimalController {
     }
 
     @GetMapping("/{id}") // nawias do PathVariable // id zaraz po ukośniku
-    public AnimalDTO getAnimalById(@PathVariable("id") UUID id) {
+    public AnimalDTO getAnimalById(@PathVariable("id") Integer id) {
         return animalService.getAnimalById(id).orElseThrow(null);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
         animalService.deleteById(id);
         String message = "Deleted: ";
         return new ResponseEntity<>(message + id, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updatePatchById(@PathVariable("id") UUID animalId, @RequestBody AnimalDTO animalDTO) {
+    public ResponseEntity<?> updatePatchById(@PathVariable("id") Integer animalId, @RequestBody AnimalDTO animalDTO) {
         try {
             AnimalDTO animal = animalService.patchAnimalById(animalId, animalDTO).orElse(null);
             return new ResponseEntity<>(animal, HttpStatus.OK);
@@ -78,14 +101,15 @@ public class AnimalController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateBox(@PathVariable("id") UUID animalId, @RequestBody BoxDTO boxDTO) {
+    public ResponseEntity<String> updateBox(@PathVariable("id") Integer animalId, @RequestBody BoxDTO boxDTO) {
         AnimalDTO changed = animalService.changeBoxToGivenBoxNumber(animalId, boxDTO);
         String message = "Box changed to: ";
         return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
     }
 
+    //todo wymienić na użycie akcji
     @PutMapping(value = "/{id}", params = "isQuarantine")
-    public ResponseEntity<String> updateBoxWithQuarantineStatus(@PathVariable("id") UUID animalId, @RequestParam ("isQuarantine") Boolean isQuarantine) {
+    public ResponseEntity<String> updateBoxWithQuarantineStatus(@PathVariable("id") Integer animalId, @RequestParam("isQuarantine") Boolean isQuarantine) {
         if (!isQuarantine) {
             AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithNoQuarantineStatus(animalId);
             String message = "Box changed to: ";
@@ -97,21 +121,21 @@ public class AnimalController {
         }
     }
 
-        @GetMapping(params = "vaccinated")
-        public List<AnimalDTO> getNonVaccinated (@RequestParam Boolean vaccinated, AnimalDTO animalDTO){
-            return animalService.listNonVaccinated();
-        }
-
-        public ResponseEntity<?> vaccinate (UUID id){ // zmiana cechy robimy updatem zamiast operacji na zasobie
-            AnimalDTO vaccinated = animalService.vaccinate(id);
-            return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
-        }
-
-        public ResponseEntity<?> listReadyForAdoption () {
-            List<AnimalDTO> ready = animalService.listAvailableForAdoption();
-            return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
-        }
+    @GetMapping(params = "vaccinated")
+    public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
+        return animalService.listNonVaccinated();
     }
+
+    public ResponseEntity<?> vaccinate(Integer id) { // zmiana cechy robimy updatem zamiast operacji na zasobie
+        AnimalDTO vaccinated = animalService.vaccinate(id);
+        return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
+    }
+
+    public ResponseEntity<?> listReadyForAdoption() {
+        List<AnimalDTO> ready = animalService.listAvailableForAdoption();
+        return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
+    }
+}
 // skłądnia
 //localhost:8080/animals?name=Rudy
 

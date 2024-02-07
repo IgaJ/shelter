@@ -4,17 +4,16 @@ import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.entity.Animal;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface BoxService {
 
-    BoxDTO getBoxById(UUID id);
+    BoxDTO getBoxById(Integer id);
 
-    BoxDTO getBoxByAnimalId(UUID animalId);
+    BoxDTO getBoxByAnimalId(Integer animalId);
 
     List<BoxDTO> listBoxes();
 
-    void deleteById(UUID id);
+    void deleteById(Integer id);
 
     BoxDTO addNewBox(Animal animal, Boolean isQuarantine);
 

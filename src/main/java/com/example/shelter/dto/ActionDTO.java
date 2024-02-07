@@ -5,22 +5,21 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalDate;
 
-@Builder
 @Data
+@Builder
 public class ActionDTO {
 
-    private UUID id;
+    private Integer id;
 
     private ActionType actionType;
 
-    //@DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String actionDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate actionDate;
 
-    private UUID animalId;
+    private Integer animalId;
 
-    private UUID boxId;
+    private Integer boxId;
 
 }
