@@ -13,9 +13,9 @@ import java.util.UUID;
 
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping()
+@RequiredArgsConstructor
 public class ActionController {
     private final ActionService actionService;
 
