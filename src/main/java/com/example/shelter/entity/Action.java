@@ -30,5 +30,6 @@ public class Action {
     @ManyToOne
     @JoinColumn(name = "box_id")
     private Box box;
+
 }
 // póki co listy animals nie ma. Jest lista Actions w Animal. Do zmiany gdy będzie potrzeba
