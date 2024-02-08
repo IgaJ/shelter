@@ -1,18 +1,18 @@
 package com.example.shelter.service;
 
+import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.AnimalMapper;
-import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.repository.AnimalRepository;
 import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,21 +22,20 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalMapper animalMapper;
     private final BoxService boxService;
     private final BoxRepository boxRepository;
-    private int maxAnimalsInBox = 4;  // it can be public static as
 
     @Transactional
     @Override
-    public AnimalDTO saveNewAnimal(AnimalDTO animal) { //
+    public AnimalDTO saveNewAnimal(AnimalDTO animalDTO) { //
         Animal newAnimal = Animal.builder()
-                .species(animal.getSpecies())
-                .name(animal.getName())
-                .sex(animal.getSex())
-                .size(animal.getSize())
-                .age(animal.getAge())
-                .arrivalDate(animal.getArrivalDate())
-                .description(animal.getDescription())
+                .species(animalDTO.getSpecies())
+                .name(animalDTO.getName())
+                .sex(animalDTO.getSex())
+                .size(animalDTO.getSize())
+                .age(animalDTO.getAge())
+                .arrivalDate(animalDTO.getArrivalDate())
+                .description(animalDTO.getDescription())
                 .build();
-        // przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
+        // automatyczne przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
         Box selected = findAvailableBoxWithSizeAndQuarantine(); // metoda daje pierwszy box gdzie jest miejsce lub null
         if (selected == null) {
             boxService.addNewBox(newAnimal, true);
@@ -51,33 +50,89 @@ public class AnimalServiceImpl implements AnimalService {
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
 
-    public Box findAvailableBoxWithSizeAndQuarantine() {
-        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanAndQuarantine(maxAnimalsInBox, true);
-        if (!availableQuarantineBoxes.isEmpty()) {
-            return availableQuarantineBoxes.get(0);
-        } else {
-            return null;
-        }
+    Box findAvailableBoxWithSizeAndQuarantine() {
+        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanBoxCapacityAndQuarantine(true);
+        Optional<Box> requested = availableQuarantineBoxes.stream()
+                .findFirst();
+        return requested.orElse(null);
     }
 
-    public AnimalDTO changeBox(UUID animalId, BoxDTO boxDTO) {
+    // 1. Ręczna zmiana boksu: znajdż box gdzie zwierząt <4 i ma podany numer (bzwzgl na kwarantannę)
+    // 2. Automatyczna zmian boksu: znajdź pierwszy gdzie zwierząt <4, i jest wskazana kwarantanna - gdy pracownik nie chce wskazywać konkretnego
+    // 2a. kwarantanna nie
+    // 2b. kwarantanna tak
+    //
+    // 1a. zwróć box o podanym numerze - exception nie ma takiego numeru boxu
+    // 1b. spr czy są miejsca, jeśli nie to exception, jeśli tak to addAnimal
+    // 2a. zwroć pierwszy gdzie zwierząt <4
+    // 2b. gdy nie ma boxu z wolnymi miejscami - stwórz nowy box
+
+
+    public AnimalDTO changeBoxToGivenBoxNumber(Integer animalId, BoxDTO boxDTO) { // 1.
         Animal animal = animalRepository.getAnimalById(animalId);
-        Box current = animal.getBox();
-        Box requested = findAvailableBoxWithBoxNumber(boxDTO.getBoxNumber()); // dodać obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
-        if (requested != null) {
-            requested.addAnimal(animal);
-            current.getAnimals().remove(animal);
-            boxRepository.save(requested);
-            boxRepository.save(current);
+        Box currentBox = animal.getBox();
+        Box box = boxRepository.findByNumber(boxDTO.getBoxNumber())
+                .orElseThrow(() -> new BoxServiceException("We wskazanym boksie nie ma miejsca")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
+        if (box.getAnimals().size() < box.getMaxAnimals()) {
+            box.addAnimal(animal);
+            currentBox.getAnimals().remove(animal);
+            boxRepository.save(box);
+            boxRepository.save(currentBox);
             animalRepository.save(animal);
+            return animalMapper.animalToAnimalDTO(animal);
         } else {
-            throw new BoxServiceException("sprawdź czy żądany box jest dostępny (nie ma numeru/nie ma miejsc)");
+            throw new BoxServiceException("Nie ma boksu o wskazanym numerze");
         }
-        return animalMapper.animalToAnimalDTO(animal);
     }
 
-    public Box findAvailableBoxWithBoxNumber(Integer boxNumber) {
-        return boxRepository.findBoxWithSizeLessThanAndBoxNumber(maxAnimalsInBox, boxNumber);
+    public AnimalDTO changeBoxToAnyBoxNumberWithNoQuarantineStatus(Integer animalId) { // 2a
+        Animal animal = animalRepository.getAnimalById(animalId);
+        Box currentBox = animal.getBox();
+        Box newBox = findFirstBoxWithPlaceAndNoQuarantine();
+        if (newBox == null) {
+            currentBox.getAnimals().remove(animal);
+            boxService.addNewBox(animal, false);
+            return animalMapper.animalToAnimalDTO(animal);
+        } else {
+            currentBox.getAnimals().remove(animal);
+            newBox.addAnimal(animal);
+            boxRepository.save(currentBox);
+            boxRepository.save(newBox);
+            animalRepository.save(animal);
+            return animalMapper.animalToAnimalDTO(animal);
+        }
+    }
+
+    public AnimalDTO changeBoxToAnyBoxNumberWithYesQuarantineStatus(Integer animalId) { // 2b
+        Animal animal = animalRepository.getAnimalById(animalId);
+        Box currentBox = animal.getBox();
+        Box newBox = findFirstBoxWithPlaceAndWithQuarantine();
+        if (newBox == null) {
+            currentBox.getAnimals().remove(animal);
+            boxService.addNewBox(animal, false);
+            return animalMapper.animalToAnimalDTO(animal);
+        } else {
+            currentBox.getAnimals().remove(animal);
+            newBox.addAnimal(animal);
+            boxRepository.save(currentBox);
+            boxRepository.save(newBox);
+            animalRepository.save(animal);
+            return animalMapper.animalToAnimalDTO(animal);
+        }
+    }
+
+    public Box findFirstBoxWithPlaceAndNoQuarantine() { // pierwszy dowolny box gdzie jest miejsce oraz nie jest kwarantanną
+        List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
+        return boxes.stream()
+                .filter(box -> box.getIsQuarantine().equals(false))
+                .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu bez kwarantanny"));
+    }
+
+    public Box findFirstBoxWithPlaceAndWithQuarantine() { // pierwszy dowolny box gdzie jest miejsce oraz jest kwarantanną
+        List<Box> boxes = boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
+        return boxes.stream()
+                .filter(box -> box.getIsQuarantine().equals(true))
+                .findFirst().orElseThrow(() -> new BoxServiceException("Nie ma wolnego boksu z kwarantanną"));
     }
 
     @Override
@@ -109,18 +164,13 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<AnimalDTO> vaccinate(UUID id) {
-        Optional<Animal> optionalAnimal = animalRepository.findById(id); // co zrobić z optionalem?
-        if (optionalAnimal.isPresent()) {
-            Animal animal = optionalAnimal.get();
-            animal.setVaccinated(true);
-            animal.setVaccinationDate(LocalDateTime.now());
-            animalRepository.save(animal);
-            return Optional.ofNullable(animalMapper.animalToAnimalDTO(animal));
-        } else {
-            return Optional.empty();
-        }
-    }
+    public AnimalDTO vaccinate(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        animal.setVaccinated(true);
+        animalRepository.save(animal);
+        return animalMapper.animalToAnimalDTO(animal);
+
+}
 
     @Override
     public List<AnimalDTO> getAnimalByName(String name) {
@@ -155,12 +205,12 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Optional<AnimalDTO> getAnimalById(UUID id) {
-        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElse(null)));
+    public Optional<AnimalDTO> getAnimalById(Integer id) {
+        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
     }
 
     @Override
-    public void deleteById(UUID AnimalId) {
+    public void deleteById(Integer AnimalId) {
         Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
         Box box = boxRepository.findBoxByAnimalId(AnimalId); // znajduję box w którym jest dany animal
         if (box != null) {
@@ -171,13 +221,13 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
+    public Optional<AnimalDTO> patchAnimalById(Integer animalId, AnimalDTO animalDTO) {
         return null;
     }
 }
 
 //@Override
-    /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) { // todo exception zamiast optional
+    /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
         AtomicReference<Optional<AnimalDTO>> atomicReference = new AtomicReference<>();
 
         animalRepository.findById(animalId).ifPresentOrElse(foundAnimal -> {

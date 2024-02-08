@@ -2,30 +2,34 @@ package com.example.shelter.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Getter
 @Setter
-@Builder
 @Entity
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Action {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private ActionType actionType;
-    private LocalDateTime date;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate actionDate;
 
     @ManyToOne
     @JoinColumn(name = "animal_id")
     private Animal animal;
+
+    @ManyToOne
+    @JoinColumn(name = "box_id")
+    private Box box;
+
 }
 // póki co listy animals nie ma. Jest lista Actions w Animal. Do zmiany gdy będzie potrzeba

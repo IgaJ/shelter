@@ -9,26 +9,43 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/boxes")
 public class BoxController {
     private final BoxService boxService;
+
     @GetMapping
     public List<BoxDTO> listBoxes() {
         return boxService.listBoxes();
     }
 
     @GetMapping("/{id}")
-    public BoxDTO getBoxById(@PathVariable("id") UUID id) {
+    public BoxDTO getBoxById(@PathVariable("id") Integer id) {
         return boxService.getBoxById(id);
     }
 
+    @GetMapping("/check/{boxNumber}") // chceck if available by boxNumber
+    public ResponseEntity<String> checkIfAvailableByBoxNumber(@PathVariable("boxNumber") Integer boxNumber) {
+        String message = " available";
+        String error = " unavailable";
+        BoxDTO available = boxService.findBoxWithSizeLessThanBoxCapacityAndBoxNumber(boxNumber);
+        if (available != null) {
+            return new ResponseEntity<>(available.getBoxNumber() + message, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(boxNumber + error, HttpStatus.valueOf(400));
+        }
+    }
+
+    @GetMapping("/available")
+    public List<BoxDTO> findBoxesWithPlace() {
+        return boxService.findBoxesWithPlace();
+    }
+
     @DeleteMapping("/id/{id}") // prefix id dodany żeby uniknąć ambiguos handler methods
-    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
         boxService.deleteById(id);
         String message = "Deleted: ";
         return new ResponseEntity<>(message + id, HttpStatus.OK);

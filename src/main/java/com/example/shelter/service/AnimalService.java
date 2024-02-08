@@ -5,7 +5,6 @@ import com.example.shelter.dto.BoxDTO;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface AnimalService {
 
@@ -21,18 +20,22 @@ public interface AnimalService {
 
     List<AnimalDTO> getAnimalsBySize(String size);
 
-    Optional<AnimalDTO> getAnimalById(UUID id);
+    Optional<AnimalDTO> getAnimalById(Integer id);
 
-    void deleteById(UUID id);
+    void deleteById(Integer id);
 
-    Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO);
+    Optional<AnimalDTO> patchAnimalById(Integer animalId, AnimalDTO animalDTO);
 
-   Optional <AnimalDTO> vaccinate(UUID id);
+   AnimalDTO vaccinate(Integer id);
 
     List<AnimalDTO> listNonVaccinated();
 
     List<AnimalDTO> listAvailableForAdoption();
 
-    AnimalDTO changeBox(UUID animalId, BoxDTO boxDTO);
+    AnimalDTO changeBoxToGivenBoxNumber(Integer animalId, BoxDTO boxDTO);
+
+    public AnimalDTO changeBoxToAnyBoxNumberWithNoQuarantineStatus(Integer animalId);
+
+    public AnimalDTO changeBoxToAnyBoxNumberWithYesQuarantineStatus(Integer animalId);
 }
 

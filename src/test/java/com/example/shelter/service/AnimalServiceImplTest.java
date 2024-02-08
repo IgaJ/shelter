@@ -24,9 +24,6 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class AnimalServiceImplTest {
 
-
-    private int maxAnimalsInBox = 4;
-
     @Mock
     AnimalRepository animalRepository;
     AnimalMapper animalMapper = new AnimalMapperImpl();
@@ -44,19 +41,17 @@ public class AnimalServiceImplTest {
     void test2() {
         List<Box> boxes = new ArrayList<>(List.of(new Box(), new Box()));
         ArgumentCaptor<Boolean> captor = ArgumentCaptor.forClass(Boolean.class);
-        ArgumentCaptor<Integer> captor1 = ArgumentCaptor.forClass(Integer.class);
         Mockito.when(boxRepository
-                .findBoxesWithSizeLessThanAndQuarantine(captor1.capture(), captor.capture()))
+                .findBoxesWithSizeLessThanBoxCapacityAndQuarantine(captor.capture()))
                 .thenReturn(boxes);
 
         Assertions.assertNotNull(animalService.findAvailableBoxWithSizeAndQuarantine());
         Assertions.assertEquals(true, captor.getValue());
-        Assertions.assertEquals(4, captor1.getValue());
     }
 
     @Test
     void test3() {
-        Mockito.when(boxRepository.findBoxesWithSizeLessThanAndQuarantine(ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean()))
+        Mockito.when(boxRepository.findBoxesWithSizeLessThanBoxCapacityAndQuarantine(ArgumentMatchers.anyBoolean()))
                 .thenReturn(Collections.emptyList());
         Assertions.assertNull(animalService.findAvailableBoxWithSizeAndQuarantine());
     }

@@ -20,8 +20,6 @@ public class BoxServiceImpl implements BoxService {
     private final BoxMapper boxMapper;
     private final AnimalRepository animalRepository;
 
-    private int maxAnimalsInBox = 4;
-
     @Override // overload method, to add animal to box
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
         Box newBox = saveNewBox(isQuarantine);
@@ -49,23 +47,18 @@ public class BoxServiceImpl implements BoxService {
         return boxRepository.save(newBox);
     }
 
-/*    @Override
-    public int countAllBoxes() {
-        return boxRepository.countAllBoxes();
-    }*/
-
     @Override
     public int findHighestBoxNumber() {
         return boxRepository.giveHighestBoxNumber();
     }
 
     @Override
-    public BoxDTO getBoxById(UUID id) {
+    public BoxDTO getBoxById(Integer id) {
         return boxMapper.toBoxDTO(boxRepository.findById(id).orElseThrow());
     }
 
     @Override
-    public BoxDTO getBoxByAnimalId(UUID animalId) {
+    public BoxDTO getBoxByAnimalId(Integer animalId) {
         return boxMapper.toBoxDTO(boxRepository.findBoxByAnimalId(animalId));
     }
 
@@ -78,7 +71,7 @@ public class BoxServiceImpl implements BoxService {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(Integer id) {
         Box box = boxRepository.findById(id).orElse(null);
         if ((box != null) && (box.getAnimals().isEmpty())) {
             boxRepository.deleteById(id);
@@ -101,5 +94,18 @@ public class BoxServiceImpl implements BoxService {
                 throw new BoxServiceException("Animals in box to be deleted");
             }
         }
+    }
+
+    @Override
+    public BoxDTO findBoxWithSizeLessThanBoxCapacityAndBoxNumber(Integer boxNumber) {
+        return boxMapper.toBoxDTO(boxRepository.findBoxWithSizeLessThanBoxCapacityAndBoxNumber(boxNumber));
+    }
+
+    @Override
+    public List<BoxDTO> findBoxesWithPlace() {
+        return boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity()
+                .stream()
+                .map(box -> boxMapper.toBoxDTO(box))
+                .collect(Collectors.toList());
     }
 }

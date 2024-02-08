@@ -1,23 +1,25 @@
 package com.example.shelter.dto;
 
 import com.example.shelter.entity.ActionType;
-import com.example.shelter.entity.Animal;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalDate;
 
-@Builder
 @Data
+@Builder
 public class ActionDTO {
 
-    private UUID id;
+    private Integer id;
 
     private ActionType actionType;
 
-    private LocalDateTime actionDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate actionDate;
 
-    private Animal animal;
+    private Integer animalId;
+
+    private Integer boxId;
 
 }
