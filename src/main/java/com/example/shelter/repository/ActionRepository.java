@@ -12,4 +12,7 @@ public interface ActionRepository extends JpaRepository <Action, Integer> {
 
     @Query("SELECT d FROM Action d WHERE d.actionType = :actionType")
     List<Action> listActions(@Param("actionType") ActionType actionType);
+
+    @Query("SELECT a FROM Action a WHERE a.animal.id = :animalId")
+    List<Action> findActionsByAnimalId(@Param("animalId") Integer id);
 }
