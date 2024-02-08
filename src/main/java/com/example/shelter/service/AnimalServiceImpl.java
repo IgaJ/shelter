@@ -25,15 +25,15 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Transactional
     @Override
-    public AnimalDTO saveNewAnimal(AnimalDTO animal) { //
+    public AnimalDTO saveNewAnimal(AnimalDTO animalDTO) { //
         Animal newAnimal = Animal.builder()
-                .species(animal.getSpecies())
-                .name(animal.getName())
-                .sex(animal.getSex())
-                .size(animal.getSize())
-                .age(animal.getAge())
-                .arrivalDate(animal.getArrivalDate())
-                .description(animal.getDescription())
+                .species(animalDTO.getSpecies())
+                .name(animalDTO.getName())
+                .sex(animalDTO.getSex())
+                .size(animalDTO.getSize())
+                .age(animalDTO.getAge())
+                .arrivalDate(animalDTO.getArrivalDate())
+                .description(animalDTO.getDescription())
                 .build();
         // automatyczne przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
         Box selected = findAvailableBoxWithSizeAndQuarantine(); // metoda daje pierwszy box gdzie jest miejsce lub null
