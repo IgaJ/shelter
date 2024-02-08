@@ -46,7 +46,6 @@ public class Box {
     public void addAction(Action action) {
         actions.add(action);
     }
-
 }
 
 
