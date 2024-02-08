@@ -1,6 +1,7 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.ActionDTO;
+import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.entity.Action;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class ActionServiceImpl implements ActionService {
     private final ActionMapper actionMapper;
     private final AnimalRepository animalRepository;
     private final BoxRepository boxRepository; // serwisy zamiast repozytoriów tutaj
+    private final AnimalService animalService;
 
 
 
@@ -31,12 +35,13 @@ public class ActionServiceImpl implements ActionService {
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
-            case ADMIT -> admit(animal);
+            case ADMIT -> admit(actionDTO);
             case ADOPT -> adopt(animal);
             case VACCINATE -> vaccinate(animal);
             case WALK -> walk(animal);
         }
         newAction.setActionDate(LocalDate.now());
+        newAction.setAnimal(animal);
         animal.addAction(newAction);
         actionRepository.save(newAction);
         animalRepository.save(animal);
@@ -58,10 +63,16 @@ public class ActionServiceImpl implements ActionService {
         return actionMapper.toActionDTO(newAction);
     }
 
-    private void admit(Animal animal) {
-        animal.setArrivalDate(LocalDate.now());
-        animal.setAdopted(false);
-        animal.setVaccinated(false);
+    @Override
+    public List<ActionDTO> getActionsByAnimalId(Integer id) {
+        return actionRepository.findActionsByAnimalId(id)
+                .stream()
+                .map(action -> actionMapper.toActionDTO(action))
+                .collect(Collectors.toList());
+    }
+
+    private void admit(ActionDTO actionDTO) {
+        //animalService.saveNewAnimal(actionMapper.toAnimalDTO(actionDTO));
     }
 
     private void adopt(Animal animal) {
@@ -79,5 +90,12 @@ public class ActionServiceImpl implements ActionService {
 
     private void clean(Box box) {
         box.setCleaningDate(LocalDate.now());
+    }
+
+    public List<ActionDTO> listActions() {
+        return actionRepository.findAll()
+                .stream()
+                .map(action -> actionMapper.toActionDTO(action))
+                .collect(Collectors.toList());
     }
 }
