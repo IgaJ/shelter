@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -168,7 +169,14 @@ public class AnimalServiceImpl implements AnimalService {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         animal.setVaccinated(true);
         animalRepository.save(animal);
-}
+    }
+
+    public void walk(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        animal.setLastWalkDate(LocalDate.now());
+        animalRepository.save(animal);
+    }
+
 
     @Override
     public List<AnimalDTO> getAnimalByName(String name) {

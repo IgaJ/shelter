@@ -31,14 +31,13 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
         Animal animal = animalRepository.findById(actionDTO.getAnimalId()).orElseThrow(() -> new ActionServiceException("Nie ma takiego zwierzęcia"));
-        Integer animalId = animal.getId();
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
             case ADMIT -> admit(actionDTO);
             case ADOPT -> adopt(animal);
-            case VACCINATE -> vaccinate(animalId);
-            case WALK -> walk(animal);
+            case VACCINATE -> animalService.vaccinate(animal.getId());
+            case WALK -> animalService.walk(animal.getId());
         }
         newAction.setActionDate(LocalDate.now());
         newAction.setAnimal(animal);
