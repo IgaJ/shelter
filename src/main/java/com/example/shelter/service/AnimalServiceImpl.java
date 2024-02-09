@@ -164,12 +164,10 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public AnimalDTO vaccinate(Integer id) {
+    public void vaccinate(Integer id) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         animal.setVaccinated(true);
         animalRepository.save(animal);
-        return animalMapper.animalToAnimalDTO(animal);
-
 }
 
     @Override

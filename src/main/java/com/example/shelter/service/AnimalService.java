@@ -26,7 +26,7 @@ public interface AnimalService {
 
     Optional<AnimalDTO> patchAnimalById(Integer animalId, AnimalDTO animalDTO);
 
-   AnimalDTO vaccinate(Integer id);
+   void vaccinate(Integer id);
 
     List<AnimalDTO> listNonVaccinated();
 
