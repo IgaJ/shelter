@@ -18,14 +18,14 @@ import java.util.List;
 public class ActionController {
     private final ActionService actionService;
 
-    @PostMapping("/animals/{id}/actions") // akcja jest podzasobem zwierzęcia
-    public ResponseEntity<ActionDTO> saveNewActionToAnimal(@RequestBody ActionDTO actionDTO, @PathVariable Integer id) {
+    @PostMapping("/animals/actions") // akcja jest podzasobem zwierzęcia
+    public ResponseEntity<ActionDTO> saveNewActionToAnimal(@RequestBody ActionDTO actionDTO) {
         ActionDTO savedAction = actionService.saveNewActionForAnimal(actionDTO);
         return new ResponseEntity<>(savedAction, HttpStatus.OK);
     }
 
-    @PostMapping("/boxes/{id}/actions")
-    public ResponseEntity<ActionDTO> saveNewActionToBox(@RequestBody ActionDTO actionDTO, @PathVariable Integer id) {
+    @PostMapping("/boxes/actions")
+    public ResponseEntity<ActionDTO> saveNewActionToBox(@RequestBody ActionDTO actionDTO) {
         ActionDTO savedAction = actionService.saveNewActionForBox(actionDTO);
         return new ResponseEntity<>(savedAction, HttpStatus.OK);
     }
