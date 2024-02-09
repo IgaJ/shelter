@@ -1,7 +1,6 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.ActionDTO;
-import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.entity.Action;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
@@ -32,12 +31,13 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
         Animal animal = animalRepository.findById(actionDTO.getAnimalId()).orElseThrow(() -> new ActionServiceException("Nie ma takiego zwierzęcia"));
+        Integer animalId = animal.getId();
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
             case ADMIT -> admit(actionDTO);
             case ADOPT -> adopt(animal);
-            case VACCINATE -> vaccinate(animal);
+            case VACCINATE -> vaccinate(animalId);
             case WALK -> walk(animal);
         }
         newAction.setActionDate(LocalDate.now());
@@ -80,8 +80,8 @@ public class ActionServiceImpl implements ActionService {
         animal.setAdoptionDate(LocalDate.now());
     }
 
-    private void vaccinate(Animal animal) {
-        animal.setVaccinated(true);
+    private void vaccinate(Integer animalId) {
+        animalService.vaccinate(animalId);
     }
 
     private void walk(Animal animal) {

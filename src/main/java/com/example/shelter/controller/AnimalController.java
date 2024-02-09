@@ -126,11 +126,6 @@ public class AnimalController {
         return animalService.listNonVaccinated();
     }
 
-    public ResponseEntity<?> vaccinate(Integer id) { // zmiana cechy robimy updatem zamiast operacji na zasobie
-        AnimalDTO vaccinated = animalService.vaccinate(id);
-        return new ResponseEntity<>(vaccinated.toString(), HttpStatus.NO_CONTENT);
-    }
-
     public ResponseEntity<?> listReadyForAdoption() {
         List<AnimalDTO> ready = animalService.listAvailableForAdoption();
         return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
