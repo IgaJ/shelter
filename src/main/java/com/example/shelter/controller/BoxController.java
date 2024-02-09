@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/boxes")
+@RequestMapping("api/v1/boxes")
 public class BoxController {
     private final BoxService boxService;
 

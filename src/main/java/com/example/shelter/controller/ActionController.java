@@ -13,8 +13,8 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping()
 @RequiredArgsConstructor
+@RequestMapping("api/v1")
 public class ActionController {
     private final ActionService actionService;
 
