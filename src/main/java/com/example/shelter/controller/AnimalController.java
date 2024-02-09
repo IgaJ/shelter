@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/animals")
+@RequestMapping("api/v1/animals")
 public class AnimalController {
     private final AnimalService animalService;
 
