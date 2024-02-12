@@ -6,6 +6,7 @@ import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.ActionMapper;
 import com.example.shelter.mappers.AnimalMapper;
+import com.example.shelter.mappers.BoxMapper;
 import com.example.shelter.repository.ActionRepository;
 import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,10 @@ public class ActionServiceImpl implements ActionService {
 
     private final ActionRepository actionRepository;
     private final ActionMapper actionMapper;
-    private final AnimalMapper animalMapper;
-    private final BoxRepository boxRepository;
     private final AnimalService animalService;
-
+    private final AnimalMapper animalMapper;
+    private final BoxService boxService;
+    private final BoxMapper boxMapper;
 
 
     @Override
@@ -47,16 +48,16 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public ActionDTO saveNewActionForBox(ActionDTO actionDTO) {
-        Box box = boxRepository.findById(actionDTO.getBoxId()).orElseThrow(()-> new ActionServiceException("Nie ma takiego boksu"));
+        Box box = (boxMapper.toBox(boxService.getBoxById(actionDTO.getBoxId())));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
-            case CLEAN -> clean(box);
+            case CLEAN -> boxService.clean(actionDTO.getId());
         }
         newAction.setActionDate(LocalDate.now());
+        newAction.setBox(box);
         box.addAction(newAction);
-        actionRepository.save(newAction); // najpierw save akcji potem boxu (bo w boxie wskazanie na akcje)
-        boxRepository.save(box);
+        actionRepository.save(newAction);
         return actionMapper.toActionDTO(newAction);
     }
 
@@ -74,10 +75,6 @@ public class ActionServiceImpl implements ActionService {
     private void adopt(Animal animal) {
         animal.setAdopted(true);
         animal.setAdoptionDate(LocalDate.now());
-    }
-
-    private void clean(Box box) {
-        box.setCleaningDate(LocalDate.now());
     }
 
     public List<ActionDTO> listActions() {

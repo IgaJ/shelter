@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -107,5 +108,11 @@ public class BoxServiceImpl implements BoxService {
                 .stream()
                 .map(box -> boxMapper.toBoxDTO(box))
                 .collect(Collectors.toList());
+    }
+
+    public void clean(Integer id) {
+        Box box = boxRepository.getReferenceById(id);
+        box.setCleaningDate(LocalDate.now());
+        boxRepository.save(box);
     }
 }

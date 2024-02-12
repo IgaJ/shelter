@@ -28,4 +28,6 @@ public interface BoxService {
     BoxDTO findBoxWithSizeLessThanBoxCapacityAndBoxNumber(Integer boxNumber);
 
     List<BoxDTO> findBoxesWithPlace();
+
+    void clean(Integer Id);
 }
