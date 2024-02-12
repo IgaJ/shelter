@@ -8,7 +8,6 @@ import com.example.shelter.mappers.ActionMapper;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.mappers.BoxMapper;
 import com.example.shelter.repository.ActionRepository;
-import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +34,7 @@ public class ActionServiceImpl implements ActionService {
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
             //case ADMIT -> admit(animal);
-            //case ADOPT -> adopt(animal);
+            case ADOPT -> animalService.adopt(animal.getId());
             case VACCINATE -> animalService.vaccinate(animal.getId());
             case WALK -> animalService.walk(animal.getId());
         }
@@ -67,14 +66,6 @@ public class ActionServiceImpl implements ActionService {
                 .stream()
                 .map(action -> actionMapper.toActionDTO(action))
                 .collect(Collectors.toList());
-    }
-
-    private void admit(Animal animal) {
-    }
-
-    private void adopt(Animal animal) {
-        animal.setAdopted(true);
-        animal.setAdoptionDate(LocalDate.now());
     }
 
     public List<ActionDTO> listActions() {

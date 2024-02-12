@@ -28,6 +28,7 @@ public interface AnimalService {
 
    void vaccinate(Integer id);
    void walk(Integer id);
+   void adopt(Integer id);
 
     List<AnimalDTO> listNonVaccinated();
 

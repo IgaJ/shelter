@@ -177,6 +177,12 @@ public class AnimalServiceImpl implements AnimalService {
         animalRepository.save(animal);
     }
 
+    public void adopt(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        animal.setAdopted(true);
+        animalRepository.save(animal);
+    }
+
 
     @Override
     public List<AnimalDTO> getAnimalByName(String name) {
