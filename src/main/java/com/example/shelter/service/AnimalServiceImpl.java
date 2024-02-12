@@ -2,6 +2,8 @@ package com.example.shelter.service;
 
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.dto.BoxDTO;
+import com.example.shelter.entity.Action;
+import com.example.shelter.entity.ActionType;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.AnimalMapper;
@@ -36,17 +38,20 @@ public class AnimalServiceImpl implements AnimalService {
                 .arrivalDate(animalDTO.getArrivalDate())
                 .description(animalDTO.getDescription())
                 .build();
+        Action action = new Action();
+        action.setAnimal(newAnimal);
+        action.setActionType(ActionType.ADMIT);
+        action.setActionDate(newAnimal.getArrivalDate());
         // automatyczne przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
         Box selected = findAvailableBoxWithSizeAndQuarantine(); // metoda daje pierwszy box gdzie jest miejsce lub null
         if (selected == null) {
             boxService.addNewBox(newAnimal, true);
         } else {
-            /*if(selected.getAnimals() == null) {
-                selected.setAnimals(new HashSet<>());
-            }*/
             selected.addAnimal(newAnimal);
             animalRepository.save(newAnimal);
             boxRepository.save(selected);
+            newAnimal.addAction(action);
+
         }
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
@@ -236,56 +241,3 @@ public class AnimalServiceImpl implements AnimalService {
         return null;
     }
 }
-
-//@Override
-    /*public Optional<AnimalDTO> patchAnimalById(UUID animalId, AnimalDTO animalDTO) {
-        AtomicReference<Optional<AnimalDTO>> atomicReference = new AtomicReference<>();
-
-        animalRepository.findById(animalId).ifPresentOrElse(foundAnimal -> {
-
-        *//*    if(cosposzlonietak){
-                atomicReference.set(Optional.empty());
-                return;
-            }*//*
-            if (animalDTO.getAdopted() != null && animalDTO.getAdopted()) {
-                if ((foundAnimal.getBox().getNumber() == 0) || (foundAnimal.getVaccinationDate() == LocalDateTime.now().minus(1, ChronoUnit.YEARS))) { // jeżeli box=0 (kwarantanna) i nie jest szczepione - jeśli data ostatniego szczenienia > rok
-                    *//*atomicReference.set(Optional.empty());
-                    return;*//*
-                    throw new AnimalServiceException("zwierzę nie przygotowane do adopcji");
-                }
-                foundAnimal.setAdopted(animalDTO.getAdopted());
-            }
-
-            if (StringUtils.hasText(animalDTO.getName())) {
-                foundAnimal.setName(animalDTO.getName());
-            }
-            if (StringUtils.hasText(animalDTO.getSex())) {
-                foundAnimal.setSex(animalDTO.getSex());
-            }
-            if (animalDTO.getAge() != null) {
-                foundAnimal.setAge(animalDTO.getAge());
-            }
-            if (animalDTO.getArrivalDate() != null) {
-                foundAnimal.setArrivalDate(animalDTO.getArrivalDate());
-            }
-            if (animalDTO.getBox().getNumber() != null) {
-                foundAnimal.getBox().setNumber(animalDTO.getBox().getNumber());
-            }
-            if (StringUtils.hasText(animalDTO.getDescription())) {
-                foundAnimal.setDescription(animalDTO.getDescription());
-            }
-
-            if (animalDTO.getVaccinated() != null) {
-                foundAnimal.setVaccinated(animalDTO.getVaccinated());
-            }
-            if (animalDTO.getVaccinationDate() != null) {
-                foundAnimal.setVaccinationDate(animalDTO.getVaccinationDate());
-            }
-
-            atomicReference.set(Optional.of(animalMapper.animalToAnimalDTO(animalRepository.save(foundAnimal))));
-        }, () -> {
-            atomicReference.set(Optional.empty());
-        });
-
-        return atomicReference.get();
-    }*/
