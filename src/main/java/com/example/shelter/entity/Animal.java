@@ -44,7 +44,7 @@ public class Animal {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastWalkDate;
 
-    @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
+    @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL) //  operacje takie jak zapis, aktualizacja i usuwanie dla Animal będą miały odzwierciedlenie na powiązanych z Animal encjach Action
     private Set<Action> actions = new HashSet<>();
 
     public void addAction(Action action) {

@@ -214,7 +214,6 @@ public class AnimalServiceImpl implements AnimalService {
     public Optional<AnimalDTO> getAnimalById(Integer id) {
         return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
     }
-
     @Override
     public void deleteById(Integer AnimalId) {
         Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
