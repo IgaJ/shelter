@@ -5,8 +5,8 @@ import com.example.shelter.entity.Action;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.ActionMapper;
+import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.repository.ActionRepository;
-import com.example.shelter.repository.AnimalRepository;
 import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,24 +18,23 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ActionServiceImpl implements ActionService {
-    // akcja na zwierzęciu i boxie. Akcja zawsze dodawana komuś (zwierzęciu...)
 
     private final ActionRepository actionRepository;
     private final ActionMapper actionMapper;
-    private final AnimalRepository animalRepository;
-    private final BoxRepository boxRepository; // serwisy zamiast repozytoriów tutaj
+    private final AnimalMapper animalMapper;
+    private final BoxRepository boxRepository;
     private final AnimalService animalService;
 
 
 
     @Override
     public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
-        Animal animal = animalRepository.findById(actionDTO.getAnimalId()).orElseThrow(() -> new ActionServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = (animalMapper.animalDTOToAnimal(animalService.getAnimalById(actionDTO.getAnimalId()).orElseThrow(() -> new ActionServiceException("Nie ma takiego zwierzęcia"))));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
-            case ADMIT -> admit(actionDTO);
-            case ADOPT -> adopt(animal);
+            //case ADMIT -> admit(animal);
+            //case ADOPT -> adopt(animal);
             case VACCINATE -> animalService.vaccinate(animal.getId());
             case WALK -> animalService.walk(animal.getId());
         }
@@ -43,7 +42,6 @@ public class ActionServiceImpl implements ActionService {
         newAction.setAnimal(animal);
         animal.addAction(newAction);
         actionRepository.save(newAction);
-        animalRepository.save(animal);
         return actionMapper.toActionDTO(newAction);
     }
 
@@ -70,21 +68,12 @@ public class ActionServiceImpl implements ActionService {
                 .collect(Collectors.toList());
     }
 
-    private void admit(ActionDTO actionDTO) {
-        //animalService.saveNewAnimal(actionMapper.toAnimalDTO(actionDTO));
+    private void admit(Animal animal) {
     }
 
     private void adopt(Animal animal) {
         animal.setAdopted(true);
         animal.setAdoptionDate(LocalDate.now());
-    }
-
-    private void vaccinate(Integer animalId) {
-        animalService.vaccinate(animalId);
-    }
-
-    private void walk(Animal animal) {
-        animal.setLastWalkDate(LocalDate.now());
     }
 
     private void clean(Box box) {
