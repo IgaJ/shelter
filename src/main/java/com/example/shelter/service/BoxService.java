@@ -9,6 +9,8 @@ public interface BoxService {
 
     BoxDTO getBoxById(Integer id);
 
+    void addAnimal(Animal animal);
+
     BoxDTO getBoxByAnimalId(Integer animalId);
 
     List<BoxDTO> listBoxes();

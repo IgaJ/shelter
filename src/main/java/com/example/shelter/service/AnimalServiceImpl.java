@@ -2,8 +2,6 @@ package com.example.shelter.service;
 
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.dto.BoxDTO;
-import com.example.shelter.entity.Action;
-import com.example.shelter.entity.ActionType;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.AnimalMapper;
@@ -29,40 +27,11 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     @Override
     public AnimalDTO saveNewAnimal(AnimalDTO animalDTO) { //
-        Animal newAnimal = Animal.builder()
-                .species(animalDTO.getSpecies())
-                .name(animalDTO.getName())
-                .sex(animalDTO.getSex())
-                .size(animalDTO.getSize())
-                .age(animalDTO.getAge())
-                .arrivalDate(animalDTO.getArrivalDate())
-                .description(animalDTO.getDescription())
-                .build();
-        Action action = new Action();
-        action.setAnimal(newAnimal);
-        action.setActionType(ActionType.ADMIT);
-        action.setActionDate(newAnimal.getArrivalDate());
-        // automatyczne przydzielane nowego zwierzęcia do boxu, zawsze do kwarantanny
-        Box selected = findAvailableBoxWithSizeAndQuarantine(); // metoda daje pierwszy box gdzie jest miejsce lub null
-        if (selected == null) {
-            boxService.addNewBox(newAnimal, true);
-        } else {
-            selected.addAnimal(newAnimal);
-            animalRepository.save(newAnimal);
-            boxRepository.save(selected);
-            newAnimal.addAction(action);
-
-        }
+        Animal newAnimal = animalMapper.animalDTOToAnimal(animalDTO);
+        animalRepository.save(newAnimal);
+        boxService.addAnimal(newAnimal);
         return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
     }
-
-    Box findAvailableBoxWithSizeAndQuarantine() {
-        List<Box> availableQuarantineBoxes = boxRepository.findBoxesWithSizeLessThanBoxCapacityAndQuarantine(true);
-        Optional<Box> requested = availableQuarantineBoxes.stream()
-                .findFirst();
-        return requested.orElse(null);
-    }
-
     // 1. Ręczna zmiana boksu: znajdż box gdzie zwierząt <4 i ma podany numer (bzwzgl na kwarantannę)
     // 2. Automatyczna zmian boksu: znajdź pierwszy gdzie zwierząt <4, i jest wskazana kwarantanna - gdy pracownik nie chce wskazywać konkretnego
     // 2a. kwarantanna nie
@@ -78,7 +47,7 @@ public class AnimalServiceImpl implements AnimalService {
         Animal animal = animalRepository.getAnimalById(animalId);
         Box currentBox = animal.getBox();
         Box box = boxRepository.findByNumber(boxDTO.getBoxNumber())
-                .orElseThrow(() -> new BoxServiceException("We wskazanym boksie nie ma miejsca")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
+                .orElseThrow(() -> new BoxServiceException("Błędny numer boksu")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
         if (box.getAnimals().size() < box.getMaxAnimals()) {
             box.addAnimal(animal);
             currentBox.getAnimals().remove(animal);
@@ -87,7 +56,7 @@ public class AnimalServiceImpl implements AnimalService {
             animalRepository.save(animal);
             return animalMapper.animalToAnimalDTO(animal);
         } else {
-            throw new BoxServiceException("Nie ma boksu o wskazanym numerze");
+            throw new BoxServiceException("W boksie nie ma miejsc");
         }
     }
 
@@ -191,6 +160,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public List<AnimalDTO> getAnimalByName(String name) {
+
         return animalRepository.getAnimalByName(name)
                 .stream()
                 .map(animal -> animalMapper.animalToAnimalDTO(animal))
@@ -225,6 +195,7 @@ public class AnimalServiceImpl implements AnimalService {
     public Optional<AnimalDTO> getAnimalById(Integer id) {
         return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
     }
+
     @Override
     public void deleteById(Integer AnimalId) {
         Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null); // znajduję wskazane po AnimalId zwierzę;
