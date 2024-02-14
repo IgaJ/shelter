@@ -31,4 +31,6 @@ public interface AnimalRepository extends JpaRepository <Animal, Integer> {
     @Query("SELECT d FROM Animal d WHERE d.id = :id")
     Animal getAnimalById(@Param("id") Integer id);
 }
+// criteria, dostarczać parametr
+// example
 

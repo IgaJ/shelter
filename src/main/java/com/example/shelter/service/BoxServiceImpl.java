@@ -21,6 +21,30 @@ public class BoxServiceImpl implements BoxService {
     private final BoxMapper boxMapper;
     private final AnimalRepository animalRepository;
 
+    public void addAnimal(Animal animal) {
+        Optional<Box> selected = findAvailableBoxWithSizeAndQuarantine();
+        if (selected.isEmpty()) {
+            addNewBox(animal, true);
+        } else {
+            selected.get().addAnimal(animal); // .get do wyciągnięcia boksu z optionala
+            boxRepository.save(selected.get());
+        }
+     /*   findAvailableBoxWithSizeAndQuarantine()
+                .map(box ->{
+                    box.addAnimal(animal);
+                  return  boxMapper.toBoxDTO(boxRepository.save(box));
+                }).or(()->{
+                    addNewBox(animal,true);
+                    return null;
+                });*/
+    }
+
+    Optional<Box> findAvailableBoxWithSizeAndQuarantine() {
+        return boxRepository.findBoxesWithSizeLessThanBoxCapacityAndQuarantine(true)
+                .stream()
+                .findFirst();
+    }
+
     @Override // overload method, to add animal to box
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
         Box newBox = saveNewBox(isQuarantine);

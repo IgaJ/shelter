@@ -33,7 +33,6 @@ public class ActionServiceImpl implements ActionService {
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
-            //case ADMIT -> admit(animal);
             case ADOPT -> animalService.adopt(animal.getId());
             case VACCINATE -> animalService.vaccinate(animal.getId());
             case WALK -> animalService.walk(animal.getId());
