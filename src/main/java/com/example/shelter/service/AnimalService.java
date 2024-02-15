@@ -1,7 +1,6 @@
 package com.example.shelter.service;
 
 import com.example.shelter.dto.AnimalDTO;
-import com.example.shelter.dto.BoxDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +8,10 @@ import java.util.Optional;
 public interface AnimalService {
 
     AnimalDTO saveNewAnimal(AnimalDTO animal);
+
+    void vaccinate(Integer id);
+    void walk(Integer id);
+    void adopt(Integer id);
 
     List<AnimalDTO> listAnimals();
 
@@ -26,18 +29,8 @@ public interface AnimalService {
 
     Optional<AnimalDTO> patchAnimalById(Integer animalId, AnimalDTO animalDTO);
 
-   void vaccinate(Integer id);
-   void walk(Integer id);
-   void adopt(Integer id);
-
     List<AnimalDTO> listNonVaccinated();
 
     List<AnimalDTO> listAvailableForAdoption();
-
-    AnimalDTO changeBoxToGivenBoxNumber(Integer animalId, BoxDTO boxDTO);
-
-    public AnimalDTO changeBoxToAnyBoxNumberWithNoQuarantineStatus(Integer animalId);
-
-    public AnimalDTO changeBoxToAnyBoxNumberWithYesQuarantineStatus(Integer animalId);
 }
 

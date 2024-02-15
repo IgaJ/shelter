@@ -10,6 +10,9 @@ public interface BoxService {
     BoxDTO getBoxById(Integer id);
 
     void addAnimal(Animal animal);
+    void changeBoxToGivenBoxNumber(Integer animalId, Integer boxId);
+    void changeBoxToFirstQuarantineBox(Integer animalId);
+    public void changeBoxToFirstNoQuarantineBox(Integer animalId);
 
     BoxDTO getBoxByAnimalId(Integer animalId);
 
