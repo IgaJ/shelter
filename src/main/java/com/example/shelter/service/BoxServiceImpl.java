@@ -39,34 +39,70 @@ public class BoxServiceImpl implements BoxService {
                 });*/
     }
 
+    public void changeBoxToGivenBoxNumber(Integer animalId, Integer boxId) {
+        Animal animal = animalRepository.getAnimalById(animalId);
+        Box currentBox = animal.getBox();
+        Box box = boxRepository.findByNumber(boxId)
+                .orElseThrow(() -> new BoxServiceException("Błędny numer boksu")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
+        if (box.getAnimals().size() < box.getMaxAnimals()) {
+            box.addAnimal(animal);
+            currentBox.getAnimals().remove(animal);
+            boxRepository.save(box);
+            boxRepository.save(currentBox);
+            animalRepository.save(animal);
+        } else {
+            throw new BoxServiceException("W boksie nie ma miejsc");
+        }
+    }
+
+    public void changeBoxToFirstQuarantineBox(Integer animalId) {
+        Animal animal = animalRepository.getAnimalById(animalId);
+        Box currentBox = animal.getBox();
+        currentBox.getAnimals().remove(animal);
+        addAnimal(animal);
+        boxRepository.save(currentBox);
+    }
+
+    public void changeBoxToFirstNoQuarantineBox(Integer animalId) {
+        Animal animal = animalRepository.getAnimalById(animalId);
+        Box currentBox = animal.getBox();
+        currentBox.getAnimals().remove(animal);
+        boxRepository.save(currentBox);
+        Optional<Box> newBox = boxRepository.findBoxesWithSizeLessThanBoxCapacityAndQuarantine(false).stream().findFirst();
+        if (newBox.isEmpty()) {
+            addNewBox(animal, false);
+        } else {
+            Box optional = newBox.get();
+            optional.addAnimal(animal);
+            boxRepository.save(optional);
+        }
+    }
+
     Optional<Box> findAvailableBoxWithSizeAndQuarantine() {
         return boxRepository.findBoxesWithSizeLessThanBoxCapacityAndQuarantine(true)
                 .stream()
                 .findFirst();
     }
 
+    @Override
+    public BoxDTO addNewBox(Boolean isQuarantine) { // only for dataInitializer
+        return boxMapper.toBoxDTO(saveNewBox(isQuarantine));
+    }
+
     @Override // overload method, to add animal to box
     public BoxDTO addNewBox(Animal animal, Boolean isQuarantine) {
         Box newBox = saveNewBox(isQuarantine);
         animal.setBox(newBox);
- /*       if (newBox.getAnimals() == null) { // dodane sprawdzenie czy jest zainicjalizowany set
-            newBox.setAnimals(new HashSet<>());
-        }*/
-        newBox.addAnimal(animal); // niepoprawne użycie gettera (newBox.get().add()) ma być dedykowana metoda add
+        newBox.addAnimal(animal);
         animalRepository.save(animal);
         boxRepository.save(newBox);
         return boxMapper.toBoxDTO(newBox);
     }
 
-    @Override
-    public BoxDTO addNewBox(Boolean isQuarantine) { // for dataInitializer
-        return boxMapper.toBoxDTO(saveNewBox(isQuarantine));
-    }
-
     private Box saveNewBox(Boolean isQuarantine) {
         Box newBox = Box.builder()
                 .isQuarantine(isQuarantine)
-                .boxNumber(findHighestBoxNumber()+1)
+                .boxNumber(findHighestBoxNumber() + 1)
                 .animals(new HashSet<>())
                 .build();
         return boxRepository.save(newBox);
@@ -75,6 +111,12 @@ public class BoxServiceImpl implements BoxService {
     @Override
     public int findHighestBoxNumber() {
         return boxRepository.giveHighestBoxNumber();
+    }
+
+    public void clean(Integer id) {
+        Box box = boxRepository.getReferenceById(id);
+        box.setCleaningDate(LocalDate.now());
+        boxRepository.save(box);
     }
 
     @Override
@@ -132,11 +174,5 @@ public class BoxServiceImpl implements BoxService {
                 .stream()
                 .map(box -> boxMapper.toBoxDTO(box))
                 .collect(Collectors.toList());
-    }
-
-    public void clean(Integer id) {
-        Box box = boxRepository.getReferenceById(id);
-        box.setCleaningDate(LocalDate.now());
-        boxRepository.save(box);
     }
 }

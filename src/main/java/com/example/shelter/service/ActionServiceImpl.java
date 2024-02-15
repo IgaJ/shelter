@@ -36,6 +36,9 @@ public class ActionServiceImpl implements ActionService {
             case ADOPT -> animalService.adopt(animal.getId());
             case VACCINATE -> animalService.vaccinate(animal.getId());
             case WALK -> animalService.walk(animal.getId());
+            case CHANGE_BOX_TO_GIVEN_NUMBER -> boxService.changeBoxToGivenBoxNumber(animal.getId(), actionDTO.getBoxId());
+            case CHANGE_BOX_TO_FIRST_QUARANTINE -> boxService.changeBoxToFirstQuarantineBox(animal.getId());
+            case CHANGE_BOX_TO_FIRST_NO_QUARANTNE -> boxService.changeBoxToFirstNoQuarantineBox(animal.getId());
         }
         newAction.setActionDate(LocalDate.now());
         newAction.setAnimal(animal);

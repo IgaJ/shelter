@@ -1,7 +1,6 @@
 package com.example.shelter.controller;
 
 import com.example.shelter.dto.AnimalDTO;
-import com.example.shelter.dto.BoxDTO;
 import com.example.shelter.service.AnimalService;
 import com.example.shelter.service.AnimalServiceException;
 import lombok.RequiredArgsConstructor;
@@ -100,12 +99,13 @@ public class AnimalController {
         }
     }
 
-    @PutMapping("/{id}")
+/*    @PutMapping("/{id}")
     public ResponseEntity<String> updateBox(@PathVariable("id") Integer animalId, @RequestBody BoxDTO boxDTO) {
-        AnimalDTO changed = animalService.changeBoxToGivenBoxNumber(animalId, boxDTO);
+        AnimalDTO changed = .changeBoxToGivenBoxNumber(animalId, boxDTO);
         String message = "Box changed to: ";
         return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
-    }
+    }*/
+/*
 
     //todo wymienić na użycie akcji
     @PutMapping(value = "/{id}", params = "isQuarantine")
@@ -120,6 +120,7 @@ public class AnimalController {
             return new ResponseEntity<>(message + changed.getBoxNumber() + " with quarantine status set to true ", HttpStatus.OK);
         }
     }
+*/
 
     @GetMapping(params = "vaccinated")
     public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
