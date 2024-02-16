@@ -16,11 +16,12 @@ import java.util.Set;
 public class AnimalDTO {
 
     private Integer id;
+    private String name;
+    private int boxNumber;
 
     @NotNull
     private AnimalSpecies species;
 
-    private String name;
     private String sex;
     private String size;
     private Integer age;
@@ -28,7 +29,6 @@ public class AnimalDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate arrivalDate;
 
-    private int boxNumber; // todo mapper do adnotacji by tłumaczył Box na int boxNumber
 
     private String description;
     private Boolean adopted;
