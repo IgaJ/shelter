@@ -1,5 +1,6 @@
 package com.example.shelter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -44,8 +45,9 @@ public class Animal {
     @ManyToOne
     private Box box;
 
-    @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL) // operacje takie jak zapis, aktualizacja
+    @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // operacje takie jak zapis, aktualizacja
     // i usuwanie dla Animal będą miały odzwierciedlenie na powiązanych z Animal encjach Action
+    @JsonIgnore // dla uniknięcia nieskończonej rekurencji w wyniku cyklicznych relacji między encjami Box a Animal
     private Set<Action> actions = new HashSet<>();
 
     public void addAction(Action action) {

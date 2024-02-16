@@ -1,5 +1,6 @@
 package com.example.shelter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,9 +31,10 @@ public class Box {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate cleaningDate;
 
-    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL) // operacje takie jak zapis, aktualizacja i usuwanie dla Box będą miały odzwierciedlenie na powiązanych z Box encjach Action
+    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL, fetch = FetchType.LAZY ) // operacje takie jak zapis, aktualizacja i usuwanie dla Box będą miały odzwierciedlenie na powiązanych z Box encjach Action
     //mapowane przez drugą stronę (Animal) przez pole o zawie "box" - nie towrzy się druga tabela
     //@JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    @JsonIgnore
     private Set<Animal> animals; // czemu nie inicjalizuje przy tworzeniu nowego boxu? Przeniosłąm inicjalzację do bs.saveNewBox
 
     public void addAnimal(Animal animal) {
