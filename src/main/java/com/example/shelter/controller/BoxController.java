@@ -17,7 +17,7 @@ import java.util.List;
 public class BoxController {
     private final BoxService boxService;
 
-    @GetMapping
+    @GetMapping(produces = "application/json")
     public List<BoxDTO> listBoxes() {
         return boxService.listBoxes();
     }

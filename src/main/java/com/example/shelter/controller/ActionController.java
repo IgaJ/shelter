@@ -18,7 +18,7 @@ import java.util.List;
 public class ActionController {
     private final ActionService actionService;
 
-    @PostMapping("/animals/actions") // akcja jest podzasobem zwierzęcia
+    @PostMapping("/animals/actions")
     public ResponseEntity<ActionDTO> saveNewActionToAnimal(@RequestBody ActionDTO actionDTO) {
         ActionDTO savedAction = actionService.saveNewActionForAnimal(actionDTO);
         return new ResponseEntity<>(savedAction, HttpStatus.OK);
