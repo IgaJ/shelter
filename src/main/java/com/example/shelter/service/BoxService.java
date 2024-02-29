@@ -42,7 +42,7 @@ public class BoxService {
     }
 
     public void changeBoxToGivenBoxNumber(Integer animalId, Integer boxId) {
-        Animal animal = animalRepository.getAnimalById(animalId);
+        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         Box currentBox = animal.getBox();
         Box box = boxRepository.findByNumber(boxId)
                 .orElseThrow(() -> new BoxServiceException("Błędny numer boksu")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
@@ -58,7 +58,7 @@ public class BoxService {
     }
 
     public void changeBoxToFirstQuarantineBox(Integer animalId) {
-        Animal animal = animalRepository.getAnimalById(animalId);
+        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         Box currentBox = animal.getBox();
         currentBox.getAnimals().remove(animal);
         addAnimal(animal);
@@ -66,7 +66,7 @@ public class BoxService {
     }
 
     public void changeBoxToFirstNoQuarantineBox(Integer animalId) {
-        Animal animal = animalRepository.getAnimalById(animalId);
+        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         Box currentBox = animal.getBox();
         currentBox.getAnimals().remove(animal);
         boxRepository.save(currentBox);
