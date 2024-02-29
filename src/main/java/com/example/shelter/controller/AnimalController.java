@@ -77,7 +77,7 @@ public class AnimalController {
         return animalService.getAnimalsBySize(size);
     }
 
-    @GetMapping("/{id}") // nawias do PathVariable // id zaraz po ukośniku
+    @GetMapping("/{id}")
     public AnimalDTO getAnimalById(@PathVariable("id") Integer id) {
         return animalService.getAnimalById(id).orElseThrow(null);
     }
@@ -99,29 +99,6 @@ public class AnimalController {
         }
     }
 
-/*    @PutMapping("/{id}")
-    public ResponseEntity<String> updateBox(@PathVariable("id") Integer animalId, @RequestBody BoxDTO boxDTO) {
-        AnimalDTO changed = .changeBoxToGivenBoxNumber(animalId, boxDTO);
-        String message = "Box changed to: ";
-        return new ResponseEntity<>(message + changed.getBoxNumber(), HttpStatus.OK);
-    }*/
-/*
-
-    //todo wymienić na użycie akcji
-    @PutMapping(value = "/{id}", params = "isQuarantine")
-    public ResponseEntity<String> updateBoxWithQuarantineStatus(@PathVariable("id") Integer animalId, @RequestParam("isQuarantine") Boolean isQuarantine) {
-        if (!isQuarantine) {
-            AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithNoQuarantineStatus(animalId);
-            String message = "Box changed to: ";
-            return new ResponseEntity<>(message + changed.getBoxNumber() + " with quarantine status set to false ", HttpStatus.OK);
-        } else {
-            AnimalDTO changed = animalService.changeBoxToAnyBoxNumberWithYesQuarantineStatus(animalId);
-            String message = "Box changed to: ";
-            return new ResponseEntity<>(message + changed.getBoxNumber() + " with quarantine status set to true ", HttpStatus.OK);
-        }
-    }
-*/
-
     @GetMapping(params = "vaccinated")
     public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
         return animalService.listNonVaccinated();
@@ -132,7 +109,7 @@ public class AnimalController {
         return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
     }
 }
-// skłądnia
+// składnia
 //localhost:8080/animals?name=Rudy
 
 // /api/v1/animals  -> GET/POST

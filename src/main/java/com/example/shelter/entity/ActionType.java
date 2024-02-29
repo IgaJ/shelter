@@ -3,6 +3,7 @@ package com.example.shelter.entity;
 public enum ActionType {
     ADMIT,
     ADOPT,
+    EDIT,
     VACCINATE,
     WALK,
     CLEAN,

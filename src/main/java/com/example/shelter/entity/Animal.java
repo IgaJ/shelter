@@ -38,6 +38,8 @@ public class Animal {
     private Boolean vaccinated = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate vaccinationDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate adoptionDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastWalkDate;
