@@ -1,6 +1,5 @@
 package com.example.shelter.service;
 
-import com.example.shelter.dto.ActionDTO;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
@@ -24,7 +23,6 @@ public class AnimalService {
     private final AnimalMapper animalMapper;
     private final BoxService boxService;
     private final BoxRepository boxRepository;
-    private final ActionService actionService;
 
     @Transactional
     public AnimalDTO saveNewAnimal(AnimalDTO animalDTO) { //
@@ -123,9 +121,12 @@ public class AnimalService {
         animalRepository.deleteById(AnimalId);
     }
 
-    public Optional<AnimalDTO> patchAnimal(ActionDTO actionDTO, AnimalDTO animalDTO) {
-        Animal existing = animalRepository.getAnimalById(actionDTO.getAnimalId());
+    public Optional<AnimalDTO> patchAnimal(AnimalDTO animalDTO) {
+        Animal existing = animalRepository.getAnimalById(animalDTO.getId());
 
+        if (existing == null) {
+            throw new AnimalServiceException("Nie ma zwierzęcia o takim Id");
+        }
         if (StringUtils.hasText(animalDTO.getName())) {
             existing.setName(animalDTO.getName());
         }
@@ -159,7 +160,6 @@ public class AnimalService {
         if (animalDTO.getLastWalkDate() != null) {
             existing.setLastWalkDate(animalDTO.getLastWalkDate());
         }
-        actionService.saveNewActionForAnimal(actionDTO);
         return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.save(existing)));
     }
 }
