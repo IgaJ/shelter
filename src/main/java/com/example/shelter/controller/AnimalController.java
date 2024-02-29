@@ -79,7 +79,7 @@ public class AnimalController {
 
     @GetMapping("/{id}")
     public AnimalDTO getAnimalById(@PathVariable("id") Integer id) {
-        return animalService.getAnimalById(id).orElseThrow(null);
+        return animalService.getAnimalById(id);
     }
 
     @DeleteMapping("/{id}")

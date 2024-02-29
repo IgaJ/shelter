@@ -28,7 +28,7 @@ public class ActionService {
 
 
     public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
-        Animal animal = (animalMapper.animalDTOToAnimal(animalService.getAnimalById(actionDTO.getAnimalId()).orElseThrow(() -> new ActionServiceException("Nie ma takiego zwierzęcia"))));
+        Animal animal = (animalMapper.animalDTOToAnimal(animalService.getAnimalById(actionDTO.getAnimalId())));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {

@@ -107,12 +107,14 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<AnimalDTO> getAnimalById(Integer id) {
-        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
+    public AnimalDTO getAnimalById(Integer id) {
+        return animalRepository.findById(id)
+                .map(animal-> animalMapper.animalToAnimalDTO(animal))
+                .orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
     }
 
     public void deleteById(Integer AnimalId) {
-        Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null);
+        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         Box box = boxRepository.findBoxByAnimalId(AnimalId);
         if (box != null) {
             box.getAnimals().remove(foundAnimal);
@@ -122,11 +124,8 @@ public class AnimalService {
     }
 
     public Optional<AnimalDTO> patchAnimal(AnimalDTO animalDTO) {
-        Animal existing = animalRepository.getAnimalById(animalDTO.getId());
+        Animal existing = animalRepository.getAnimalById(animalDTO.getId()).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
 
-        if (existing == null) {
-            throw new AnimalServiceException("Nie ma zwierzęcia o takim Id");
-        }
         if (StringUtils.hasText(animalDTO.getName())) {
             existing.setName(animalDTO.getName());
         }
