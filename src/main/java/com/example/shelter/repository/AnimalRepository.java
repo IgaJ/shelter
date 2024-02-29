@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AnimalRepository extends JpaRepository <Animal, Integer> {
     @Query("SELECT a FROM Animal a WHERE LOWER(a.name) = LOWER(:name)")
@@ -29,7 +30,7 @@ public interface AnimalRepository extends JpaRepository <Animal, Integer> {
     List<Animal> findAllByVaccinatedAndAdopted(Boolean vaccinated, Boolean adopted);
 
     @Query("SELECT a FROM Animal a WHERE a.id = :id")
-    Animal getAnimalById(@Param("id") Integer id);
+    Optional<Animal> getAnimalById(@Param("id") Integer id);
 }
 // criteria, dostarczać parametr
 // example
