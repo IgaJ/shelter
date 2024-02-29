@@ -1,5 +1,6 @@
 package com.example.shelter.service;
 
+import com.example.shelter.dto.ActionDTO;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
@@ -23,6 +24,7 @@ public class AnimalService {
     private final AnimalMapper animalMapper;
     private final BoxService boxService;
     private final BoxRepository boxRepository;
+    private final ActionService actionService;
 
     @Transactional
     public AnimalDTO saveNewAnimal(AnimalDTO animalDTO) { //
@@ -50,7 +52,6 @@ public class AnimalService {
         animal.setAdoptionDate(LocalDate.now());
         animalRepository.save(animal);
     }
-
 
     public List<AnimalDTO> listAnimals() {
         return animalRepository.findAll()
@@ -80,14 +81,12 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
-
     public List<AnimalDTO> getAnimalByName(String name) {
         return animalRepository.getAnimalByName(name)
                 .stream()
                 .map(animal -> animalMapper.animalToAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
-
 
     public List<AnimalDTO> getByAge(Integer age) {
         return animalRepository.getAnimalByAge(age)
@@ -96,14 +95,12 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
-
     public List<AnimalDTO> getBySex(String sex) {
         return animalRepository.getAnimalBySex(sex)
                 .stream()
                 .map(animal -> animalMapper.animalToAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
-
 
     public List<AnimalDTO> getAnimalsBySize(String size) {
         return animalRepository.getAnimalBySize(size)
@@ -112,11 +109,9 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
-
     public Optional<AnimalDTO> getAnimalById(Integer id) {
         return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.findById(id).orElseThrow(null)));
     }
-
 
     public void deleteById(Integer AnimalId) {
         Animal foundAnimal = animalRepository.findById(AnimalId).orElse(null);
@@ -128,9 +123,9 @@ public class AnimalService {
         animalRepository.deleteById(AnimalId);
     }
 
+    public Optional<AnimalDTO> patchAnimal(ActionDTO actionDTO, AnimalDTO animalDTO) {
+        Animal existing = animalRepository.getAnimalById(actionDTO.getAnimalId());
 
-    public Optional<AnimalDTO> patchAnimalById(Integer animalId, AnimalDTO animalDTO) {
-        Animal existing = animalRepository.getAnimalById(animalId);
         if (StringUtils.hasText(animalDTO.getName())) {
             existing.setName(animalDTO.getName());
         }
@@ -164,6 +159,7 @@ public class AnimalService {
         if (animalDTO.getLastWalkDate() != null) {
             existing.setLastWalkDate(animalDTO.getLastWalkDate());
         }
-        return Optional.ofNullable(animalMapper.animalToAnimalDTO(existing));
+        actionService.saveNewActionForAnimal(actionDTO);
+        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.save(existing)));
     }
 }
