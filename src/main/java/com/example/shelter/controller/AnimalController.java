@@ -1,6 +1,5 @@
 package com.example.shelter.controller;
 
-import com.example.shelter.dto.ActionDTO;
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.service.AnimalService;
 import com.example.shelter.service.AnimalServiceException;
@@ -91,9 +90,9 @@ public class AnimalController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> patchAnimal(@RequestBody ActionDTO actionDTO, @RequestBody AnimalDTO animalDTO) {
+    public ResponseEntity<?> patchAnimal(@RequestBody AnimalDTO animalDTO) {
         try {
-            AnimalDTO animal = animalService.patchAnimal(actionDTO, animalDTO).orElse(null);
+            AnimalDTO animal = animalService.patchAnimal(animalDTO).orElse(null);
             return new ResponseEntity<>(animal, HttpStatus.OK);
         } catch (AnimalServiceException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(400));
