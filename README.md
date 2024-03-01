@@ -2,7 +2,7 @@
 This is a sample apllication for managing a shelter with animals.   
 It provides RESTful endpoints for managing animals, their rooms and performed actions like walk, vaccinate, adopt, change room.
 
-**Tehnologies used**
+## Tehnologies used
 <li>Java
 <li>Spring Boot
 <li>Spring Data JPA
@@ -10,7 +10,7 @@ It provides RESTful endpoints for managing animals, their rooms and performed ac
 <li>H2 Database (in-memory)
 <li>Lombok
 
-**Project structure**
+## Project structure
 <li>controllers: Contains REST controllers for animals, boxes (rooms) and actions
 <li>dto: Data Transfer Objects for communication between controllers and services
 <li>entities: JPA entities for animals, boxes and actions (operations archive)
@@ -19,7 +19,7 @@ It provides RESTful endpoints for managing animals, their rooms and performed ac
 <li>mappers: Converters between DTOs and entities
 <li>initializer: Data initializer to create initial rooms during application startup
 
-**Endpoints**  
+## Endpoints
 Animals
 <li>POST /api/v1/animals: Create a new animal
 <li>GET /api/v1/animals: Retrieve a list of all animals or filter by parameters (name, age, sex, size, etc.)
@@ -41,16 +41,16 @@ Actions
 <li>GET /api/v1/animals/{id}/actions: Retrieve a list of actions for an animal
 <li>GET /api/v1/actions: Retrieve a list of all actions
 
-**Security (work in progress)**  
+## Security (work in progress)
 The application is a work in progress and basic security features will be implemented soon. Stay tuned for updates and feel free to contribute!
 
-**Usage**
+## Usage
 1. Clone the repository: https://github.com/IgaJ/shelter.git
 2. Navigate to the project directory: cd shelter
 3. Build and run the application: mvnw spring-boot:run
 The application will be accessible at http://localhost:8080
 
-
+## 
 ![pexels-photo-15794988](https://github.com/IgaJ/shelter/assets/110561199/26133d2c-15f0-4e97-b043-ef8b256f9e88)
 
 Photo credit: Bianca Beltrán, pexels.com
