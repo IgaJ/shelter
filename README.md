@@ -45,7 +45,7 @@ Actions
 The application is a work in progress and basic security features will be implemented soon. Stay tuned for updates and feel free to contribute!
 
 **Usage**
-1. Clone the repository: 
+1. Clone the repository: https://github.com/IgaJ/shelter.git
 2. Navigate to the project directory: cd shelter
 3. Build and run the application: mvnw spring-boot:run
 The application will be accessible at http://localhost:8080
