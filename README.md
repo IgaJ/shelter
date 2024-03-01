@@ -51,6 +51,11 @@ The application is a work in progress and basic security features will be implem
 The application will be accessible at http://localhost:8080
 
 
+![pexels-photo-15794988](https://github.com/IgaJ/shelter/assets/110561199/26133d2c-15f0-4e97-b043-ef8b256f9e88)
+
+Photo credit: Bianca Beltrán, pexels.com
+
+
 
 
 
