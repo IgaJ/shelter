@@ -1,6 +1,8 @@
 # Animal shelter manager application
-This is a sample apllication for managing an animal shelter.   
-It provides RESTful endpoints for managing animals, their rooms and performed actions like walking, vaccinating, adopting or changing rooms.
+This project serves as a trainig implementation for an animal shelter, providing solutions for animal care.  
+The application ofers RESTful endpoints for managing animals, their living spaces, and archiving various actions performed with animals such as walking, vaccinating, adopting or changing rooms.
+
+This is a training project designed to showcase fundamental concepts. If you find the functionality intriguing, your contributions and ideas are highly encouraged. This project has the potential for expansion based on interest, making it an opportunity to delve deeper into the world of software development or to support institutions working with animals.
 
 ## Tehnologies used
 <li>Java
