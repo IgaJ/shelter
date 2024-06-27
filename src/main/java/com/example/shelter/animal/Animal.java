@@ -1,5 +1,7 @@
-package com.example.shelter.entity;
+package com.example.shelter.animal;
 
+import com.example.shelter.action.Action;
+import com.example.shelter.box.Box;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

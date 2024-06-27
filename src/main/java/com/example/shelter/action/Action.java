@@ -1,5 +1,7 @@
-package com.example.shelter.entity;
+package com.example.shelter.action;
 
+import com.example.shelter.animal.Animal;
+import com.example.shelter.box.Box;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Action {
+public class  Action {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

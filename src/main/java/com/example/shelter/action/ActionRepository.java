@@ -1,7 +1,5 @@
-package com.example.shelter.repository;
+package com.example.shelter.action;
 
-import com.example.shelter.entity.Action;
-import com.example.shelter.entity.ActionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

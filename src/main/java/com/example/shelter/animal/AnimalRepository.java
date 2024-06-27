@@ -1,6 +1,6 @@
-package com.example.shelter.repository;
+package com.example.shelter.animal;
 
-import com.example.shelter.entity.Animal;
+import com.example.shelter.animal.Animal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,7 +1,5 @@
-package com.example.shelter.controller;
+package com.example.shelter.animal;
 
-import com.example.shelter.dto.AnimalDTO;
-import com.example.shelter.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

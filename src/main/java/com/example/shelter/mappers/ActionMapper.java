@@ -1,9 +1,7 @@
 package com.example.shelter.mappers;
 
-import com.example.shelter.dto.ActionDTO;
-import com.example.shelter.dto.AnimalDTO;
-import com.example.shelter.entity.Action;
-import com.example.shelter.entity.Animal;
+import com.example.shelter.action.ActionDTO;
+import com.example.shelter.action.Action;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,6 +1,6 @@
-package com.example.shelter.repository;
+package com.example.shelter.box;
 
-import com.example.shelter.entity.Box;
+import com.example.shelter.box.Box;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

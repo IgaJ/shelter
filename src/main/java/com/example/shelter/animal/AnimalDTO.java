@@ -1,7 +1,6 @@
-package com.example.shelter.dto;
+package com.example.shelter.animal;
 
-import com.example.shelter.entity.Action;
-import com.example.shelter.entity.AnimalSpecies;
+import com.example.shelter.action.Action;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;

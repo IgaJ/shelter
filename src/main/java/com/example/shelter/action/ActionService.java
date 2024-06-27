@@ -1,14 +1,12 @@
-package com.example.shelter.service;
+package com.example.shelter.action;
 
-import com.example.shelter.dto.ActionDTO;
-import com.example.shelter.entity.Action;
-import com.example.shelter.entity.ActionType;
-import com.example.shelter.entity.Animal;
-import com.example.shelter.entity.Box;
+import com.example.shelter.animal.Animal;
+import com.example.shelter.box.Box;
 import com.example.shelter.mappers.ActionMapper;
 import com.example.shelter.mappers.AnimalMapper;
 import com.example.shelter.mappers.BoxMapper;
-import com.example.shelter.repository.ActionRepository;
+import com.example.shelter.animal.AnimalService;
+import com.example.shelter.box.BoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,7 @@ public class ActionService {
     private final BoxMapper boxMapper;
 
 
-    public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
+    public ActionDTO save(ActionDTO actionDTO) {
         Animal animal = (animalMapper.toAnimal(animalService.getAnimalById(actionDTO.getAnimalId())));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());

@@ -1,6 +1,5 @@
-package com.example.shelter.dto;
+package com.example.shelter.action;
 
-import com.example.shelter.entity.ActionType;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;

@@ -1,11 +1,8 @@
-package com.example.shelter.service;
+package com.example.shelter.box;
 
-import com.example.shelter.dto.BoxDTO;
-import com.example.shelter.entity.Animal;
-import com.example.shelter.entity.Box;
+import com.example.shelter.animal.Animal;
+import com.example.shelter.animal.AnimalRepository;
 import com.example.shelter.mappers.BoxMapper;
-import com.example.shelter.repository.AnimalRepository;
-import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +31,10 @@ public class BoxService {
     }
 
     public void changeBoxToGivenBoxNumber(Integer animalId, Integer boxId) {
-        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
         Box currentBox = animal.getBox();
         Box box = boxRepository.findByNumber(boxId)
-                .orElseThrow(() -> new BoxServiceException("Błędny numer boksu")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
+                .orElseThrow(() -> new RuntimeException("Błędny numer boksu")); // rozwinąć obsługę przypadku gdy nie ma numeru/nie ma miejsc - lista dostępnych?
         if (box.getAnimals().size() < box.getMaxAnimals()) {
             box.addAnimal(animal);
             currentBox.getAnimals().remove(animal);
@@ -45,12 +42,12 @@ public class BoxService {
             boxRepository.save(currentBox);
             animalRepository.save(animal);
         } else {
-            throw new BoxServiceException("W boksie nie ma miejsc");
+            throw new RuntimeException("W boksie nie ma miejsc");
         }
     }
 
     public void changeBoxToFirstQuarantineBox(Integer animalId) {
-        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
         Box currentBox = animal.getBox();
         currentBox.getAnimals().remove(animal);
         addAnimal(animal);
@@ -58,7 +55,7 @@ public class BoxService {
     }
 
     public void changeBoxToFirstNoQuarantineBox(Integer animalId) {
-        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = animalRepository.getAnimalById(animalId).orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
         Box currentBox = animal.getBox();
         currentBox.getAnimals().remove(animal);
         boxRepository.save(currentBox);
@@ -131,7 +128,7 @@ public class BoxService {
         if ((box != null) && (box.getAnimals().isEmpty())) {
             boxRepository.deleteById(id);
         } else {
-            throw new BoxServiceException("box with animals impossible to delete, move animals first");
+            throw new RuntimeException("box with animals impossible to delete, move animals first");
         }
     }
 
@@ -142,10 +139,10 @@ public class BoxService {
             boxRepository.deleteByNumber(number);
         } else {
             if (box == null) {
-                throw new BoxServiceException("Invalid box number");
+                throw new RuntimeException("Invalid box number");
             }
             if (!box.getAnimals().isEmpty()) {
-                throw new BoxServiceException("Animals in box to be deleted");
+                throw new RuntimeException("Animals in box to be deleted");
             }
         }
     }

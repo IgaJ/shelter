@@ -1,11 +1,9 @@
-package com.example.shelter.service;
+package com.example.shelter.animal;
 
-import com.example.shelter.dto.AnimalDTO;
-import com.example.shelter.entity.Animal;
-import com.example.shelter.entity.Box;
+import com.example.shelter.box.Box;
 import com.example.shelter.mappers.AnimalMapper;
-import com.example.shelter.repository.AnimalRepository;
-import com.example.shelter.repository.BoxRepository;
+import com.example.shelter.box.BoxRepository;
+import com.example.shelter.box.BoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,19 +28,19 @@ public class AnimalService {
     }
 
     public void vaccinate(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Nie ma takiego zwierzęcia"));
         animal.setVaccinated(true);
         animalRepository.save(animal);
     }
 
     public void walk(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Nie ma takiego zwierzęcia"));
         animal.setLastWalkDate(LocalDate.now());
         animalRepository.save(animal);
     }
 
     public void adopt(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Nie ma takiego zwierzęcia"));
         animal.setAdopted(true);
         animal.setAdoptionDate(LocalDate.now());
         animalRepository.save(animal);
@@ -107,11 +105,11 @@ public class AnimalService {
     public AnimalDTO getAnimalById(Integer id) {
         return animalRepository.findById(id)
                 .map(animal-> animalMapper.toAnimalDTO(animal))
-                .orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+                .orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
     }
 
     public boolean deleteById(Integer AnimalId) {
-        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
+        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
         Box box = boxRepository.findBoxByAnimalId(AnimalId);
         if (box != null) {
             box.getAnimals().remove(foundAnimal);

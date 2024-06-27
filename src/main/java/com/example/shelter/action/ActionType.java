@@ -1,4 +1,4 @@
-package com.example.shelter.entity;
+package com.example.shelter.action;
 
 public enum ActionType {
     ADMIT,

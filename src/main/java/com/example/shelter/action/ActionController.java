@@ -1,7 +1,5 @@
-package com.example.shelter.controller;
+package com.example.shelter.action;
 
-import com.example.shelter.dto.ActionDTO;
-import com.example.shelter.service.ActionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +16,7 @@ public class ActionController {
 
     @PostMapping("/animal")
     public ResponseEntity<ActionDTO> saveNewAnimalAction(@RequestBody ActionDTO actionDTO) {
-        return ResponseEntity.ok(actionService.saveNewActionForAnimal(actionDTO));
+        return ResponseEntity.ok(actionService.save(actionDTO));
     }
 
     @PostMapping("/box")

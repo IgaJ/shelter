@@ -1,7 +1,5 @@
-package com.example.shelter.controller;
+package com.example.shelter.box;
 
-import com.example.shelter.dto.BoxDTO;
-import com.example.shelter.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,7 @@ public class BoxController {
     private final BoxService boxService;
 
     @GetMapping(produces = "application/json")
-    public List<BoxDTO> listBoxes() {
+    public List<BoxDTO> findAll() {
         return boxService.listBoxes();
     }
 
@@ -44,17 +42,15 @@ public class BoxController {
         return boxService.findBoxesWithPlace();
     }
 
-    @DeleteMapping("/id/{id}") // prefix id dodany żeby uniknąć ambiguos handler methods
-    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
-        boxService.deleteById(id);
-        String message = "Deleted: ";
-        return new ResponseEntity<>(message + id, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/number/{number}") // prefix number dodany żeby uniknąć ambiguos handler methods
-    public ResponseEntity<String> deleteByNumber(@PathVariable("number") Integer number) {
-        boxService.deleteByNumber(number);
-        String message = "Deleted: ";
-        return new ResponseEntity<>(message + number, HttpStatus.OK);
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@RequestParam(required = false) Integer id, @RequestParam(required = false) Integer number) {
+        if (id != null) {
+            boxService.deleteById(id);
+        } else if (number != null) {
+            boxService.deleteByNumber(number);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

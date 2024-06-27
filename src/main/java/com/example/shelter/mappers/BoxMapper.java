@@ -1,7 +1,7 @@
 package com.example.shelter.mappers;
 
-import com.example.shelter.dto.BoxDTO;
-import com.example.shelter.entity.Box;
+import com.example.shelter.box.BoxDTO;
+import com.example.shelter.box.Box;
 import org.mapstruct.Mapper;
 
 @Mapper(uses = AnimalMapper.class)

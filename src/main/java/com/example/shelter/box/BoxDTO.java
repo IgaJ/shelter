@@ -1,5 +1,6 @@
-package com.example.shelter.dto;
+package com.example.shelter.box;
 
+import com.example.shelter.animal.AnimalDTO;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
