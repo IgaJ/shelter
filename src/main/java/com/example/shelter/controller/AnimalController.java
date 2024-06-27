@@ -2,10 +2,8 @@ package com.example.shelter.controller;
 
 import com.example.shelter.dto.AnimalDTO;
 import com.example.shelter.service.AnimalService;
-import com.example.shelter.service.AnimalServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,39 +18,12 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @PostMapping
-    public ResponseEntity<AnimalDTO> saveNewAnimal(@RequestBody AnimalDTO animalDTO) {
-        AnimalDTO savedAnimal = animalService.saveNewAnimal(animalDTO);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/animals/id/" + savedAnimal.getId().toString());
-        return new ResponseEntity<>(savedAnimal, headers, HttpStatus.CREATED);
+    public ResponseEntity<AnimalDTO> save(@RequestBody AnimalDTO animalDTO) {
+        return ResponseEntity.ok(animalService.save(animalDTO));
     }
 
-/*    @GetMapping
-    public List<AnimalDTO> getAnimals(@RequestParam(required = false) String name,
-                                      @RequestParam(required = false) Integer age,
-                                      @RequestParam(required = false) String sex,
-                                      @RequestParam(required = false) String size,
-                                      @PathVariable(required = false) Integer id) {
-        if (id != null) {
-            return Collections.singletonList(animalService.getAnimalById(id).orElseThrow(null));
-        }
-        if (name != null) {
-            animalService.getAnimalByName(name);
-        }
-        if (age != null) {
-            animalService.getByAge(age);
-        }
-        if (sex != null) {
-            animalService.getBySex(sex);
-        }
-        if (size != null) {
-            animalService.getAnimalsBySize(size);
-        }
-        return animalService.listAnimals();
-    }*/
-
     @GetMapping
-    public List<AnimalDTO> listAnimals() {
+    public List<AnimalDTO> findAll() {
         return animalService.listAnimals();
     }
 
@@ -82,31 +53,27 @@ public class AnimalController {
         return animalService.getAnimalById(id);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
-        animalService.deleteById(id);
-        String message = "Deleted: ";
-        return new ResponseEntity<>(message + id, HttpStatus.OK);
-    }
-
-    @PatchMapping
-    public ResponseEntity<?> patchAnimal(@RequestBody AnimalDTO animalDTO) {
-        try {
-            AnimalDTO animal = animalService.patchAnimal(animalDTO).orElse(null);
-            return new ResponseEntity<>(animal, HttpStatus.OK);
-        } catch (AnimalServiceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(400));
-        }
-    }
-
     @GetMapping(params = "vaccinated")
     public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
         return animalService.listNonVaccinated();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
+        if (!animalService.deleteById(id)) {
+            throw new RuntimeException("Animal not found");
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping
+    public ResponseEntity<AnimalDTO> update(@RequestBody AnimalDTO animalDTO) {
+        return ResponseEntity.ok(animalService.patchAnimal(animalDTO));
+    }
+
+    @GetMapping("/adoption")
     public ResponseEntity<?> listReadyForAdoption() {
-        List<AnimalDTO> ready = animalService.listAvailableForAdoption();
-        return new ResponseEntity<>(ready.stream().toList(), HttpStatus.OK);
+        return ResponseEntity.ok(animalService.listAvailableForAdoption());
     }
 }
 // składnia

@@ -9,11 +9,9 @@ import com.example.shelter.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +23,10 @@ public class AnimalService {
     private final BoxRepository boxRepository;
 
     @Transactional
-    public AnimalDTO saveNewAnimal(AnimalDTO animalDTO) { //
-        Animal newAnimal = animalMapper.animalDTOToAnimal(animalDTO);
-        animalRepository.save(newAnimal);
+    public AnimalDTO save(AnimalDTO animalDTO) { //
+        Animal newAnimal = animalMapper.toAnimal(animalDTO);
         boxService.addAnimal(newAnimal);
-        return animalMapper.animalToAnimalDTO(animalRepository.save(newAnimal));
+        return animalMapper.toAnimalDTO(animalRepository.save(newAnimal));
     }
 
     public void vaccinate(Integer id) {
@@ -54,66 +51,66 @@ public class AnimalService {
     public List<AnimalDTO> listAnimals() {
         return animalRepository.findAll()
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> listNonVaccinated() {
         return animalRepository.getNonVaccinated(false)
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> listAvailableForAdoption() {
         return animalRepository.getAvailableForAdoption()
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> listAvailable(Boolean vaccinated, Boolean adopted) {
         return animalRepository.findAllByVaccinatedAndAdopted(vaccinated, adopted)
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> getAnimalByName(String name) {
         return animalRepository.getAnimalByName(name)
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> getByAge(Integer age) {
         return animalRepository.getAnimalByAge(age)
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> getBySex(String sex) {
         return animalRepository.getAnimalBySex(sex)
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> getAnimalsBySize(String size) {
         return animalRepository.getAnimalBySize(size)
                 .stream()
-                .map(animal -> animalMapper.animalToAnimalDTO(animal))
+                .map(animal -> animalMapper.toAnimalDTO(animal))
                 .collect(Collectors.toList());
     }
 
     public AnimalDTO getAnimalById(Integer id) {
         return animalRepository.findById(id)
-                .map(animal-> animalMapper.animalToAnimalDTO(animal))
+                .map(animal-> animalMapper.toAnimalDTO(animal))
                 .orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
     }
 
-    public void deleteById(Integer AnimalId) {
+    public boolean deleteById(Integer AnimalId) {
         Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
         Box box = boxRepository.findBoxByAnimalId(AnimalId);
         if (box != null) {
@@ -121,44 +118,11 @@ public class AnimalService {
             boxRepository.save(box);
         }
         animalRepository.deleteById(AnimalId);
+        return false;
     }
 
-    public Optional<AnimalDTO> patchAnimal(AnimalDTO animalDTO) {
-        Animal existing = animalRepository.getAnimalById(animalDTO.getId()).orElseThrow(()-> new AnimalServiceException("Nie ma takiego zwierzęcia"));
-
-        if (StringUtils.hasText(animalDTO.getName())) {
-            existing.setName(animalDTO.getName());
-        }
-        if (StringUtils.hasText(animalDTO.getSex())) {
-            existing.setSex(animalDTO.getSex());
-        }
-        if (StringUtils.hasText(animalDTO.getSize())) {
-            existing.setSize(animalDTO.getSize());
-        }
-        if (animalDTO.getAge() != null) {
-            existing.setAge(animalDTO.getAge());
-        }
-        if (animalDTO.getArrivalDate() != null) {
-            existing.setArrivalDate(animalDTO.getArrivalDate());
-        }
-        if (StringUtils.hasText(animalDTO.getDescription())) {
-            existing.setDescription(animalDTO.getDescription());
-        }
-        if (animalDTO.getAdopted() != null) {
-            existing.setAdopted(animalDTO.getAdopted());
-        }
-        if (animalDTO.getVaccinated() != null) {
-            existing.setVaccinated(animalDTO.getVaccinated());
-        }
-        if (animalDTO.getVaccinationDate() != null) {
-            existing.setVaccinationDate(animalDTO.getVaccinationDate());
-        }
-        if (animalDTO.getAdoptionDate() != null) {
-            existing.setAdoptionDate(animalDTO.getAdoptionDate());
-        }
-        if (animalDTO.getLastWalkDate() != null) {
-            existing.setLastWalkDate(animalDTO.getLastWalkDate());
-        }
-        return Optional.ofNullable(animalMapper.animalToAnimalDTO(animalRepository.save(existing)));
+    public AnimalDTO patchAnimal(AnimalDTO animalDTO) {
+        var animal = animalMapper.toAnimal(animalDTO);
+        return animalMapper.toAnimalDTO(animalRepository.save(animal));
     }
 }

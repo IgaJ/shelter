@@ -2,6 +2,7 @@ package com.example.shelter.service;
 
 import com.example.shelter.dto.ActionDTO;
 import com.example.shelter.entity.Action;
+import com.example.shelter.entity.ActionType;
 import com.example.shelter.entity.Animal;
 import com.example.shelter.entity.Box;
 import com.example.shelter.mappers.ActionMapper;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class ActionService {
 
     private final ActionRepository actionRepository;
-    private final ActionMapper actionMapper;
+    private final ActionMapper actionMapper; 
     private final AnimalService animalService;
     private final AnimalMapper animalMapper;
     private final BoxService boxService;
@@ -28,7 +29,7 @@ public class ActionService {
 
 
     public ActionDTO saveNewActionForAnimal(ActionDTO actionDTO) {
-        Animal animal = (animalMapper.animalDTOToAnimal(animalService.getAnimalById(actionDTO.getAnimalId())));
+        Animal animal = (animalMapper.toAnimal(animalService.getAnimalById(actionDTO.getAnimalId())));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
         switch (actionDTO.getActionType()) {
@@ -50,8 +51,8 @@ public class ActionService {
         Box box = (boxMapper.toBox(boxService.getBoxById(actionDTO.getBoxId())));
         Action newAction = new Action();
         newAction.setActionType(actionDTO.getActionType());
-        switch (actionDTO.getActionType()) {
-            case CLEAN -> boxService.clean(actionDTO.getId());
+        if (actionDTO.getActionType() == ActionType.CLEAN) {
+            boxService.clean(actionDTO.getId());
         }
         newAction.setActionDate(LocalDate.now());
         newAction.setBox(box);

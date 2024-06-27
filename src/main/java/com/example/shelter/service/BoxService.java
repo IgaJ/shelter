@@ -31,14 +31,6 @@ public class BoxService {
             selected.get().addAnimal(animal); // .get do wyciągnięcia boksu z optionala
             boxRepository.save(selected.get());
         }
-     /*   findAvailableBoxWithSizeAndQuarantine()
-                .map(box ->{
-                    box.addAnimal(animal);
-                  return  boxMapper.toBoxDTO(boxRepository.save(box));
-                }).or(()->{
-                    addNewBox(animal,true);
-                    return null;
-                });*/
     }
 
     public void changeBoxToGivenBoxNumber(Integer animalId, Integer boxId) {

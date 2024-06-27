@@ -4,41 +4,35 @@ import com.example.shelter.dto.ActionDTO;
 import com.example.shelter.service.ActionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/actions")
 public class ActionController {
     private final ActionService actionService;
 
-    @PostMapping("/animals/actions")
-    public ResponseEntity<ActionDTO> saveNewActionToAnimal(@RequestBody ActionDTO actionDTO) {
-        ActionDTO savedAction = actionService.saveNewActionForAnimal(actionDTO);
-        return new ResponseEntity<>(savedAction, HttpStatus.OK);
+    @PostMapping("/animal")
+    public ResponseEntity<ActionDTO> saveNewAnimalAction(@RequestBody ActionDTO actionDTO) {
+        return ResponseEntity.ok(actionService.saveNewActionForAnimal(actionDTO));
     }
 
-    @PostMapping("/boxes/actions")
-    public ResponseEntity<ActionDTO> saveNewActionToBox(@RequestBody ActionDTO actionDTO) {
-        ActionDTO savedAction = actionService.saveNewActionForBox(actionDTO);
-        return new ResponseEntity<>(savedAction, HttpStatus.OK);
+    @PostMapping("/box")
+    public ResponseEntity<ActionDTO> saveNewBoxAction(@RequestBody ActionDTO actionDTO) {
+        return ResponseEntity.ok(actionService.saveNewActionForBox(actionDTO));
     }
 
-    @GetMapping("/animals/{id}/actions")
-    public List<ActionDTO> getActionsByAnimalId(@PathVariable("id") Integer id) {
+    @GetMapping("/animal/{id}")
+    public List<ActionDTO> getByAnimalId(@PathVariable("id") Integer id) {
         return actionService.getActionsByAnimalId(id);
     }
 
-    @GetMapping("/actions")
-    public List<ActionDTO> getAllActions() {
+    @GetMapping
+    public List<ActionDTO> findAll() {
         return actionService.listActions();
     }
-
-
 }
