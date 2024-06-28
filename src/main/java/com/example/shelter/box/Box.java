@@ -34,6 +34,5 @@ public class Box {
 
     public void addAnimal(Animal animal) {
         animals.add(animal);
-        animal.setBox(this);
     }
 }

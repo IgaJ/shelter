@@ -22,9 +22,8 @@ public class AnimalService {
     @Transactional
     public AnimalDTO save(AnimalDTO animalDTO) { //
         Animal newAnimal = animalMapper.toAnimal(animalDTO);
-        Box quarantineBOX = boxService.findFirstAvailableBox(true)
-                .orElseThrow(() -> new RuntimeException("No available quarantine box found"));
-        quarantineBOX.addAnimal(newAnimal);
+        Box quarantineBox = boxService.findFirstAvailableBox(true).orElseGet(() -> boxService.addNewBox(true));
+        quarantineBox.addAnimal(newAnimal);
         return animalMapper.toAnimalDTO(animalRepository.save(newAnimal));
     }
 

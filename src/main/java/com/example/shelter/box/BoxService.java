@@ -16,6 +16,11 @@ public class BoxService {
     private final BoxRepository boxRepository;
     private final BoxMapper boxMapper;
 
+    public BoxDTO save(BoxDTO boxDTO) {
+        Box newBox = boxMapper.toBox(boxDTO);
+        return boxMapper.toBoxDTO(boxRepository.save(newBox));
+    }
+
     public Optional<Box> findFirstAvailableBox(Boolean isQuarantine) {
         return boxRepository.findFirstAvailable(isQuarantine);
     }
@@ -24,13 +29,13 @@ public class BoxService {
         return boxRepository.findByBoxNumberAndIsQuarantine(boxNumber, isQuarantine);
     }
 
-    public void addNewBox(Boolean isQuarantine) {
+    public Box addNewBox(Boolean isQuarantine) {
         Box newBox = Box.builder()
                 .isQuarantine(isQuarantine)
                 .boxNumber(findHighestBoxNumber() + 1)
                 .animals(new HashSet<>())
                 .build();
-        boxRepository.save(newBox);
+        return boxRepository.save(newBox);
     }
 
     public int findHighestBoxNumber() {
@@ -40,8 +45,6 @@ public class BoxService {
     public Box findByAnimalId(Integer id) {
         return boxRepository.findByAnimalId(id);
     }
-
-
 
     public void clean(Integer id) {
         Box box = boxRepository.getReferenceById(id);
