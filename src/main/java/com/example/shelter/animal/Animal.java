@@ -57,5 +57,4 @@ public class Animal {
     public void addAction(Action action) {
         actions.add(action);
     }
-
 }

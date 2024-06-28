@@ -2,9 +2,9 @@ package com.example.shelter.animal;
 
 import com.example.shelter.box.Box;
 import com.example.shelter.mappers.AnimalMapper;
-import com.example.shelter.box.BoxRepository;
 import com.example.shelter.box.BoxService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +18,35 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
     private final BoxService boxService;
-    private final BoxRepository boxRepository;
 
     @Transactional
     public AnimalDTO save(AnimalDTO animalDTO) { //
         Animal newAnimal = animalMapper.toAnimal(animalDTO);
-        boxService.addAnimal(newAnimal);
+        Box quarantineBOX = boxService.findFirstAvailableBox(true)
+                .orElseThrow(() -> new RuntimeException("No available quarantine box found"));
+        quarantineBOX.addAnimal(newAnimal);
         return animalMapper.toAnimalDTO(animalRepository.save(newAnimal));
+    }
+
+    public AnimalDTO transferToNonQuarantineBox(Integer animalId) {
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new RuntimeException("Animal not found"));
+        Box nonQuarantineBox = boxService.findFirstAvailableBox(false)
+                .orElseThrow(() -> new RuntimeException("No available non-quarantine box found"));
+        animal.getBox().getAnimals().remove(animal);
+        nonQuarantineBox.addAnimal(animal);
+        return animalMapper.toAnimalDTO(animalRepository.save(animal));
+    }
+
+    @Transactional
+    public AnimalDTO changeBox(Integer animalId, Integer boxNumber, Boolean isQuarantine) {
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new RuntimeException("Animal not found"));
+        Box newBox = boxService.findBoxByNumberAndQuarantineStatus(boxNumber, isQuarantine)
+                .orElseThrow(() -> new RuntimeException("Box not found"));
+        animal.getBox().getAnimals().remove(animal);
+        newBox.addAnimal(animal);
+        return animalMapper.toAnimalDTO(animalRepository.save(animal));
     }
 
     public void vaccinate(Integer id) {
@@ -46,80 +68,48 @@ public class AnimalService {
         animalRepository.save(animal);
     }
 
-    public List<AnimalDTO> listAnimals() {
+    public List<AnimalDTO> listAll() {
         return animalRepository.findAll()
                 .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
+                .map(animalMapper::toAnimalDTO)
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> listNonVaccinated() {
         return animalRepository.getNonVaccinated(false)
                 .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
+                .map(animalMapper::toAnimalDTO)
                 .collect(Collectors.toList());
     }
 
     public List<AnimalDTO> listAvailableForAdoption() {
         return animalRepository.getAvailableForAdoption()
                 .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
+                .map(animalMapper::toAnimalDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<AnimalDTO> listAvailable(Boolean vaccinated, Boolean adopted) {
-        return animalRepository.findAllByVaccinatedAndAdopted(vaccinated, adopted)
-                .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
-                .collect(Collectors.toList());
+    public List<AnimalDTO> findBySpecification(Integer id, AnimalSpecies animalSpecies, String name, String sex, String  size, Integer age) {
+        Specification<Animal> spec = Specification.where(AnimalSpecification.hasId(id))
+                .and(AnimalSpecification.hasSpecies(animalSpecies))
+                .and(AnimalSpecification.hasName(name))
+                .and(AnimalSpecification.hasSex(sex))
+                .and(AnimalSpecification.hasSize(size))
+                .and(AnimalSpecification.hasAge(age));
+        return animalRepository.findAll(spec).stream().map(animalMapper::toAnimalDTO).collect(Collectors.toList());
     }
 
-    public List<AnimalDTO> getAnimalByName(String name) {
-        return animalRepository.getAnimalByName(name)
-                .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
-                .collect(Collectors.toList());
-    }
-
-    public List<AnimalDTO> getByAge(Integer age) {
-        return animalRepository.getAnimalByAge(age)
-                .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
-                .collect(Collectors.toList());
-    }
-
-    public List<AnimalDTO> getBySex(String sex) {
-        return animalRepository.getAnimalBySex(sex)
-                .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
-                .collect(Collectors.toList());
-    }
-
-    public List<AnimalDTO> getAnimalsBySize(String size) {
-        return animalRepository.getAnimalBySize(size)
-                .stream()
-                .map(animal -> animalMapper.toAnimalDTO(animal))
-                .collect(Collectors.toList());
-    }
-
-    public AnimalDTO getAnimalById(Integer id) {
-        return animalRepository.findById(id)
-                .map(animal-> animalMapper.toAnimalDTO(animal))
-                .orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
-    }
-
-    public boolean deleteById(Integer AnimalId) {
-        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new RuntimeException("Nie ma takiego zwierzęcia"));
-        Box box = boxRepository.findBoxByAnimalId(AnimalId);
+    public boolean delete(Integer AnimalId) {
+        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new RuntimeException("Animal not found"));
+        Box box = foundAnimal.getBox();
         if (box != null) {
             box.getAnimals().remove(foundAnimal);
-            boxRepository.save(box);
         }
         animalRepository.deleteById(AnimalId);
-        return false;
+        return true;
     }
 
-    public AnimalDTO patchAnimal(AnimalDTO animalDTO) {
+    public AnimalDTO update(AnimalDTO animalDTO) {
         var animal = animalMapper.toAnimal(animalDTO);
         return animalMapper.toAnimalDTO(animalRepository.save(animal));
     }

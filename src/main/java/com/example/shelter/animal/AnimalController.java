@@ -20,57 +20,51 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.save(animalDTO));
     }
 
-    @GetMapping
-    public List<AnimalDTO> findAll() {
-        return animalService.listAnimals();
-    }
-
-    @GetMapping(params = "name")
-    // param = tylko wtedy metoda uruchomiona gdy dostarczony jest ten parametr inaczej ambiguance
-    public List<AnimalDTO> getAnimalByName(@RequestParam String name) {
-        return animalService.getAnimalByName(name);
-    }
-
-    @GetMapping(params = "age")
-    public List<AnimalDTO> getAnimalByAge(@RequestParam Integer age) {
-        return animalService.getByAge(age);
-    }
-
-    @GetMapping(params = "sex")
-    public List<AnimalDTO> getBySex(@RequestParam String sex) {
-        return animalService.getBySex(sex);
-    }
-
-    @GetMapping(params = "size")
-    public List<AnimalDTO> getAnimalsBySize(@RequestParam String size) {
-        return animalService.getAnimalsBySize(size);
-    }
-
-    @GetMapping("/{id}")
-    public AnimalDTO getAnimalById(@PathVariable("id") Integer id) {
-        return animalService.getAnimalById(id);
-    }
-
-    @GetMapping(params = "vaccinated")
-    public List<AnimalDTO> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
-        return animalService.listNonVaccinated();
+    @PatchMapping
+    public ResponseEntity<AnimalDTO> update(@RequestBody AnimalDTO animalDTO) {
+        return ResponseEntity.ok(animalService.update(animalDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id) {
-        if (!animalService.deleteById(id)) {
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
+        if (!animalService.delete(id)) {
             throw new RuntimeException("Animal not found");
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping
-    public ResponseEntity<AnimalDTO> update(@RequestBody AnimalDTO animalDTO) {
-        return ResponseEntity.ok(animalService.patchAnimal(animalDTO));
+    @GetMapping
+    public ResponseEntity<List<AnimalDTO>> listAll() {
+        return ResponseEntity.ok(animalService.listAll());
+    }
+
+    @PostMapping("/{id}/transfer")
+    public ResponseEntity<AnimalDTO> transferToNonQuarantineBox(@PathVariable Integer id) {
+        return ResponseEntity.ok(animalService.transferToNonQuarantineBox(id));
+    }
+
+    @PostMapping("/{id}/changeBox")
+    public ResponseEntity<AnimalDTO> changeBox(@PathVariable Integer id, @RequestParam Integer boxNumber, @RequestParam Boolean isQuarantine) {
+        return ResponseEntity.ok(animalService.changeBox(id, boxNumber, isQuarantine));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<AnimalDTO>> searchAnimals(@RequestParam(required = false) Integer id,
+                                         @RequestParam(required = false) AnimalSpecies animalSpecies,
+                                         @RequestParam(required = false) String name,
+                                         @RequestParam(required = false) String sex,
+                                         @RequestParam(required = false) String size,
+                                         @RequestParam(required = false) Integer age) {
+        return ResponseEntity.ok(animalService.findBySpecification(id, animalSpecies, name, sex, size,age));
+    }
+
+    @GetMapping("/vaccinated")
+    public ResponseEntity<List<AnimalDTO>> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
+        return ResponseEntity.ok(animalService.listNonVaccinated());
     }
 
     @GetMapping("/adoption")
-    public ResponseEntity<?> listReadyForAdoption() {
+    public ResponseEntity<List<AnimalDTO>> listReadyForAdoption() {
         return ResponseEntity.ok(animalService.listAvailableForAdoption());
     }
 }
