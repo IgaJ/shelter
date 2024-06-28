@@ -16,39 +16,25 @@ public class BoxController {
     private final BoxService boxService;
 
     @GetMapping(produces = "application/json")
-    public List<BoxDTO> findAll() {
-        return boxService.listBoxes();
+    public ResponseEntity<List<BoxDTO>> findAll() {
+        return ResponseEntity.ok(boxService.listBoxes());
     }
 
     @GetMapping("/{id}")
-    public BoxDTO getBoxById(@PathVariable("id") Integer id) {
-        return boxService.getBoxById(id);
-    }
-
-    @GetMapping("/check/{boxNumber}") // chceck if available by boxNumber
-    public ResponseEntity<String> checkIfAvailableByBoxNumber(@PathVariable("boxNumber") Integer boxNumber) {
-        String message = " available";
-        String error = " unavailable";
-        BoxDTO available = boxService.findBoxWithSizeLessThanBoxCapacityAndBoxNumber(boxNumber);
-        if (available != null) {
-            return new ResponseEntity<>(available.getBoxNumber() + message, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(boxNumber + error, HttpStatus.valueOf(400));
-        }
+    public ResponseEntity<BoxDTO> getBoxById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(boxService.getBoxById(id));
     }
 
     @GetMapping("/available")
-    public List<BoxDTO> findBoxesWithPlace() {
-        return boxService.findBoxesWithPlace();
+    public ResponseEntity<List<BoxDTO>> findBoxesWithPlace() {
+        return ResponseEntity.ok(boxService.findBoxesWithPlace());
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam(required = false) Integer id, @RequestParam(required = false) Integer number) {
+    public ResponseEntity<Void> delete(@RequestParam(required = false) Integer id) {
         if (id != null) {
             boxService.deleteById(id);
-        } else if (number != null) {
-            boxService.deleteByNumber(number);
-        } else {
+        }else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);

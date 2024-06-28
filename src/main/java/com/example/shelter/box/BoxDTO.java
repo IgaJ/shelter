@@ -12,13 +12,9 @@ import java.util.Set;
 @Builder
 public class BoxDTO {
     private Integer id;
-
     private Integer boxNumber;
     private Boolean isQuarantine;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;
-
-    // adnotacja onetomany niepotrzebna
     private Set<AnimalDTO> animals; // zmienną uzupełnia mapper
 }
