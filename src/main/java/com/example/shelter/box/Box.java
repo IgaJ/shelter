@@ -1,6 +1,5 @@
 package com.example.shelter.box;
 
-import com.example.shelter.action.Action;
 import com.example.shelter.animal.Animal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -21,38 +20,20 @@ public class Box {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(unique = true)
     private Integer boxNumber;
-
     private Boolean isQuarantine;
-
     @Builder.Default
     private int maxAnimals = 4;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate cleaningDate;
 
-    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL, fetch = FetchType.LAZY ) // operacje takie jak zapis, aktualizacja i usuwanie dla Box będą miały odzwierciedlenie na powiązanych z Box encjach Action
-    //mapowane przez drugą stronę (Animal) przez pole o zawie "box" - nie towrzy się druga tabela
-    //@JoinTable(name = "animals_in_box", joinColumns = @JoinColumn(name = "box_id"), inverseJoinColumns = @JoinColumn(name = "animal_id"))
+    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     @JsonIgnore
-    private Set<Animal> animals; // czemu nie inicjalizuje przy tworzeniu nowego boxu? Przeniosłąm inicjalzację do bs.saveNewBox
+    private Set<Animal> animals = new HashSet<>();
 
     public void addAnimal(Animal animal) {
-        animals.add(animal); // ostatecznie iniciualizacja w bs.saveNewBox. Trzeba było ddoać sprawdzenie w as.saveNewAnimal czy kolekcja jest null i inicjalizację
+        animals.add(animal);
         animal.setBox(this);
     }
-
-    @OneToMany(mappedBy = "box", cascade = CascadeType.ALL)
-    private Set<Action> actions = new HashSet<>();
-
-    public void addAction(Action action) {
-        actions.add(action);
-    }
 }
-
-
-// Zależności opóźnione (lazy):
-//Jeśli relacja animals jest ustawiona na tryb "lazy loading", Hibernate nie załaduje zestawu animals, dopóki nie zostanie użyta ta właściwość. W takim przypadku, upewnij się,
-// że w momencie używania animals (np. w metodzie addAnimal lub w innym miejscu) sesja Hibernate jest wciąż aktywna.
