@@ -18,14 +18,8 @@ public interface BoxRepository extends JpaRepository <Box, Integer> {
     @Query("SELECT b FROM Box b JOIN b.animals a WHERE a.id = :animalId") // zapytanie do tabel łączonych
     Box findByAnimalId(@Param("animalId") Integer id);
 
-    @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals AND b.boxNumber = :boxNumber")
-    Box findBoxWithSizeLessThanBoxCapacityAndBoxNumber(@Param("boxNumber") Integer boxNumber);
-
     @Query("SELECT b FROM Box b WHERE SIZE(b.animals) < b.maxAnimals")
-    List<Box> findBoxesWithNumberOfAnimalsLessThanBoxCapacity();
-
-    @Query("SELECT b FROM Box b WHERE b.boxNumber = :boxNumber")
-    Optional<Box> findByNumber(@Param("boxNumber") Integer boxNumber);
+    List<Box> findAvailable();
 
     @Modifying // dodana @modifying bo z @query hibernate oczekuje zapytania select nie delete
     @Query("DELETE FROM Box b WHERE b.boxNumber = :boxNumber")

@@ -27,4 +27,12 @@ public interface AnimalSpecification {
     static Specification<Animal> hasAge (Integer age) {
         return (root, query, builder) -> age == null ? builder.conjunction() : builder.equal(root.get("age"), age);
     }
+
+    static Specification<Animal> isVaccinated (Boolean vaccinated) {
+        return (root, query, builder) -> vaccinated == null ? builder.conjunction() : builder.equal(root.get("vaccinated"), vaccinated);
+    }
+
+    static Specification<Animal> isAvailableForAdoption (Boolean available) {
+        return (root, query, builder) -> available == null ? builder.conjunction() : builder.equal(root.get("adopted"), false);
+    }
 }

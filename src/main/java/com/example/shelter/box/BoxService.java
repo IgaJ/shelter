@@ -59,7 +59,7 @@ public class BoxService {
     public List<BoxDTO> listBoxes() {
         return boxRepository.findAll()
                 .stream()
-                .map(box -> boxMapper.toBoxDTO(box))
+                .map(boxMapper::toBoxDTO)
                 .collect(Collectors.toList());
     }
 
@@ -68,14 +68,14 @@ public class BoxService {
         if (box.getAnimals().isEmpty()) {
             boxRepository.deleteById(id);
         } else {
-            throw new RuntimeException("box with animals impossible to delete, move animals first");
+            throw new RuntimeException("Box cannot be deleted. Please move the animals first.");
         }
     }
 
-    public List<BoxDTO> findBoxesWithPlace() {
-        return boxRepository.findBoxesWithNumberOfAnimalsLessThanBoxCapacity()
+    public List<BoxDTO> findAvailable() {
+        return boxRepository.findAvailable()
                 .stream()
-                .map(box -> boxMapper.toBoxDTO(box))
+                .map(boxMapper::toBoxDTO)
                 .collect(Collectors.toList());
     }
 }

@@ -54,20 +54,13 @@ public class AnimalController {
                                          @RequestParam(required = false) String name,
                                          @RequestParam(required = false) String sex,
                                          @RequestParam(required = false) String size,
-                                         @RequestParam(required = false) Integer age) {
-        return ResponseEntity.ok(animalService.findBySpecification(id, animalSpecies, name, sex, size,age));
-    }
-
-    @GetMapping("/vaccinated")
-    public ResponseEntity<List<AnimalDTO>> getNonVaccinated(@RequestParam Boolean vaccinated, AnimalDTO animalDTO) {
-        return ResponseEntity.ok(animalService.listNonVaccinated());
-    }
-
-    @GetMapping("/adoption")
-    public ResponseEntity<List<AnimalDTO>> listReadyForAdoption() {
-        return ResponseEntity.ok(animalService.listAvailableForAdoption());
+                                         @RequestParam(required = false) Integer age,
+                                         @RequestParam(required = false) Boolean vaccinated,
+                                         @RequestParam(required = false) Boolean available) {
+        return ResponseEntity.ok(animalService.findBySpecification(id, animalSpecies, name, sex, size,age, vaccinated, available));
     }
 }
+
 // składnia
 //localhost:8080/animals?name=Rudy
 

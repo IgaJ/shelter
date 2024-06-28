@@ -74,27 +74,15 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public List<AnimalDTO> listNonVaccinated() {
-        return animalRepository.getNonVaccinated(false)
-                .stream()
-                .map(animalMapper::toAnimalDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<AnimalDTO> listAvailableForAdoption() {
-        return animalRepository.getAvailableForAdoption()
-                .stream()
-                .map(animalMapper::toAnimalDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<AnimalDTO> findBySpecification(Integer id, AnimalSpecies animalSpecies, String name, String sex, String  size, Integer age) {
+    public List<AnimalDTO> findBySpecification(Integer id, AnimalSpecies animalSpecies, String name, String sex, String  size, Integer age, Boolean vaccinated, Boolean available) {
         Specification<Animal> spec = Specification.where(AnimalSpecification.hasId(id))
                 .and(AnimalSpecification.hasSpecies(animalSpecies))
                 .and(AnimalSpecification.hasName(name))
                 .and(AnimalSpecification.hasSex(sex))
                 .and(AnimalSpecification.hasSize(size))
-                .and(AnimalSpecification.hasAge(age));
+                .and(AnimalSpecification.hasAge(age))
+                .and(AnimalSpecification.isVaccinated(vaccinated))
+                .and(AnimalSpecification.isAvailableForAdoption(available));
         return animalRepository.findAll(spec).stream().map(animalMapper::toAnimalDTO).collect(Collectors.toList());
     }
 

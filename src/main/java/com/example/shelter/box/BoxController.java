@@ -26,8 +26,8 @@ public class BoxController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<BoxDTO>> findBoxesWithPlace() {
-        return ResponseEntity.ok(boxService.findBoxesWithPlace());
+    public ResponseEntity<List<BoxDTO>> findAvailable() {
+        return ResponseEntity.ok(boxService.findAvailable());
     }
 
     @DeleteMapping
