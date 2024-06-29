@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 public interface AnimalMapper {
     Animal toAnimal(AnimalDTO dto);
 
-    @Mapping(target = "boxNumber", source = "box.boxNumber") // @mapping definiuje niestandardowe mapowanie, target to pole w DTO a source to pole w box
+    @Mapping(target = "boxNumber", source = "box.boxNumber")
     AnimalDTO toAnimalDTO(Animal animal);
 
 }

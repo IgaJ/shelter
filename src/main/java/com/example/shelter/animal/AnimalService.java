@@ -27,6 +27,28 @@ public class AnimalService {
         return animalMapper.toAnimalDTO(animalRepository.save(newAnimal));
     }
 
+    public AnimalDTO update(AnimalDTO animalDTO) {
+        var animal = animalMapper.toAnimal(animalDTO);
+        return animalMapper.toAnimalDTO(animalRepository.save(animal));
+    }
+
+    public boolean delete(Integer AnimalId) {
+        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new RuntimeException("Animal not found"));
+        Box box = foundAnimal.getBox();
+        if (box != null) {
+            box.getAnimals().remove(foundAnimal);
+        }
+        animalRepository.deleteById(AnimalId);
+        return true;
+    }
+
+    public List<AnimalDTO> listAll() {
+        return animalRepository.findAll()
+                .stream()
+                .map(animalMapper::toAnimalDTO)
+                .collect(Collectors.toList());
+    }
+
     public AnimalDTO transferToNonQuarantineBox(Integer animalId) {
         Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(() -> new RuntimeException("Animal not found"));
@@ -48,32 +70,6 @@ public class AnimalService {
         return animalMapper.toAnimalDTO(animalRepository.save(animal));
     }
 
-    public void vaccinate(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Nie ma takiego zwierzęcia"));
-        animal.setVaccinated(true);
-        animalRepository.save(animal);
-    }
-
-    public void walk(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Nie ma takiego zwierzęcia"));
-        animal.setLastWalkDate(LocalDate.now());
-        animalRepository.save(animal);
-    }
-
-    public void adopt(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Nie ma takiego zwierzęcia"));
-        animal.setAdopted(true);
-        animal.setAdoptionDate(LocalDate.now());
-        animalRepository.save(animal);
-    }
-
-    public List<AnimalDTO> listAll() {
-        return animalRepository.findAll()
-                .stream()
-                .map(animalMapper::toAnimalDTO)
-                .collect(Collectors.toList());
-    }
-
     public List<AnimalDTO> findBySpecification(Integer id, AnimalSpecies animalSpecies, String name, String sex, String  size, Integer age, Boolean vaccinated, Boolean available) {
         Specification<Animal> spec = Specification.where(AnimalSpecification.hasId(id))
                 .and(AnimalSpecification.hasSpecies(animalSpecies))
@@ -86,18 +82,22 @@ public class AnimalService {
         return animalRepository.findAll(spec).stream().map(animalMapper::toAnimalDTO).collect(Collectors.toList());
     }
 
-    public boolean delete(Integer AnimalId) {
-        Animal foundAnimal = animalRepository.findById(AnimalId).orElseThrow(()-> new RuntimeException("Animal not found"));
-        Box box = foundAnimal.getBox();
-        if (box != null) {
-            box.getAnimals().remove(foundAnimal);
-        }
-        animalRepository.deleteById(AnimalId);
-        return true;
+    public void vaccinate(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
+        animal.setVaccinated(true);
+        animalRepository.save(animal);
     }
 
-    public AnimalDTO update(AnimalDTO animalDTO) {
-        var animal = animalMapper.toAnimal(animalDTO);
-        return animalMapper.toAnimalDTO(animalRepository.save(animal));
+    public void walk(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
+        animal.setLastWalkDate(LocalDate.now());
+        animalRepository.save(animal);
+    }
+
+    public void adopt(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
+        animal.setAdopted(true);
+        animal.setAdoptionDate(LocalDate.now());
+        animalRepository.save(animal);
     }
 }

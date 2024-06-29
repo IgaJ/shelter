@@ -57,21 +57,7 @@ public class AnimalController {
                                          @RequestParam(required = false) Integer age,
                                          @RequestParam(required = false) Boolean vaccinated,
                                          @RequestParam(required = false) Boolean available) {
+        // better to create specification here than call method with 8 params
         return ResponseEntity.ok(animalService.findBySpecification(id, animalSpecies, name, sex, size,age, vaccinated, available));
     }
 }
-
-// składnia
-//localhost:8080/animals?name=Rudy
-
-// /api/v1/animals  -> GET/POST
-// /api/v1/animals?maxAge=5&minAge=2 - request params
-// /api/v1/animals/id -> GET/PUT/PATCH/DELETE  (tym sposobem robimy update i działemy na jednym)
-// /api/v1/owners/id/animals/id
-
-//wysylanie przez parametry zapytania url: animals?parametr1=wartosc&parametr2=wartosc&....  -> @RequestParam lub bez adnotacji
-//wysylanie przez czesc sciezki najczesciej do id - @PathVariable
-//wysylanie przez cialo zapytania, najczesciej obiekty w formacie json - @RequestBody -> referencja do obiektu DTO
-//wysylanie danych w naglowkach zapytania (header) -> dane logowania, login i hasło
-
-

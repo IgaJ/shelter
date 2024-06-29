@@ -21,14 +21,6 @@ public class BoxService {
         return boxMapper.toBoxDTO(boxRepository.save(newBox));
     }
 
-    public Optional<Box> findFirstAvailableBox(Boolean isQuarantine) {
-        return boxRepository.findFirstAvailable(isQuarantine);
-    }
-
-    public Optional<Box> findBoxByNumberAndQuarantineStatus(Integer boxNumber, Boolean isQuarantine) {
-        return boxRepository.findByBoxNumberAndIsQuarantine(boxNumber, isQuarantine);
-    }
-
     public Box addNewBox(Boolean isQuarantine) {
         Box newBox = Box.builder()
                 .isQuarantine(isQuarantine)
@@ -38,25 +30,23 @@ public class BoxService {
         return boxRepository.save(newBox);
     }
 
+    public Optional<Box> findFirstAvailableBox(Boolean isQuarantine) {
+        return boxRepository.findFirstAvailable(isQuarantine);
+    }
+
+    public Optional<Box> findBoxByNumberAndQuarantineStatus(Integer boxNumber, Boolean isQuarantine) {
+        return boxRepository.findByBoxNumberAndIsQuarantine(boxNumber, isQuarantine);
+    }
+
     public int findHighestBoxNumber() {
         return boxRepository.giveHighestBoxNumber();
-    }
-
-    public Box findByAnimalId(Integer id) {
-        return boxRepository.findByAnimalId(id);
-    }
-
-    public void clean(Integer id) {
-        Box box = boxRepository.getReferenceById(id);
-        box.setCleaningDate(LocalDate.now());
-        boxRepository.save(box);
     }
 
     public BoxDTO getBoxById(Integer id) {
         return boxMapper.toBoxDTO(boxRepository.findById(id).orElseThrow());
     }
 
-    public List<BoxDTO> listBoxes() {
+    public List<BoxDTO> findAll() {
         return boxRepository.findAll()
                 .stream()
                 .map(boxMapper::toBoxDTO)
@@ -77,5 +67,11 @@ public class BoxService {
                 .stream()
                 .map(boxMapper::toBoxDTO)
                 .collect(Collectors.toList());
+    }
+
+    public void clean(Integer id) {
+        Box box = boxRepository.getReferenceById(id);
+        box.setCleaningDate(LocalDate.now());
+        boxRepository.save(box);
     }
 }

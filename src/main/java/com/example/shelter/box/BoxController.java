@@ -17,7 +17,7 @@ public class BoxController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<BoxDTO>> findAll() {
-        return ResponseEntity.ok(boxService.listBoxes());
+        return ResponseEntity.ok(boxService.findAll());
     }
 
     @GetMapping("/{id}")
@@ -37,6 +37,6 @@ public class BoxController {
         }else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

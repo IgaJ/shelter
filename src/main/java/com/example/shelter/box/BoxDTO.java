@@ -16,5 +16,5 @@ public class BoxDTO {
     private Boolean isQuarantine;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime cleaningDate;
-    private Set<AnimalDTO> animals; // zmienną uzupełnia mapper
+    private Set<AnimalDTO> animals;
 }
