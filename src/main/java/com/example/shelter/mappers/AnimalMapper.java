@@ -1,15 +1,15 @@
 package com.example.shelter.mappers;
 
-import com.example.shelter.entity.Animal;
-import com.example.shelter.dto.AnimalDTO;
+import com.example.shelter.animal.Animal;
+import com.example.shelter.animal.AnimalDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
 public interface AnimalMapper {
-    Animal animalDTOToAnimal (AnimalDTO dto);
+    Animal toAnimal(AnimalDTO dto);
 
-    @Mapping(target = "boxNumber", source = "box.boxNumber") // @mapping definiuje niestandardowe mapowanie, target to pole w DTO a source to pole w box
-    AnimalDTO animalToAnimalDTO (Animal animal);
+    @Mapping(target = "boxNumber", source = "box.boxNumber")
+    AnimalDTO toAnimalDTO(Animal animal);
 
 }

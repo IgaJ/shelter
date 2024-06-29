@@ -1,6 +1,6 @@
 package com.example.shelter;
 
-import com.example.shelter.service.BoxService;
+import com.example.shelter.box.BoxService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
