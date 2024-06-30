@@ -1,6 +1,9 @@
 package com.example.shelter.box;
 
 import com.example.shelter.mappers.BoxMapper;
+import com.example.shelter.task.TaskDTO;
+import com.example.shelter.task.TaskService;
+import com.example.shelter.task.TaskType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +18,15 @@ import java.util.stream.Collectors;
 public class BoxService {
     private final BoxRepository boxRepository;
     private final BoxMapper boxMapper;
+    private final TaskService taskService;
 
-    public BoxDTO save(BoxDTO boxDTO) {
-        Box newBox = boxMapper.toBox(boxDTO);
-        return boxMapper.toBoxDTO(boxRepository.save(newBox));
+    public List<TaskDTO> getTasksForBox(Integer boxId) {
+        if (!boxRepository.existsById(boxId)) {
+            throw new RuntimeException("Box not found");
+        }
+        return taskService.findByBoxId(boxId);
     }
+
 
     public Box addNewBox(Boolean isQuarantine) {
         Box newBox = Box.builder()
@@ -73,5 +80,8 @@ public class BoxService {
         Box box = boxRepository.getReferenceById(id);
         box.setCleaningDate(LocalDate.now());
         boxRepository.save(box);
+
+        String description = "Cleaning of box " + box.getBoxNumber();
+        taskService.saveTaskForBox(box, description,TaskType.CLEANING_BOX);
     }
 }
