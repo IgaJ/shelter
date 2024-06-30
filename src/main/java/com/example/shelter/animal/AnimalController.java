@@ -63,33 +63,33 @@ public class AnimalController {
     }
 
     @PostMapping("/{id}/feed")
-    public ResponseEntity<Void> feed(@PathVariable Integer id) {
-        animalService.feed(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{id}/vaccinate")
-    public ResponseEntity<Void> vaccinate(@PathVariable Integer id) {
-        animalService.vaccinate(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{id}/health")
-    public ResponseEntity<Void> checkHealth(@PathVariable Integer id) {
-        animalService.checkHealth(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AnimalDTO> feed(@PathVariable Integer id) {
+        AnimalDTO fed = animalService.feed(id);
+        return ResponseEntity.ok(fed);
     }
 
     @PostMapping("/{id}/walk")
-    public ResponseEntity<Void> walk(@PathVariable Integer id) {
-        animalService.walk(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AnimalDTO> walk(@PathVariable Integer id) {
+        AnimalDTO walked = animalService.walk(id);
+        return ResponseEntity.ok(walked);
+    }
+
+    @PostMapping("/{id}/health")
+    public ResponseEntity<AnimalDTO> checkHealth(@PathVariable Integer id) {
+        AnimalDTO checked = animalService.checkHealth(id);
+        return ResponseEntity.ok(checked);
+    }
+
+    @PostMapping("/{id}/vaccinate")
+    public ResponseEntity<AnimalDTO> vaccinate(@PathVariable Integer id) {
+        AnimalDTO vaccinated = animalService.vaccinate(id);
+        return ResponseEntity.ok(vaccinated);
     }
 
     @PostMapping("/{id}/adopt")
-    public ResponseEntity<Void> adopt(@PathVariable Integer id) {
-        animalService.adopt(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AnimalDTO> adopt(@PathVariable Integer id) {
+        AnimalDTO adopted = animalService.adopt(id);
+        return ResponseEntity.ok(adopted);
     }
     @GetMapping("/{id}/tasks")
     public List<TaskDTO> getTasksForAnimal(@PathVariable Integer id) {

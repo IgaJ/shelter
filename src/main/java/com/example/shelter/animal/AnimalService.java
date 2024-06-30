@@ -22,14 +22,6 @@ public class AnimalService {
     private final TaskService taskService;
 
     @Transactional
-    public List<TaskDTO> getTasksForAnimal(Integer animalId) {
-        if (!animalRepository.existsById(animalId)) {
-            throw new RuntimeException("Animal not found");
-        }
-        return taskService.findByAnimalId(animalId);
-    }
-
-    @Transactional
     public AnimalDTO save(AnimalDTO animalDTO) {
         Animal newAnimal = animalMapper.toAnimal(animalDTO);
         Box quarantineBox = boxService.findFirstAvailableBox(true).orElseGet(() -> boxService.addNewBox(true));
@@ -93,47 +85,51 @@ public class AnimalService {
     }
 
     @Transactional
-    public void feed(Integer id) {
+    public AnimalDTO feed(Integer id) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
         animal.setFeedDate(LocalDate.now());
         animalRepository.save(animal);
 
         String description = "Feeding of " + animal.getName() + " (animal id: " + animal.getId() + ")";
         taskService.saveTaskForAnimal(animal, description, TaskType.FEEDING);
+        return animalMapper.toAnimalDTO(animal);
     }
 
     @Transactional
-    public void vaccinate(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
-        animal.setVaccinated(true);
-        animalRepository.save(animal);
-
-        String description = "Vaccination of " + animal.getName() + " (animal id: " + animal.getId() + ")";
-        taskService.saveTaskForAnimal(animal, description, TaskType.VACCINATION);
-    }
-
-    @Transactional
-    public void checkHealth(Integer id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
-        animal.setHealthCheckDate(LocalDate.now());
-        animalRepository.save(animal);
-
-        String description = "Health check of " + animal.getName() + " (animal id: " + animal.getId() + ")";
-        taskService.saveTaskForAnimal(animal, description, TaskType.HEALTH_CHECK);
-    }
-
-    @Transactional
-    public void walk(Integer id) {
+    public AnimalDTO walk(Integer id) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
         animal.setWalkDate(LocalDate.now());
         animalRepository.save(animal);
 
         String description = "Walk with " + animal.getName() + " (animal id: " + animal.getId() + ")";
         taskService.saveTaskForAnimal(animal, description, TaskType.WALK);
+        return animalMapper.toAnimalDTO(animal);
     }
 
     @Transactional
-    public void adopt(Integer id) {
+    public AnimalDTO checkHealth(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
+        animal.setHealthCheckDate(LocalDate.now());
+        animalRepository.save(animal);
+
+        String description = "Health check of " + animal.getName() + " (animal id: " + animal.getId() + ")";
+        taskService.saveTaskForAnimal(animal, description, TaskType.HEALTH_CHECK);
+        return animalMapper.toAnimalDTO(animal);
+    }
+
+    @Transactional
+    public AnimalDTO vaccinate(Integer id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
+        animal.setVaccinated(true);
+        animalRepository.save(animal);
+
+        String description = "Vaccination of " + animal.getName() + " (animal id: " + animal.getId() + ")";
+        taskService.saveTaskForAnimal(animal, description, TaskType.VACCINATION);
+        return animalMapper.toAnimalDTO(animal);
+    }
+
+    @Transactional
+    public AnimalDTO adopt(Integer id) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
         animal.setAdopted(true);
         animal.setAdoptionDate(LocalDate.now());
@@ -141,5 +137,14 @@ public class AnimalService {
 
         String description = "Adoption of " + animal.getName() + " (animal id: " + animal.getId() + ")";
         taskService.saveTaskForAnimal(animal, description, TaskType.ADOPTION);
+        return animalMapper.toAnimalDTO(animal);
+    }
+
+    @Transactional
+    public List<TaskDTO> getTasksForAnimal(Integer animalId) {
+        if (!animalRepository.existsById(animalId)) {
+            throw new RuntimeException("Animal not found");
+        }
+        return taskService.findByAnimalId(animalId);
     }
 }

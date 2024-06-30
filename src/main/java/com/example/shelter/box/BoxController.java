@@ -44,9 +44,9 @@ public class BoxController {
     }
 
     @PostMapping("/{id}/clean")
-    public ResponseEntity<Void> clean(@PathVariable Integer id) {
-        boxService.clean(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<BoxDTO> clean(@PathVariable Integer id) {
+        BoxDTO cleaned = boxService.clean(id);
+        return ResponseEntity.ok(cleaned);
     }
 
     @GetMapping("/{id}/tasks")
