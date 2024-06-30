@@ -121,6 +121,7 @@ public class AnimalService {
     public AnimalDTO vaccinate(Integer id) {
         Animal animal = animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found"));
         animal.setVaccinated(true);
+        animal.setVaccinationDate(LocalDate.now());
         animalRepository.save(animal);
 
         String description = "Vaccination of " + animal.getName() + " (animal id: " + animal.getId() + ")";
