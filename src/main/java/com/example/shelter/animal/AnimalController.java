@@ -1,5 +1,6 @@
 package com.example.shelter.animal;
 
+import com.example.shelter.task.TaskDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,11 +27,11 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         if (!animalService.delete(id)) {
             throw new RuntimeException("Animal not found");
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping
@@ -59,5 +60,39 @@ public class AnimalController {
                                          @RequestParam(required = false) Boolean available) {
         // better to create specification here than call method with 8 params
         return ResponseEntity.ok(animalService.findBySpecification(id, animalSpecies, name, sex, size,age, vaccinated, available));
+    }
+
+    @PostMapping("/{id}/feed")
+    public ResponseEntity<AnimalDTO> feed(@PathVariable Integer id) {
+        AnimalDTO fed = animalService.feed(id);
+        return ResponseEntity.ok(fed);
+    }
+
+    @PostMapping("/{id}/walk")
+    public ResponseEntity<AnimalDTO> walk(@PathVariable Integer id) {
+        AnimalDTO walked = animalService.walk(id);
+        return ResponseEntity.ok(walked);
+    }
+
+    @PostMapping("/{id}/health")
+    public ResponseEntity<AnimalDTO> checkHealth(@PathVariable Integer id) {
+        AnimalDTO checked = animalService.checkHealth(id);
+        return ResponseEntity.ok(checked);
+    }
+
+    @PostMapping("/{id}/vaccinate")
+    public ResponseEntity<AnimalDTO> vaccinate(@PathVariable Integer id) {
+        AnimalDTO vaccinated = animalService.vaccinate(id);
+        return ResponseEntity.ok(vaccinated);
+    }
+
+    @PostMapping("/{id}/adopt")
+    public ResponseEntity<AnimalDTO> adopt(@PathVariable Integer id) {
+        AnimalDTO adopted = animalService.adopt(id);
+        return ResponseEntity.ok(adopted);
+    }
+    @GetMapping("/{id}/tasks")
+    public List<TaskDTO> getTasksForAnimal(@PathVariable Integer id) {
+        return animalService.getTasksForAnimal(id);
     }
 }

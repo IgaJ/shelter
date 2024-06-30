@@ -1,5 +1,6 @@
 package com.example.shelter.box;
 
+import com.example.shelter.task.TaskDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import java.util.List;
 @RequestMapping("api/v1/boxes")
 public class BoxController {
     private final BoxService boxService;
+
+
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<BoxDTO>> findAll() {
@@ -38,5 +41,16 @@ public class BoxController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{id}/clean")
+    public ResponseEntity<BoxDTO> clean(@PathVariable Integer id) {
+        BoxDTO cleaned = boxService.clean(id);
+        return ResponseEntity.ok(cleaned);
+    }
+
+    @GetMapping("/{id}/tasks")
+    public List<TaskDTO> getTasksForBox(@PathVariable Integer id) {
+        return boxService.getTasksForBox(id);
     }
 }

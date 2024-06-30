@@ -1,46 +1,52 @@
-# Animal shelter manager application
-This project serves as a trainig implementation for an animal shelter, providing solutions for animal care.  
-The application ofers RESTful endpoints for managing animals their living spaces, and their health.
+# Animal Shelter Manager Application
 
-This is a training project designed to showcase fundamental concepts. If you find the functionality intriguing, your contributions and ideas are highly encouraged. This project has the potential for expansion based on interest, making it an opportunity to develop or to support institutions working with animals.
+This project serves as a training implementation for an animal shelter, providing solutions for animal care.  
+The application offers RESTful endpoints for managing animals, their living spaces, and their health.
 
-## Tehnologies used
-<li>Java
-<li>Spring Boot
-<li>Spring Data JPA
-<li>Spring MVC
-<li>Lombok
-<li>H2 Database (in-memory)
-<li>MySQl
+This is a training project designed to showcase fundamental concepts. If you find the functionality intriguing, your contributions and ideas are highly encouraged.
 
-## Project structure
-<li>controllers: Contains REST controllers for animals and boxes (rooms)
-<li>dto: Data Transfer Objects for communication between controllers and services
-<li>entities: JPA entities for animals and boxes
-<li>repositories: Spring Data JPA repositories for interacting with the database
-<li>services: Business logic services to manage animals
-<li>mappers: Converters between DTOs and entities
-<li>initializer: Data initializer to create initial rooms during application startup
+## Interaction with the System
+Operations such as vaccination, health checking, walking, adoption, and box cleaning can be triggered through appropriate HTTP requests. This enables users of the application (e.g., shelter staff) to interact with the system and update the status of animals and boxes.
+
+## Technologies Used
+- Java
+- Spring Boot
+- Spring Data JPA
+- Spring MVC
+- Lombok
+- H2 Database (in-memory)
+- MySQL
+
+## Project Structure
+- **controllers**: Contains REST controllers for animals, boxes (rooms), and tasks performed (e.g., walking, feeding, health checking, box cleaning)
+- **dto**: Data Transfer Objects for communication between controllers and services
+- **entities**: JPA entities for animals, boxes, and tasks for both
+- **repositories**: Spring Data JPA repositories for interacting with the database
+- **services**: Business logic services
+- **mappers**: Converters between DTOs and entities
+- **initializer**: Data initializer to create initial rooms during application startup
 
 ## Endpoints
-Animals
-<li>POST /api/v1/animals: Create a new animal
-<li>GET /api/v1/search: return a list of animals filered by specified parameters (name, age, sex, size, etc.)
-<li>POST /api/v1/animals/{id}/transfer: move to room without quarantoine status
-<li>POST /api/v1/animals/{id}/changeBox: change to room with specified params
-<li>DELETE /api/v1/animals/{id}: delete an animal by ID
-<li>PATCH /api/v1/animals: update an existing animal data
 
-Boxes (rooms)
-<li>GET /api/v1/boxes: retrieve a list of all boxes (rooms)
-<li>GET /api/v1/boxes/{id}: retrieve a box by ID
-<li>GET /api/v1/boxes/available: retrieve a list of rooms with available space
-<li>DELETE /api/v1/boxes/id/{id}: delete a box by ID
+### Animals
+- **POST /api/v1/animals**: Create a new animal
+- **GET /api/v1/animals/search**: Return a list of animals filtered by specified parameters (name, age, sex, size, etc.)
+- **POST /api/v1/animals/{id}/transfer**: Move to room without quarantine status
+- **POST /api/v1/animals/{id}/changeBox**: Change to room with specified parameters
+- **DELETE /api/v1/animals/{id}**: Delete an animal by ID
+- **PATCH /api/v1/animals**: Update an existing animal data
+- **POST /api/v1/animals/{id}/feed** (or **/walk**, **/health**, **/vaccinate**, **/adopt**): Create a respective task
+
+### Boxes (rooms)
+- **GET /api/v1/boxes**: Retrieve a list of all boxes (rooms)
+- **GET /api/v1/boxes/{id}**: Retrieve a box by ID
+- **GET /api/v1/boxes/available**: Retrieve a list of rooms with available space
+- **DELETE /api/v1/boxes/id/{id}**: Delete a box by ID
+- **POST /api/v1/boxes/{id}/clean**: Create a respective task
+
+### Tasks
+- **GET /api/v1/animals/{id}/tasks**: Retrieve tasks for a specific animal
+- **GET /api/v1/boxes/{id}/tasks**: Retrieve tasks for a specific box
 
 ## Security (work in progress)
-The application is a work in progress and basic security features will be implemented soon. Stay tuned for updates and feel free to contribute!
-
-
-
-
-
+The application is a work in progress and basic security features will be implemented soon.

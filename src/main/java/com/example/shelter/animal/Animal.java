@@ -31,11 +31,15 @@ public class Animal {
     private Boolean adopted = false;
     private Boolean vaccinated = false;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate feedDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate healthCheckDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate vaccinationDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate adoptionDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate lastWalkDate;
+    private LocalDate walkDate;
 
     @ManyToOne
     private Box box;
