@@ -16,6 +16,7 @@ Operations such as vaccination, health checking, walking, adoption, and box clea
 - Lombok
 - H2 Database (in-memory)
 - MySQL
+- Docker
 
 ## Project Structure
 - **controllers**: Contains REST controllers for animals, boxes (rooms), and tasks performed (e.g., walking, feeding, health checking, box cleaning)
