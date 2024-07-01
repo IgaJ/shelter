@@ -1,38 +1,46 @@
 package com.example.shelter.animal;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public interface AnimalSpecification {
 
-    static Specification<Animal> hasId (Integer id) {
-        return (root, query, builder) -> id == null ? builder.conjunction() : builder.equal(root.get("id"), id);
-    }
-
-    static Specification<Animal> hasSpecies (AnimalSpecies species) {
-        return (root, query, builder) -> species == null ? builder.conjunction() : builder.equal(root.get("species"), species);
-    }
-
-    static Specification<Animal> hasName (String name) {
-        return (root, query, builder) -> name == null ? builder.conjunction() : builder.equal(root.get("name"), name);
-    }
-
-    static Specification<Animal> hasSex (String sex) {
-        return (root, query, builder) -> sex == null ? builder.conjunction() : builder.equal(root.get("sex"), sex);
-    }
-
-    static Specification<Animal> hasSize (String size) {
-        return (root, query, builder) -> size == null ? builder.conjunction() : builder.equal(root.get("size"), size);
-    }
-
-    static Specification<Animal> hasAge (Integer age) {
-        return (root, query, builder) -> age == null ? builder.conjunction() : builder.equal(root.get("age"), age);
-    }
-
-    static Specification<Animal> isVaccinated (Boolean vaccinated) {
-        return (root, query, builder) -> vaccinated == null ? builder.conjunction() : builder.equal(root.get("vaccinated"), vaccinated);
-    }
-
-    static Specification<Animal> isAvailableForAdoption (Boolean available) {
-        return (root, query, builder) -> available == null ? builder.conjunction() : builder.equal(root.get("adopted"), false);
+    static Specification<Animal> getAnimalsByCriteria(Integer id, AnimalSpecies species, String name, String sex,
+                                                      String size, Integer age, Boolean adopted, Boolean vaccinated) {
+        return (Root<Animal> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (id != null) {
+                predicates.add(builder.equal(root.get("id"), id));
+            }
+            if (species != null) {
+                predicates.add(builder.equal(root.get("species"), species));
+            }
+            if (name != null && !name.isEmpty()) {
+                predicates.add(builder.equal(root.get("name"), name));
+            }
+            if (sex != null && !sex.isEmpty()) {
+                predicates.add(builder.equal(root.get("sex"), sex));
+            }
+            if (size != null && !size.isEmpty()) {
+                predicates.add(builder.equal(root.get("size"), size));
+            }
+            if (age != null) {
+                predicates.add(builder.equal(root.get("age"), age));
+            }
+            if (adopted != null) {
+                predicates.add(builder.equal(root.get("adopted"), adopted));
+            }
+            if (vaccinated != null) {
+                predicates.add(builder.equal(root.get("vaccinated"), vaccinated));
+            }
+            return builder.and(predicates.toArray(predicates.toArray(new Predicate[0])));
+        };
     }
 }

@@ -49,17 +49,9 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.changeBox(id, boxNumber, isQuarantine));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<AnimalDTO>> searchAnimals(@RequestParam(required = false) Integer id,
-                                         @RequestParam(required = false) AnimalSpecies animalSpecies,
-                                         @RequestParam(required = false) String name,
-                                         @RequestParam(required = false) String sex,
-                                         @RequestParam(required = false) String size,
-                                         @RequestParam(required = false) Integer age,
-                                         @RequestParam(required = false) Boolean vaccinated,
-                                         @RequestParam(required = false) Boolean available) {
-        // better to create specification here than call method with 8 params
-        return ResponseEntity.ok(animalService.findBySpecification(id, animalSpecies, name, sex, size,age, vaccinated, available));
+    @PostMapping("/search")
+    public ResponseEntity<List<AnimalDTO>> searchAnimals(@RequestBody AnimalSearchCriteria criteria) {
+        return ResponseEntity.ok(animalService.searchAnimals(criteria));
     }
 
     @PostMapping("/{id}/feed")
